@@ -175,9 +175,9 @@ export default function TowerMap({ marker, svgStyle }) {
         )
       })()}
 
-      {/* Titel */}
-      <text x="170" y="572" textAnchor="middle" fill={INKM} fontSize="9"
-        fontFamily="Georgia,serif" letterSpacing="2">
+      {/* Titel – auf hellem Pergament (unter dem Turm), dunkel & lesbar */}
+      <text x="170" y="556" textAnchor="middle" fill={INK} fontSize="9.5"
+        fontFamily="Georgia,serif" letterSpacing="2" fontWeight="bold">
         TURM DES MAGIERS
       </text>
     </svg>

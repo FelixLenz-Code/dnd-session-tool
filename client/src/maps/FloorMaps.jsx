@@ -52,6 +52,21 @@ function Lbl({ x, y, text, fs = 9, fill = INK, anchor = 'middle', bold = false }
   )
 }
 
+// Beschriftungs-Plakette: cremefarbenes Schild mit Rand — immer lesbar,
+// egal auf welchem Untergrund. Das gemeinsame Text-System aller Karten.
+function Plaque({ cx, cy, text, fs = 9, fill = INK, plate = '#f4ead0' }) {
+  const w = text.length * fs * 0.62 + 14
+  const h = fs + 9
+  return (
+    <g>
+      <rect x={cx - w / 2} y={cy - h / 2} width={w} height={h}
+        fill={plate} stroke={INKM} strokeWidth="0.9" rx="3"/>
+      <text x={cx} y={cy + fs * 0.36} textAnchor="middle" fill={fill} fontSize={fs}
+        fontFamily="Georgia,serif" fontWeight="bold">{text}</text>
+    </g>
+  )
+}
+
 function Marker({ x, y, label }) {
   if (!label) return null
   const w = Math.max((label?.length ?? 0) * 5.8 + 10, 34)
@@ -81,13 +96,13 @@ function StairRect({ x, y, w = 78, h = 56 }) {
   )
 }
 
-function FooterEntrance({ y = 322, totalH = 360 }) {
+function FooterEntrance({ y = 316, totalH = 360 }) {
   return (
     <>
       <rect x="4" y={y} width="492" height={totalH - y - 4} fill={WALL}/>
-      <path d={`M 218 ${y+16} L 218 ${y} Q 250 ${y-12} 282 ${y} L 282 ${y+16}`}
+      <path d={`M 222 ${y+14} L 222 ${y} Q 250 ${y-11} 278 ${y} L 278 ${y+14}`}
         fill="#c8a850" stroke={INK} strokeWidth="1.5"/>
-      <text x="250" y={y+12} textAnchor="middle" fill="#e8c870" fontSize="9"
+      <text x="250" y={y+11} textAnchor="middle" fill="#e8c870" fontSize="9"
         fontFamily="Georgia,serif" fontWeight="bold">▼ Eingang</text>
     </>
   )
@@ -122,52 +137,46 @@ export function FloorKeller({ marker, interactive = false, puzzleState, puzzleWr
   return (
     <Frame p="fk" title="Keller – Die Pforte" svgStyle={svgStyle}>
       {/* Linkes Panel: Stein */}
-      <rect x="14" y="43" width="176" height="271" fill="#c0b8a8" stroke={INK} strokeWidth="1.5"/>
-      <rect x="20" y="49" width="164" height="259" fill="#c8c0b0"/>
+      <rect x="14" y="43" width="176" height="265" fill="#c0b8a8" stroke={INK} strokeWidth="1.5"/>
+      <rect x="20" y="49" width="164" height="253" fill="#c8c0b0"/>
 
       {/* Gedicht-Tafel */}
-      <rect x="30" y="62" width="148" height="148" fill="#d4c8a8" stroke={INK} strokeWidth="2" rx="2"/>
-      <rect x="38" y="70" width="132" height="132" fill="#dcd0b4" stroke={INKM} strokeWidth="0.8"/>
-      <Lbl x="104" y="88" text="Gedicht-Tafel" fs={10} bold fill={INK}/>
-      {[106,120,134,148,162,176].map((lineY, i) => (
+      <rect x="30" y="60" width="148" height="142" fill="#d4c8a8" stroke={INK} strokeWidth="2" rx="2"/>
+      <rect x="38" y="68" width="132" height="126" fill="#dcd0b4" stroke={INKM} strokeWidth="0.8"/>
+      {[100,114,128,142,156,170].map((lineY, i) => (
         <line key={i} x1={46} y1={lineY} x2={162} y2={lineY}
           stroke={INKM} strokeWidth="0.8" opacity="0.5"/>
       ))}
-      <Lbl x="104" y="196" text="(In Stein gemeißelt)" fs={8} fill={INKL}/>
+      <Lbl x="104" y="188" text="(In Stein gemeißelt)" fs={8} fill={INKL}/>
+      <Plaque cx={104} cy={82} text="Gedicht-Tafel" fs={9.5}/>
 
       {/* Treppe (links unten) */}
-      <StairRect x="34" y="230" w="148" h="68"/>
-      <Lbl x="108" y="312" text="▲ Treppe" fs={9.5} bold fill={INK}/>
+      <StairRect x="34" y="226" w="148" h="64"/>
+      <Plaque cx={108} cy={300} text="▲ Treppe" fs={9}/>
 
       {/* Rechtes Panel: Gold */}
-      <rect x="192" y="43" width="294" height="271" fill="#d4c070" stroke={INK} strokeWidth="1.5"/>
-      <rect x="198" y="49" width="282" height="259" fill="#dcca7a"/>
+      <rect x="192" y="43" width="294" height="265" fill="#d4c070" stroke={INK} strokeWidth="1.5"/>
+      <rect x="198" y="49" width="282" height="253" fill="#dcca7a"/>
 
       {/* Versiegelte Tür – Steinrahmen */}
-      <rect x="292" y="60" width="106" height="196" fill="#5a4010" stroke={INK} strokeWidth="2.5" rx="1"/>
-      {/* Holzoberfläche */}
-      <rect x="300" y="68" width="90" height="182" fill="#c09030" stroke={INKM} strokeWidth="1.2"/>
-      {/* Holzplanken */}
-      {[92,112,132,152,172,192,212,232].map(lineY => (
+      <rect x="292" y="58" width="106" height="196" fill="#5a4010" stroke={INK} strokeWidth="2.5" rx="1"/>
+      <rect x="300" y="66" width="90" height="182" fill="#c09030" stroke={INKM} strokeWidth="1.2"/>
+      {[90,110,130,150,170,190,210,230].map(lineY => (
         <line key={lineY} x1={302} y1={lineY} x2={388} y2={lineY}
           stroke="#8a6010" strokeWidth="0.8" opacity="0.7"/>
       ))}
-      {/* Bogen */}
-      <path d="M 300 88 Q 345 58 390 88" fill="#5a4010" stroke={INK} strokeWidth="2"/>
-      <path d="M 306 92 Q 345 66 384 92" fill="#d09040" stroke={INKM} strokeWidth="1"/>
-      {/* Schloss */}
-      <rect x="326" y="136" width="44" height="28" fill="#9a8030" stroke={INK} strokeWidth="1.2" rx="2"/>
-      <rect x="330" y="140" width="36" height="20" fill="#b09840" rx="1"/>
-      {/* Knauf */}
-      <circle cx="380" cy="155" r="7" fill={GOLD} stroke={INK} strokeWidth="1.3"/>
-      <circle cx="380" cy="155" r="4" fill="#e0b030"/>
-      {/* Eisenbeschläge */}
-      {[[296,80],[296,150],[388,80],[388,150]].map(([bx,by],i) => (
+      <path d="M 300 86 Q 345 56 390 86" fill="#5a4010" stroke={INK} strokeWidth="2"/>
+      <path d="M 306 90 Q 345 64 384 90" fill="#d09040" stroke={INKM} strokeWidth="1"/>
+      <rect x="326" y="134" width="44" height="28" fill="#9a8030" stroke={INK} strokeWidth="1.2" rx="2"/>
+      <rect x="330" y="138" width="36" height="20" fill="#b09840" rx="1"/>
+      <circle cx="380" cy="153" r="7" fill={GOLD} stroke={INK} strokeWidth="1.3"/>
+      <circle cx="380" cy="153" r="4" fill="#e0b030"/>
+      {[[296,78],[296,148],[388,78],[388,148]].map(([bx,by],i) => (
         <rect key={i} x={bx} y={by} width="6" height="50" fill="#5a5040" stroke={INK} strokeWidth="0.7" rx="1"/>
       ))}
-      <Lbl x="345" y="274" text="Versiegelte Pforte" fs={9} bold fill={INK}/>
+      <Plaque cx={345} cy={272} text="Versiegelte Pforte" fs={9}/>
       {interactive && !solved && (
-        <Lbl x="345" y="286" text="Symbole in richtiger Reihenfolge wählen" fs={7} fill={INKM}/>
+        <Lbl x="345" y="292" text="Symbole in richtiger Reihenfolge wählen" fs={7.5} fill={INKM}/>
       )}
 
       {/* Jahreszeiten-Kreise (klickbar) */}
@@ -183,20 +192,20 @@ export function FloorKeller({ marker, interactive = false, puzzleState, puzzleWr
             <circle cx={cx} cy={cy} r="28" fill="none" stroke="#5a8a30" strokeWidth="1.5" opacity="0.3"/>
           )}
           <text x={cx} y={cy+8} textAnchor="middle" fontSize="20">{sym}</text>
-          <Lbl x={cx} y={cy+42} text={label} fs={9} fill={INKM}/>
+          <Plaque cx={cx} cy={cy+40} text={label} fs={8.5}/>
         </g>
       ))}
 
       {/* Gelöst-Overlay */}
       {solved && (
         <>
-          <rect x="300" y="68" width="90" height="182" fill="#d4f0a0" opacity="0.6"/>
-          <Lbl x="345" y="165" text="OFFEN" fs={16} bold fill="#3a7a14"/>
+          <rect x="300" y="66" width="90" height="182" fill="#d4f0a0" opacity="0.6"/>
+          <Lbl x="345" y="163" text="OFFEN" fs={16} bold fill="#3a7a14"/>
         </>
       )}
 
-      <FooterEntrance y={322} totalH={360}/>
-      {marker && <Marker x={345} y={162} label={marker.label}/>}
+      <FooterEntrance y={316} totalH={360}/>
+      {marker && <Marker x={345} y={160} label={marker.label}/>}
     </Frame>
   )
 }
@@ -208,8 +217,8 @@ const BOOK_COLS = ['#8a3010','#2a4870','#2a5820','#5a2870','#b86010','#3a5060','
 export function FloorBibliothek({ marker, svgStyle }) {
   return (
     <Frame p="fb" title="Bibliothek" svgStyle={svgStyle}>
-      <rect x="14" y="43" width="472" height="271" fill="#d8c880" stroke={INK} strokeWidth="1.5"/>
-      <rect x="24" y="53" width="452" height="261" fill="#e4d090"/>
+      <rect x="14" y="43" width="472" height="265" fill="#d8c880" stroke={INK} strokeWidth="1.5"/>
+      <rect x="24" y="53" width="452" height="255" fill="#e4d090"/>
 
       {/* NORDWAND – Vollregal mit Lücke */}
       <rect x="24" y="53" width="452" height="36" fill="#8a5c20" stroke={INK} strokeWidth="1.5"/>
@@ -222,52 +231,51 @@ export function FloorBibliothek({ marker, svgStyle }) {
       <Lbl x="253" y="75" text="LÜCKE" fs={8} bold fill={WALL}/>
 
       {/* WESTWAND – Regal */}
-      <rect x="24" y="89" width="32" height="193" fill="#8a5c20" stroke={INK} strokeWidth="1.5"/>
-      {Array.from({length: 10}, (_, i) => (
+      <rect x="24" y="89" width="32" height="180" fill="#8a5c20" stroke={INK} strokeWidth="1.5"/>
+      {Array.from({length: 9}, (_, i) => (
         <line key={i} x1="24" y1={91+i*19} x2="56" y2={91+i*19} stroke={INKM} strokeWidth="0.6"/>
       ))}
 
       {/* OSTWAND – Regal + Tagebuch */}
-      <rect x="444" y="89" width="32" height="130" fill="#8a5c20" stroke={INK} strokeWidth="1.5"/>
+      <rect x="444" y="89" width="32" height="124" fill="#8a5c20" stroke={INK} strokeWidth="1.5"/>
       {Array.from({length: 7}, (_, i) => (
-        <line key={i} x1="444" y1={91+i*19} x2="476" y2={91+i*19} stroke={INKM} strokeWidth="0.6"/>
+        <line key={i} x1="444" y1={91+i*18} x2="476" y2={91+i*18} stroke={INKM} strokeWidth="0.6"/>
       ))}
-      <rect x="444" y="222" width="32" height="60" fill={RED} stroke={INK} strokeWidth="1.8"/>
-      <rect x="448" y="226" width="24" height="52" fill="#9a1818"/>
-      <rect x="449" y="248" width="22" height="4" fill={GOLD} stroke={INK} strokeWidth="0.6"/>
+      <rect x="444" y="216" width="32" height="56" fill={RED} stroke={INK} strokeWidth="1.8"/>
+      <rect x="448" y="220" width="24" height="48" fill="#9a1818"/>
+      <rect x="449" y="240" width="22" height="4" fill={GOLD} stroke={INK} strokeWidth="0.6"/>
       {/* Tagebuch-Label mit Pfeil */}
-      <rect x="386" y="92" width="56" height="20" fill="#fff0e0" stroke={RED} strokeWidth="1" rx="2"/>
-      <Lbl x="414" y="106" text="Tagebuch" fs={8.5} bold fill={RED}/>
-      <line x1="440" y1="112" x2="458" y2="228" stroke={RED} strokeWidth="1" strokeDasharray="3,2"/>
+      <line x1="440" y1="113" x2="458" y2="220" stroke={RED} strokeWidth="1" strokeDasharray="3,2"/>
+      <Plaque cx={413} cy={103} text="Tagebuch" fs={8.5} fill={RED} plate="#fff0e0"/>
 
       {/* LESETISCH */}
-      <rect x="88" y="108" width="252" height="100" fill="#c09040" stroke={INK} strokeWidth="2" rx="2"/>
-      <rect x="95" y="115" width="238" height="86"  fill="#ccaa48" stroke={INKM} strokeWidth="0.9" rx="1"/>
-      <rect x="102" y="120" width="28" height="38" fill="#6a2010" stroke={INK} strokeWidth="0.7" rx="1"/>
-      <rect x="106" y="124" width="20" height="30" fill="#7a2818" rx="1"/>
-      <rect x="148" y="122" width="60" height="36" fill="#d8c870" stroke={INK} strokeWidth="0.8" rx="1"/>
+      <rect x="88" y="106" width="252" height="96" fill="#c09040" stroke={INK} strokeWidth="2" rx="2"/>
+      <rect x="95" y="113" width="238" height="82"  fill="#ccaa48" stroke={INKM} strokeWidth="0.9" rx="1"/>
+      <rect x="102" y="118" width="28" height="36" fill="#6a2010" stroke={INK} strokeWidth="0.7" rx="1"/>
+      <rect x="106" y="122" width="20" height="28" fill="#7a2818" rx="1"/>
+      <rect x="148" y="120" width="58" height="34" fill="#d8c870" stroke={INK} strokeWidth="0.8" rx="1"/>
       {/* Kerze */}
-      <rect x="300" y="116" width="8" height="20" fill="#f0e8c0" stroke={INKM} strokeWidth="0.7"/>
-      <ellipse cx="304" cy="113" rx="5" ry="3.5" fill="#f0c020" opacity="0.85"/>
-      <ellipse cx="304" cy="111" rx="3" ry="5"   fill="#ff9010" opacity="0.7"/>
-      <Lbl x="214" y="165" text="Lesetisch" fs={11} bold fill={INK}/>
+      <rect x="300" y="114" width="8" height="20" fill="#f0e8c0" stroke={INKM} strokeWidth="0.7"/>
+      <ellipse cx="304" cy="111" rx="5" ry="3.5" fill="#f0c020" opacity="0.85"/>
+      <ellipse cx="304" cy="109" rx="3" ry="5"   fill="#ff9010" opacity="0.7"/>
+      <Plaque cx={214} cy={178} text="Lesetisch" fs={10}/>
 
       {/* TREPPE */}
-      <StairRect x="36" y="236" w="80" h="60"/>
-      <Lbl x="76" y="310" text="▲ Treppe" fs={9.5} bold fill={INK}/>
+      <StairRect x="36" y="228" w="80" h="58"/>
+      <Plaque cx={76} cy={300} text="▲ Treppe" fs={9}/>
 
       {/* ALDRICS NOTIZEN (Schriftrolle) */}
-      <rect x="332" y="234" width="106" height="76" fill="#e0cf9a" stroke={INK} strokeWidth="1.5" rx="4"/>
-      <rect x="338" y="240" width="94"  height="64" fill="#e8d8a8" stroke={INKM} strokeWidth="0.7" rx="2"/>
-      <ellipse cx="338" cy="272" rx="7" ry="32" fill="#d8c888" stroke={INKM} strokeWidth="0.7"/>
-      <ellipse cx="438" cy="272" rx="7" ry="32" fill="#d8c888" stroke={INKM} strokeWidth="0.7"/>
-      <Lbl x="388" y="260" text="Aldrics" fs={10} bold fill={INK}/>
-      <Lbl x="388" y="274" text="Notizen" fs={9}  fill={INKM}/>
-      <line x1="352" y1="286" x2="424" y2="286" stroke={INKM} strokeWidth="0.7" opacity="0.6"/>
-      <line x1="352" y1="296" x2="410" y2="296" stroke={INKM} strokeWidth="0.7" opacity="0.6"/>
+      <rect x="332" y="226" width="106" height="74" fill="#e0cf9a" stroke={INK} strokeWidth="1.5" rx="4"/>
+      <rect x="338" y="232" width="94"  height="62" fill="#e8d8a8" stroke={INKM} strokeWidth="0.7" rx="2"/>
+      <ellipse cx="338" cy="263" rx="7" ry="31" fill="#d8c888" stroke={INKM} strokeWidth="0.7"/>
+      <ellipse cx="438" cy="263" rx="7" ry="31" fill="#d8c888" stroke={INKM} strokeWidth="0.7"/>
+      <Lbl x="388" y="252" text="Aldrics" fs={10} bold fill={INK}/>
+      <Lbl x="388" y="266" text="Notizen" fs={9}  fill={INKM}/>
+      <line x1="352" y1="278" x2="424" y2="278" stroke={INKM} strokeWidth="0.7" opacity="0.6"/>
+      <line x1="352" y1="288" x2="410" y2="288" stroke={INKM} strokeWidth="0.7" opacity="0.6"/>
 
-      <FooterEntrance y={322} totalH={360}/>
-      {marker && <Marker x={214} y={152} label={marker.label}/>}
+      <FooterEntrance y={316} totalH={360}/>
+      {marker && <Marker x={214} y={150} label={marker.label}/>}
     </Frame>
   )
 }
@@ -277,73 +285,67 @@ export function FloorBibliothek({ marker, svgStyle }) {
 export function FloorLabor({ marker, svgStyle }) {
   return (
     <Frame p="fl" title="Labor" svgStyle={svgStyle}>
-      <rect x="14" y="43" width="472" height="271" fill="#d0c076" stroke={INK} strokeWidth="1.5"/>
-      <rect x="24" y="53" width="452" height="261" fill="#dac880"/>
+      <rect x="14" y="43" width="472" height="265" fill="#d0c076" stroke={INK} strokeWidth="1.5"/>
+      <rect x="24" y="53" width="452" height="255" fill="#dac880"/>
 
       {/* 3 WERKBÄNKE oben */}
       {[
-        { x:28,  label:'Tisch 1', active:false },
-        { x:182, label:'Tisch 2', active:false },
-        { x:336, label:'Tisch 3', active:true  },
+        { x:28,  label:'Tisch 1',         active:false },
+        { x:182, label:'Tisch 2',         active:false },
+        { x:336, label:'Tisch 3 (aktiv)', active:true  },
       ].map(({ x, label, active }) => (
         <g key={label}>
-          <rect x={x} y="57" width="134" height="52"
+          <rect x={x} y="57" width="134" height="50"
             fill={active ? '#c8b840' : '#a89030'}
             stroke={active ? GOLD : INK} strokeWidth={active ? 2.5 : 1.5} rx="1"/>
           {active && (
-            <rect x={x} y="57" width="134" height="52"
+            <rect x={x} y="57" width="134" height="50"
               fill="none" stroke={GOLD} strokeWidth="2" opacity="0.5"/>
           )}
           {[0,1,2,3].map(i => (
             <g key={i}>
-              <rect x={x+12+i*28} y="62" width="10" height="28" rx="1"
+              <rect x={x+12+i*28} y="61" width="10" height="26" rx="1"
                 fill={active ? ['#a0c8d8','#d07838','#60a060','#c8a030'][i] : '#b0a060'}
                 stroke={INK} strokeWidth="0.7"/>
-              <ellipse cx={x+17+i*28} cy="62" rx="5" ry="2.5"
+              <ellipse cx={x+17+i*28} cy="61" rx="5" ry="2.5"
                 fill={active ? '#e0f0f8' : '#c0b080'} stroke={INK} strokeWidth="0.5"/>
             </g>
           ))}
-          <Lbl x={x+67} y={active ? 126 : 122} text={label} fs={active ? 10.5 : 9.5}
-            fill={active ? GOLD : INKM} bold={active}/>
-          {active && <Lbl x={x+67} y="138" text="— aktiv —" fs={8.5} fill={GOLD}/>}
+          <Plaque cx={x+67} cy={active ? 122 : 120} text={label} fs={9}
+            fill={active ? '#7a5008' : INKM}/>
         </g>
       ))}
 
       {/* KESSEL (rechts, groß) */}
-      <ellipse cx="400" cy="218" rx="60" ry="56" fill="#9a8828" stroke={INK} strokeWidth="2"/>
-      <ellipse cx="400" cy="218" rx="50" ry="46" fill="#b0a030" stroke={GOLD} strokeWidth="1.5"/>
-      <ellipse cx="400" cy="206" rx="34" ry="16" fill="#6098b8" stroke={BLUE} strokeWidth="1.2"/>
-      <ellipse cx="400" cy="206" rx="26" ry="10" fill="#80b8d8" opacity="0.6"/>
-      <path d="M 340 214 Q 326 214 326 202 Q 326 190 340 190" fill="none" stroke={INK} strokeWidth="3"/>
-      <path d="M 460 190 Q 474 190 474 202 Q 474 214 460 214" fill="none" stroke={INK} strokeWidth="3"/>
-      {[[-12,-10],[0,-14],[12,-10]].map(([dx,dy],i) => (
-        <path key={i}
-          d={`M ${400+dx} ${162+dy} Q ${400+dx-5} ${152+dy} ${400+dx+4} ${142+dy}`}
-          fill="none" stroke="#aaa" strokeWidth="1.5" opacity="0.5" strokeDasharray="3,2"/>
-      ))}
-      <Lbl x="400" y="226" text="Kessel" fs={10.5} bold fill={INK}/>
+      <ellipse cx="400" cy="216" rx="58" ry="54" fill="#9a8828" stroke={INK} strokeWidth="2"/>
+      <ellipse cx="400" cy="216" rx="48" ry="44" fill="#b0a030" stroke={GOLD} strokeWidth="1.5"/>
+      <ellipse cx="400" cy="205" rx="33" ry="15" fill="#6098b8" stroke={BLUE} strokeWidth="1.2"/>
+      <ellipse cx="400" cy="205" rx="25" ry="9" fill="#80b8d8" opacity="0.6"/>
+      <path d="M 342 212 Q 328 212 328 200 Q 328 188 342 188" fill="none" stroke={INK} strokeWidth="3"/>
+      <path d="M 458 188 Q 472 188 472 200 Q 472 212 458 212" fill="none" stroke={INK} strokeWidth="3"/>
+      <Plaque cx={400} cy={242} text="Kessel" fs={9.5}/>
 
       {/* ZUTATENTISCH */}
-      <rect x="28" y="152" width="200" height="82" fill="#b09028" stroke={INK} strokeWidth="1.5" rx="2"/>
-      <rect x="34" y="158" width="188" height="70" fill="#bca030" rx="1"/>
-      <Lbl x="128" y="178" text="Zutatentisch" fs={10} bold fill={INK}/>
+      <rect x="28" y="150" width="200" height="76" fill="#b09028" stroke={INK} strokeWidth="1.5" rx="2"/>
+      <rect x="34" y="156" width="188" height="64" fill="#bca030" rx="1"/>
       {[0,1,2].map(i => (
-        <circle key={i} cx={60+i*64} cy="208" r="18"
+        <circle key={i} cx={60+i*64} cy="200" r="17"
           fill={['#b8c0a0','#98b0c0','#a8c098'][i]} stroke={INK} strokeWidth="1.2"/>
       ))}
+      <Plaque cx={128} cy={170} text="Zutatentisch" fs={9.5}/>
 
       {/* REZEPT-NOTIZ */}
-      <rect x="28" y="250" width="150" height="52" fill="#ddd0a0" stroke={INK} strokeWidth="1.2" rx="2"/>
-      <rect x="33" y="255" width="140" height="42" fill="#e4d8a8" rx="1"/>
-      <Lbl x="103" y="272" text="Rezept-Notiz" fs={9.5} bold fill={INK}/>
-      <Lbl x="103" y="288" text="(vergilbt, kaum lesbar)" fs={8} fill={INKL}/>
+      <rect x="28" y="240" width="148" height="50" fill="#ddd0a0" stroke={INK} strokeWidth="1.2" rx="2"/>
+      <rect x="33" y="245" width="138" height="40" fill="#e4d8a8" rx="1"/>
+      <Lbl x="102" y="262" text="Rezept-Notiz" fs={9.5} bold fill={INK}/>
+      <Lbl x="102" y="277" text="(vergilbt, kaum lesbar)" fs={7.5} fill={INKL}/>
 
       {/* TREPPE */}
-      <StairRect x="196" y="250" w="80" h="52"/>
-      <Lbl x="236" y="316" text="▲ Treppe" fs={9.5} bold fill={INK}/>
+      <StairRect x="300" y="240" w="76" h="50"/>
+      <Plaque cx={338} cy={277} text="▲ Treppe" fs={9}/>
 
-      <FooterEntrance y={322} totalH={360}/>
-      {marker && <Marker x={210} y={218} label={marker.label}/>}
+      <FooterEntrance y={316} totalH={360}/>
+      {marker && <Marker x={210} y={216} label={marker.label}/>}
     </Frame>
   )
 }
@@ -351,59 +353,57 @@ export function FloorLabor({ marker, svgStyle }) {
 // ── Spiegelkammer ─────────────────────────────────────────────────────────────
 
 const SPIEGEL_MIRRORS = [
-  {id:'S1', x:30,  y:56,  w:100, h:72},
-  {id:'S2', x:138, y:56,  w:100, h:72},
-  {id:'S3', x:262, y:56,  w:100, h:72},
-  {id:'S4', x:370, y:56,  w:100, h:72},
-  {id:'S5', x:30,  y:140, w:80,  h:86},
-  {id:'S6', x:30,  y:234, w:80,  h:60},
-  {id:'S7', x:390, y:140, w:80,  h:86},
-  {id:'S8', x:390, y:234, w:80,  h:60},
+  {id:'S1', x:30,  y:54,  w:100, h:72},
+  {id:'S2', x:138, y:54,  w:100, h:72},
+  {id:'S3', x:262, y:54,  w:100, h:72},
+  {id:'S4', x:370, y:54,  w:100, h:72},
+  {id:'S5', x:30,  y:140, w:80,  h:80},
+  {id:'S6', x:30,  y:232, w:80,  h:56},
+  {id:'S7', x:390, y:140, w:80,  h:80},
+  {id:'S8', x:390, y:232, w:80,  h:56},
 ]
 
 export function FloorSpiegel({ marker, svgStyle }) {
   return (
     <Frame p="fsp" title="Spiegelkammer" svgStyle={svgStyle}>
       {/* Boden mit Fliesenmuster */}
-      <rect x="14" y="43" width="472" height="271" fill="#c8c0a0" stroke={INK} strokeWidth="1.5"/>
-      <rect x="24" y="53" width="452" height="261" fill="#d4cca8"/>
+      <rect x="14" y="43" width="472" height="265" fill="#c8c0a0" stroke={INK} strokeWidth="1.5"/>
+      <rect x="24" y="53" width="452" height="255" fill="#d4cca8"/>
       {Array.from({length: 8},  (_, i) => (
-        <line key={`h${i}`} x1="24" y1={53+i*33} x2="476" y2={53+i*33}
-          stroke="#beb898" strokeWidth="0.6" opacity="0.7"/>
+        <line key={`h${i}`} x1="24" y1={53+i*32} x2="476" y2={53+i*32}
+          stroke="#beb898" strokeWidth="0.6" opacity="0.6"/>
       ))}
       {Array.from({length: 14}, (_, i) => (
-        <line key={`v${i}`} x1={24+i*33} y1="53" x2={24+i*33} y2="314"
-          stroke="#beb898" strokeWidth="0.6" opacity="0.7"/>
+        <line key={`v${i}`} x1={24+i*33} y1="53" x2={24+i*33} y2="308"
+          stroke="#beb898" strokeWidth="0.6" opacity="0.6"/>
       ))}
 
-      {/* 8 SPIEGEL */}
+      {/* 8 SPIEGEL – Label als Plakette IM Glas (keine Kollision) */}
       {SPIEGEL_MIRRORS.map(({ id, x, y, w, h }) => (
         <g key={id}>
           <rect x={x}   y={y}   width={w}    height={h}    fill="#8a7040" stroke={INK}  strokeWidth="2" rx="1"/>
           <rect x={x+5} y={y+5} width={w-10} height={h-10} fill="#9a8050" stroke={INKM} strokeWidth="0.8"/>
           <rect x={x+9} y={y+9} width={w-18} height={h-18} fill="#c8d0c0" stroke={INKM} strokeWidth="0.5" rx="1"/>
-          <line x1={x+13} y1={y+13} x2={x+13+Math.min(22,w-24)} y2={y+13+Math.min(18,h-24)}
-            stroke="white" strokeWidth="2.5" opacity="0.55"/>
-          <line x1={x+13} y1={y+23} x2={x+13+Math.min(14,w-24)} y2={y+23+Math.min(10,h-36)}
-            stroke="white" strokeWidth="1.5" opacity="0.3"/>
-          <Lbl x={x+w/2} y={y+h+15} text={id} fs={9.5} fill={INKM} bold/>
+          <line x1={x+14} y1={y+15} x2={x+14+Math.min(20,w-28)} y2={y+15+Math.min(16,h-28)}
+            stroke="white" strokeWidth="2.5" opacity="0.5"/>
+          <Plaque cx={x+w/2} cy={y+h-13} text={id} fs={9.5} plate="#e8ecd8"/>
         </g>
       ))}
 
       {/* TRUHE */}
-      <rect x="258" y="240" width="110" height="62" fill="#c8a860" stroke={INK} strokeWidth="1.8" rx="1"/>
-      <rect x="258" y="240" width="110" height="24" fill="#b89848" stroke={INK} strokeWidth="1"/>
-      <rect x="296" y="236" width="34"  height="12" fill="#9a8030" stroke={INK} strokeWidth="1.2" rx="1"/>
-      <circle cx="313" cy="272" r="8" fill={GOLD} stroke={INK} strokeWidth="1.3"/>
-      <circle cx="313" cy="272" r="4" fill="#e0a030"/>
-      <Lbl x="313" y="316" text="Truhe" fs={9.5} bold fill={INK}/>
+      <rect x="262" y="238" width="106" height="58" fill="#c8a860" stroke={INK} strokeWidth="1.8" rx="1"/>
+      <rect x="262" y="238" width="106" height="22" fill="#b89848" stroke={INK} strokeWidth="1"/>
+      <rect x="298" y="234" width="34"  height="12" fill="#9a8030" stroke={INK} strokeWidth="1.2" rx="1"/>
+      <circle cx="315" cy="270" r="8" fill={GOLD} stroke={INK} strokeWidth="1.3"/>
+      <circle cx="315" cy="270" r="4" fill="#e0a030"/>
+      <Plaque cx={315} cy={283} text="Truhe" fs={9}/>
 
       {/* TREPPE */}
-      <StairRect x="140" y="240" w="84" h="58"/>
-      <Lbl x="182" y="314" text="▲ Treppe" fs={9.5} bold fill={INK}/>
+      <StairRect x="150" y="238" w="84" h="52"/>
+      <Plaque cx={192} cy={283} text="▲ Treppe" fs={9}/>
 
-      <FooterEntrance y={322} totalH={360}/>
-      {marker && <Marker x={250} y={194} label={marker.label}/>}
+      <FooterEntrance y={316} totalH={360}/>
+      {marker && <Marker x={250} y={190} label={marker.label}/>}
     </Frame>
   )
 }
@@ -422,54 +422,52 @@ const ARCHIV_CRYSTALS = [
 ]
 
 export function FloorArchiv({ marker, svgStyle }) {
-  const CX = 250, CY = 190, R = 112, DH = 28, DW = 18
+  const CX = 250, CY = 186, R = 100, DH = 24, DW = 16
 
   return (
     <Frame p="fa" title="Archiv der Stimmen" svgStyle={svgStyle} h={380}>
-      <rect x="14" y="43" width="472" height="299" fill="#c4b870" stroke={INK} strokeWidth="1.5"/>
-      <rect x="24" y="53" width="452" height="289" fill="#d0c278"/>
-      <circle cx={CX} cy={CY} r={R}    fill="none" stroke={INKM} strokeWidth="1.2" strokeDasharray="8,5" opacity="0.5"/>
-      <circle cx={CX} cy={CY} r={R+22} fill="none" stroke={INKM} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="14" y="43" width="472" height="293" fill="#c4b870" stroke={INK} strokeWidth="1.5"/>
+      <rect x="24" y="53" width="452" height="283" fill="#d0c278"/>
+      <circle cx={CX} cy={CY} r={R} fill="none" stroke={INKM} strokeWidth="1.2" strokeDasharray="8,5" opacity="0.5"/>
 
-      {/* 8 KRISTALLE */}
+      {/* 8 KRISTALLE – Namen als Plaketten radial nach außen */}
       {[0,45,90,135,180,225,270,315].map((angle, i) => {
         const rad = (angle - 90) * Math.PI / 180
-        const px  = CX + R * Math.cos(rad)
-        const py  = CY + R * Math.sin(rad)
+        const ux  = Math.cos(rad), uy = Math.sin(rad)
+        const px  = CX + R * ux
+        const py  = CY + R * uy
         const { c, stroke, n } = ARCHIV_CRYSTALS[i]
-        const lx = px + (px < CX - 20 ? -38 : px > CX + 20 ? 38 : 0)
-        const ly = py + (py < CY - 20 ? -14 : py > CY + 20 ? 16 : 4)
-        const la = px < CX - 20 ? 'end' : px > CX + 20 ? 'start' : 'middle'
+        const lx = px + ux * 40
+        const ly = py + uy * 40 + 3
         return (
           <g key={i}>
-            <rect x={px-14} y={py+DH} width="28" height="11" fill="#9a8830" stroke={INK} strokeWidth="1"/>
+            <rect x={px-13} y={py+DH} width="26" height="10" fill="#9a8830" stroke={INK} strokeWidth="1"/>
             <polygon
               points={`${px},${py-DH} ${px+DW},${py} ${px},${py+DH} ${px-DW},${py}`}
               fill={c} stroke={stroke} strokeWidth="1.8" opacity="0.97"/>
             <polygon
-              points={`${px},${py-DH+8} ${px+DW-9},${py} ${px},${py-8} ${px-DW+11},${py-10}`}
+              points={`${px},${py-DH+7} ${px+DW-8},${py} ${px},${py-7} ${px-DW+10},${py-9}`}
               fill="white" opacity="0.25"/>
-            <text x={lx} y={ly} textAnchor={la} fill={INK} fontSize="8.5"
-              fontFamily="Georgia,serif" fontWeight="bold">{n}</text>
+            <Plaque cx={lx} cy={ly} text={n} fs={8.5}/>
           </g>
         )
       })}
 
       {/* ZENTRUM-ALTAR */}
-      <circle cx={CX} cy={CY} r="40" fill="#c4a840" stroke={INK} strokeWidth="2.5"/>
-      <circle cx={CX} cy={CY} r="30" fill="#d4b848" stroke={INKM} strokeWidth="1.2"/>
-      <circle cx={CX} cy={CY} r="14" fill={GOLD}    stroke={INK}  strokeWidth="1.5" opacity="0.9"/>
-      <Lbl x={CX} y={CY+5} text="Altar" fs={11} bold fill={INK}/>
+      <circle cx={CX} cy={CY} r="36" fill="#c4a840" stroke={INK} strokeWidth="2.5"/>
+      <circle cx={CX} cy={CY} r="27" fill="#d4b848" stroke={INKM} strokeWidth="1.2"/>
+      <circle cx={CX} cy={CY} r="13" fill={GOLD}    stroke={INK}  strokeWidth="1.5" opacity="0.9"/>
+      <Lbl x={CX} y={CY+4} text="Altar" fs={10} bold fill={INK}/>
 
       {/* Sanctum-Hinweis */}
-      <rect x="400" y="55" width="70" height="22" fill="#c8a860" stroke={INK} strokeWidth="1.2" rx="1"/>
-      <Lbl x="435" y="70" text="↑ Sanctum" fs={9} bold fill={INK}/>
+      <rect x="400" y="56" width="72" height="22" fill="#c8a860" stroke={INK} strokeWidth="1.2" rx="2"/>
+      <Lbl x="436" y="71" text="↑ Sanctum" fs={9} bold fill={INK}/>
 
       {/* Treppe */}
-      <StairRect x="30" y="278" w="70" h="42"/>
-      <Lbl x="65" y="334" text="▲ Treppe" fs={9} bold fill={INK}/>
+      <StairRect x="30" y="290" w="68" h="38"/>
+      <Plaque cx={64} cy={318} text="▲ Treppe" fs={8.5}/>
 
-      <FooterEntrance y={342} totalH={380}/>
+      <FooterEntrance y={340} totalH={380}/>
       {marker && <Marker x={CX} y={CY} label={marker.label}/>}
     </Frame>
   )
@@ -478,17 +476,17 @@ export function FloorArchiv({ marker, svgStyle }) {
 // ── Sanctum ───────────────────────────────────────────────────────────────────
 
 export function FloorSanctum({ marker, svgStyle }) {
-  const CX = 250, CY = 180, RX = 210, RY = 140, CR = 90
+  const CX = 250, CY = 176, RX = 212, RY = 132, CR = 86
 
   return (
     <Frame p="fn" title="Das Sanctum" svgStyle={svgStyle} h={380}>
       {/* Dunkle Außenwand */}
-      <rect x="14" y="43" width="472" height="299" fill={WALL} stroke={INK} strokeWidth="1.5"/>
+      <rect x="14" y="43" width="472" height="293" fill={WALL} stroke={INK} strokeWidth="1.5"/>
       {/* Elliptischer Raum */}
       <ellipse cx={CX} cy={CY} rx={RX} ry={RY} fill="#d0b860" stroke={INK} strokeWidth="3"/>
       <ellipse cx={CX} cy={CY} rx={RX-6} ry={RY-6} fill="#d8c470"
         stroke={INKM} strokeWidth="0.8" strokeDasharray="5,3"/>
-      <ellipse cx={CX} cy={CY} rx={CR+26} ry={CR+18} fill="none"
+      <ellipse cx={CX} cy={CY} rx={CR+24} ry={CR+16} fill="none"
         stroke={INKM} strokeWidth="0.8" opacity="0.5"/>
 
       {/* 8 KERZEN */}
@@ -512,34 +510,33 @@ export function FloorSanctum({ marker, svgStyle }) {
       })}
 
       {/* ALTAR */}
-      <ellipse cx={CX} cy={CY} rx="50" ry="36" fill="#c0a040" stroke={INK}  strokeWidth="2.5"/>
-      <ellipse cx={CX} cy={CY} rx="38" ry="26" fill="#d0b050" stroke={INKM} strokeWidth="1.2"/>
+      <ellipse cx={CX} cy={CY} rx="48" ry="34" fill="#c0a040" stroke={INK}  strokeWidth="2.5"/>
+      <ellipse cx={CX} cy={CY} rx="36" ry="24" fill="#d0b050" stroke={INKM} strokeWidth="1.2"/>
 
       {/* AEGISSTEIN */}
-      <circle cx={CX} cy={CY} r="18" fill="#2a5070" stroke={INK} strokeWidth="2.2">
+      <circle cx={CX} cy={CY} r="17" fill="#2a5070" stroke={INK} strokeWidth="2.2">
         <animate attributeName="opacity" values="0.9;1;0.9" dur="2s" repeatCount="indefinite"/>
       </circle>
-      <circle cx={CX} cy={CY} r="13" fill="#3a6888"/>
-      <circle cx={CX} cy={CY} r="8"  fill="#6090b8"/>
-      <circle cx={CX} cy={CY} r="4"  fill="#90c0e0"/>
+      <circle cx={CX} cy={CY} r="12" fill="#3a6888"/>
+      <circle cx={CX} cy={CY} r="7"  fill="#6090b8"/>
+      <circle cx={CX} cy={CY} r="3.5" fill="#90c0e0"/>
       <circle cx={CX-3} cy={CY-3} r="2" fill="white" opacity="0.6"/>
-      <Lbl x={CX} y={CY+36} text="Aegisstein" fs={10.5} bold fill={INK}/>
+      <Plaque cx={CX} cy={CY+44} text="Aegisstein" fs={9.5}/>
 
       {/* KRISTALLKUGEL */}
-      <circle cx={CX+138} cy={CY}   r="20" fill="#d0e8f8" stroke={BLUE} strokeWidth="1.8" opacity="0.95"/>
-      <circle cx={CX+138} cy={CY}   r="14" fill="#b0d0f0" opacity="0.65"/>
-      <circle cx={CX+132} cy={CY-6} r="6"  fill="white"  opacity="0.45"/>
-      <Lbl x={CX+138} y={CY+30} text="Kristall-" fs={8.5} fill={BLUE}/>
-      <Lbl x={CX+138} y={CY+42} text="kugel"     fs={8.5} fill={BLUE}/>
+      <circle cx={CX+140} cy={CY-6} r="19" fill="#d0e8f8" stroke={BLUE} strokeWidth="1.8" opacity="0.95"/>
+      <circle cx={CX+140} cy={CY-6} r="13" fill="#b0d0f0" opacity="0.65"/>
+      <circle cx={CX+134} cy={CY-12} r="5" fill="white" opacity="0.45"/>
+      <Plaque cx={CX+140} cy={CY+22} text="Kristallkugel" fs={8} fill={BLUE}/>
 
       {/* Eingang (unten in Ellipse) */}
-      <path d={`M ${CX-34} ${CY+RY-4} L ${CX-34} ${CY+RY-28} Q ${CX} ${CY+RY-44} ${CX+34} ${CY+RY-28} L ${CX+34} ${CY+RY-4}`}
+      <path d={`M ${CX-32} ${CY+RY-4} L ${CX-32} ${CY+RY-26} Q ${CX} ${CY+RY-40} ${CX+32} ${CY+RY-26} L ${CX+32} ${CY+RY-4}`}
         fill="#b89030" stroke={INK} strokeWidth="2"/>
-      <Lbl x={CX} y={CY+RY+16} text="▼ Eingang" fs={9} bold fill="#e8d070"/>
+      <Lbl x={CX} y={CY+RY+18} text="▼ Eingang" fs={9} bold fill="#e8d070"/>
 
-      {/* Treppe (oben links, außerhalb der Ellipse, auf dunkler Wand) */}
-      <StairRect x="38" y="60" w="66" h="50"/>
-      <Lbl x="71" y="126" text="▲ Treppe" fs={9} bold fill="#e8d070"/>
+      {/* Treppe (oben links, auf dunkler Wand) */}
+      <StairRect x="40" y="300" w="62" h="28"/>
+      <Plaque cx={71} cy={322} text="▲ Treppe" fs={8.5}/>
 
       {marker && <Marker x={CX} y={CY} label={marker.label}/>}
     </Frame>
