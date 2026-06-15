@@ -1,0 +1,194 @@
+{
+  "id": "turm-des-magiers",
+  "title": "Turm des Magiers",
+  "description": "Der exzentrische Magier Aldric Vorn ist tot. Sein versiegelter Turm birgt ein mächtiges Artefakt — und ein Geheimnis.",
+  "dmPassword": "aldric",
+  "floors": [
+    {
+      "id": "keller",
+      "order": 0,
+      "label": "Keller – Die Pforte",
+      "description": "Der Eingang zum Turm. Eine schwere eisenbeschlagene Tür mit vier Symbolen der Jahreszeiten.",
+      "mapId": "floor-keller"
+    },
+    {
+      "id": "floor-1",
+      "order": 1,
+      "label": "Etage 1 – Bibliothek",
+      "description": "Deckenhohe Regale, ein Farbsystem, ein fehlendes Buch, und drei Teile eines Tagebuchs.",
+      "mapId": "floor-1"
+    },
+    {
+      "id": "floor-2",
+      "order": 2,
+      "label": "Etage 2 – Labor",
+      "description": "Drei Arbeitstische, ein brodelndes Experiment, und eine versteckte Vision.",
+      "mapId": "floor-2"
+    },
+    {
+      "id": "floor-3",
+      "order": 3,
+      "label": "Etage 3 – Spiegelkammer",
+      "description": "Acht Spiegel, jeder zeigt die Vergangenheit zu einem anderen Zeitpunkt.",
+      "mapId": "floor-3"
+    },
+    {
+      "id": "floor-4",
+      "order": 4,
+      "label": "Etage 4 – Archiv der Stimmen",
+      "description": "Kristalle mit aufgezeichneten Gesprächen — jeder Spieler hört eine andere.",
+      "mapId": "floor-4"
+    },
+    {
+      "id": "floor-5",
+      "order": 5,
+      "label": "Etage 5 – Sanctum",
+      "description": "Aldrics Geist stellt jedem Helden eine persönliche Frage. Das Erbe wartet.",
+      "mapId": "floor-5"
+    }
+  ],
+  "maps": [
+    { "id": "velmoor", "label": "Velmoor – Die Stadt", "renderer": "VelmoorMap" },
+    { "id": "tower", "label": "Der Turm – Übersicht", "renderer": "TowerMap" },
+    { "id": "floor-keller", "label": "Keller", "renderer": "FloorKeller" },
+    { "id": "floor-1", "label": "Bibliothek", "renderer": "FloorBibliothek" },
+    { "id": "floor-2", "label": "Labor", "renderer": "FloorLabor" },
+    { "id": "floor-3", "label": "Spiegelkammer", "renderer": "FloorSpiegel" },
+    { "id": "floor-4", "label": "Archiv", "renderer": "FloorArchiv" },
+    { "id": "floor-5", "label": "Sanctum", "renderer": "FloorSanctum" }
+  ],
+  "events": [
+    {
+      "id": "keller-eingang",
+      "floorId": "keller",
+      "label": "Tür öffnet sich",
+      "message": "Mit einem schweren Grollen schwingt die eisenbeschlagene Tür auf. Feuchtigkeit und der Geruch von altem Stein schlägt euch entgegen. Der Turm erwartet euch.",
+      "type": "narrative"
+    },
+    {
+      "id": "bibliothek-geheimhinweis",
+      "floorId": "floor-1",
+      "label": "Geheimer Hinweis (privat)",
+      "message": "Du bemerkst, dass die letzte Seite des Tagebuchs herausgerissen wurde. Die Schnittkante ist frisch. Wer war zuletzt hier?",
+      "type": "secret"
+    },
+    {
+      "id": "labor-vision",
+      "floorId": "floor-2",
+      "label": "Vision auslösen",
+      "message": "Das Experiment pulsiert — und plötzlich seht ihr es alle: Aldric steht an diesem Tisch. Er dreht sich um. Eine Frau in rotem Umhang steht in der Tür. Sie streiten. Lautlos. Sie geht. Die Vision verblasst.",
+      "type": "vision"
+    },
+    {
+      "id": "labor-explosion",
+      "floorId": "floor-2",
+      "label": "Falsches Experiment (Knall)",
+      "message": "PENG! Eine schwarze Rußwolke explodiert aus dem Kolben. Alle habt ihr Ruß im Gesicht. Das Experiment hat nicht funktioniert.",
+      "type": "event"
+    },
+    {
+      "id": "spiegel-timer",
+      "floorId": "floor-3",
+      "label": "Spiegel 7 aktiviert (→ Timer starten!)",
+      "message": "Spiegel 7 beginnt zu leuchten. Eine Szene aus der Vergangenheit wird sichtbar — eine Frau in rotem Umhang öffnet die Truhe in der Ecke. Ihr habt 60 Sekunden.",
+      "type": "vision"
+    },
+    {
+      "id": "archiv-kristalle",
+      "floorId": "floor-4",
+      "label": "Kristalle aktivieren",
+      "message": "Die Kristalle erwachen. Jeder von euch zieht einen an sich — und hört etwas anderes. Besprecht, was ihr gehört habt.",
+      "type": "event"
+    },
+    {
+      "id": "sanctum-aldric",
+      "floorId": "floor-5",
+      "label": "Aldric spricht",
+      "message": "Die Kristallkugel erwacht. Ein Abbild erscheint — Aldric Vorn, älter als ihr erwartet hättet. Er sieht euch an. 'Ihr habt meinen Turm verstanden. Nicht weil ihr klug seid — sondern weil ihr zusammen gedacht habt. Ich habe Fragen.'",
+      "type": "narrative"
+    },
+    {
+      "id": "sanctum-erbe",
+      "floorId": "floor-5",
+      "label": "Aegisstein erhalten",
+      "message": "Der Glassockel öffnet sich mit einem leisen Klicken. Der Aegisstein pulsiert blau — warm, fast lebendig. Er gehört jetzt euch. Was ihr damit macht, liegt bei euch.",
+      "type": "reward"
+    }
+  ],
+  "crystals": [
+    {
+      "id": "weiss",
+      "color": "#e8e8ff",
+      "glowColor": "#aaaaff",
+      "label": "Weißer Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den weißen Kristall. Eine warme, stolze Stimme spricht:\n\n„Mira, heute hast du dein erstes Schutzsiegel gezogen. Ich bin stolz auf dich. Du wirst eine große Magierin."\n\nAldrics Stimme klingt jung hier — voller Hoffnung."
+    },
+    {
+      "id": "blau",
+      "color": "#88aaff",
+      "glowColor": "#4466ff",
+      "label": "Blauer Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den blauen Kristall. Aldrics Stimme, nachdenklich:\n\n„Der Aegisstein könnte mehr. Ich habe die Formeln berechnet. Er könnte Flüche senden statt sie blocken. Aber das werde ich niemals erforschen. Manche Türen bleiben geschlossen.""
+    },
+    {
+      "id": "gruen",
+      "color": "#88ffaa",
+      "glowColor": "#44bb66",
+      "label": "Grüner Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den grünen Kristall. Zwei Stimmen:\n\nMira: „Zeig mir die Offensivformeln. Ich bin bereit."\nAldric: „Nein. Und frag mich nicht nochmal."\n\nStille. Dann Schritte — jemand verlässt den Raum."
+    },
+    {
+      "id": "gelb",
+      "color": "#ffee88",
+      "glowColor": "#ccaa22",
+      "label": "Gelber Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den gelben Kristall. Aldric, allein, aufgewühlt:\n\n„Die Seiten über die Zweitfunktion sind weg. Ich habe überall gesucht. Nur eine Person wusste wo sie lagen. Nur eine Person hatte Zugang."\n\nEine lange Pause.\n\n„Ich habe einen Fehler gemacht.""
+    },
+    {
+      "id": "orange",
+      "color": "#ffaa44",
+      "glowColor": "#ee7700",
+      "label": "Oranger Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den orangen Kristall. Eine Frauenstimme, gedämpft — als würde sie von weitem sprechen:\n\n„Der alte Mann gibt ihn nicht freiwillig her."\n\nEine unbekannte, tiefere Stimme antwortet: „Dann nehmt ihn."\n\nStille."
+    },
+    {
+      "id": "rot",
+      "color": "#ff6666",
+      "glowColor": "#cc2222",
+      "label": "Roter Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den roten Kristall. Aldric, fest und traurig:\n\n„Ich weiß was du getan hast. Ich weiß was du vorhast. Verlass meinen Turm, Mira. Komm nie wieder."\n\nEine Frauenstimme, kalt: „Du wirst es bereuen."\n\nDann ein Klicken — eine Tür, die sich schließt."
+    },
+    {
+      "id": "violett",
+      "color": "#cc88ff",
+      "glowColor": "#9944cc",
+      "label": "Violetter Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den violetten Kristall. Aldric, erschöpft — seine letzte Aufzeichnung:\n\n„Wer auch immer das hier findet — ich vertraue euch. Nicht weil ich euch kenne. Sondern weil mein Turm euch getestet hat.\n\nDer Aegisstein schützt Velmoor. Lasst ihn das tun."\n\nEine Pause.\n\n„Und seid vorsichtig mit denen, die euch geschickt haben.""
+    },
+    {
+      "id": "schwarz",
+      "color": "#888888",
+      "glowColor": "#444444",
+      "label": "Schwarzer Kristall",
+      "floorId": "floor-4",
+      "content": "Du berührst den schwarzen Kristall. Eine verstellte Stimme — tief, monoton:\n\n„Aldric Vorn ist tot. Sein Turm muss geöffnet werden. Der Aegisstein gehört der Stadt."\n\nDu kennst diese Stimme. Sie klingt — vertraut. Sehr vertraut.\n\nWo hast du sie schon einmal gehört?"
+    }
+  ],
+  "aldricQuestions": [
+    "Wem schuldest du deine Loyalität — und was passiert, wenn diese Person falsch liegt?",
+    "Hast du jemals für etwas geschwiegen, das du hättest aussprechen sollen?",
+    "Was ist dir wichtiger: Gerechtigkeit oder Frieden?",
+    "Würdest du eine unschuldige Stadt schützen, auch wenn du dafür bestraft würdest?",
+    "Wem gehört Macht, die gefunden wurde — nicht erschaffen?",
+    "Kannst du jemandem vergeben, der ehrlich böse ist?",
+    "Was würdest du opfern, damit andere sicher sind?",
+    "Wenn du diesen Stein behalten könntest — würdest du es tun?"
+  ]
+}
