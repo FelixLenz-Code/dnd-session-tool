@@ -176,12 +176,12 @@ export function FloorKeller({ marker, interactive = false, puzzleState, puzzleWr
       )}
 
       {/* Treppe */}
-      <StairsIcon x="230" y="232" w="68" h="42"/>
+      <StairsIcon x="242" y="232" w="68" h="42"/>
 
       {/* Eingang */}
-      <path d="M 172 306 L 172 284 Q 210 270 248 284 L 248 306"
+      <path d="M 148 306 L 148 284 Q 178 270 208 284 L 208 306"
         fill="#c8b480" stroke={INK} strokeWidth="2"/>
-      <Lbl x="210" y="297" text="Eingang" fs={8}/>
+      <Lbl x="178" y="297" text="Eingang" fs={8}/>
 
       {marker && <Marker x={114} y={152} label={marker.label}/>}
     </Frame>
@@ -228,7 +228,8 @@ export function FloorBibliothek({ marker, svgStyle }) {
 
       {/* Rotes Tagebuch (unten Ostwand) */}
       <rect x="364" y="198" width="28" height="44" fill={RED} stroke={INK} strokeWidth="1.5"/>
-      <Lbl x="378" y="223" text="Tagebuch" fs={7} fill="#fff8ee"/>
+      <Lbl x="378" y="216" text="Tage-" fs={7} fill="#fff8ee"/>
+      <Lbl x="378" y="228" text="buch"  fs={7} fill="#fff8ee"/>
 
       {/* Lesetisch */}
       <rect x="96" y="102" width="214" height="90" fill="#d4b878" stroke={INK} strokeWidth="2" rx="2"/>
@@ -240,8 +241,8 @@ export function FloorBibliothek({ marker, svgStyle }) {
 
       {/* Notizen-Rolle */}
       <rect x="290" y="222" width="80" height="46" fill="#e0cfa0" stroke={INK} strokeWidth="1.5" rx="4"/>
-      <Lbl x="330" y="242" text="Notizen" fs={9} fill={INK}/>
-      <Lbl x="330" y="256" text="Aldrics" fs={8} fill={INKL}/>
+      <Lbl x="330" y="242" text="Aldrics"  fs={9} fill={INK}/>
+      <Lbl x="330" y="256" text="Notizen" fs={8} fill={INKL}/>
 
       {marker && <Marker x={203} y={150} label={marker.label}/>}
     </Frame>
@@ -323,14 +324,14 @@ export function FloorLabor({ marker, svgStyle }) {
 
 export function FloorSpiegel({ marker, svgStyle }) {
   const MIRRORS = [
-    { id:'S1', x:36,  y:52,  w:72,  h:62 },
-    { id:'S2', x:122, y:52,  w:62,  h:56 },
-    { id:'S3', x:198, y:52,  w:62,  h:56 },
-    { id:'S4', x:274, y:52,  w:84,  h:62 },
-    { id:'S5', x:36,  y:132, w:52,  h:80 },
-    { id:'S7', x:108, y:128, w:170, h:88 },
-    { id:'S6', x:330, y:132, w:52,  h:80 },
-    { id:'S8', x:36,  y:232, w:100, h:54 },
+    { id:'S1', x:36,  y:52,  w:80, h:64 },
+    { id:'S2', x:122, y:52,  w:80, h:64 },
+    { id:'S3', x:208, y:52,  w:80, h:64 },
+    { id:'S4', x:294, y:52,  w:80, h:64 },
+    { id:'S5', x:36,  y:126, w:80, h:64 },
+    { id:'S6', x:122, y:126, w:80, h:64 },
+    { id:'S7', x:208, y:126, w:80, h:64 },
+    { id:'S8', x:294, y:126, w:80, h:64 },
   ]
 
   return (
@@ -346,18 +347,18 @@ export function FloorSpiegel({ marker, svgStyle }) {
           {/* Spiegelglanz */}
           <line x1={x+8} y1={y+8} x2={x+8+Math.min(18,w-16)} y2={y+8+Math.min(14,h-16)}
             stroke="white" strokeWidth="2" opacity="0.4"/>
-          <Lbl x={x+w/2} y={y+h/2+4} text={id} fs={id==='S7'?11:9} fill={INKM} bold/>
+          <Lbl x={x+w/2} y={y+h/2+4} text={id} fs={9} fill={INKM} bold/>
         </g>
       ))}
 
       {/* Truhe */}
-      <rect x="254" y="232" width="88" height="54" fill="#c8a860" stroke={INK} strokeWidth="1.5" rx="1"/>
-      <rect x="254" y="232" width="88" height="22" fill="#b89848" stroke={INK} strokeWidth="1"/>
-      <circle cx="298" cy="259" r="6" fill={GOLD} stroke={INK} strokeWidth="1.2"/>
-      <Lbl x="298" y="277" text="Truhe" fs={9} bold fill={INK}/>
+      <rect x="286" y="208" width="88" height="50" fill="#c8a860" stroke={INK} strokeWidth="1.5" rx="1"/>
+      <rect x="286" y="208" width="88" height="20" fill="#b89848" stroke={INK} strokeWidth="1"/>
+      <circle cx="330" cy="234" r="6" fill={GOLD} stroke={INK} strokeWidth="1.2"/>
+      <Lbl x="330" y="248" text="Truhe" fs={9} bold fill={INK}/>
 
       {/* Treppe */}
-      <StairsIcon x="160" y="232" w="68" h="54"/>
+      <StairsIcon x="36" y="210" w="68" h="46"/>
 
       {marker && <Marker x={193} y={172} label={marker.label}/>}
     </Frame>
@@ -367,49 +368,56 @@ export function FloorSpiegel({ marker, svgStyle }) {
 // ── Archiv der Stimmen ────────────────────────────────────────────────────────
 
 export function FloorArchiv({ marker, svgStyle }) {
-  const CX = 210, CY = 162, R = 80
-  const COLORS = ['#e0e0f8','#88aaee','#88eea8','#eee880','#eea844','#ee6666','#cc88ff','#c0c0c0']
+  const CX = 210, CY = 178, R = 90
+  const DH = 22, DW = 16
+  const CRYSTALS = [
+    '#e8e4f4', '#88aaee', '#70cc90', '#eee060',
+    '#ee9944', '#ee5555', '#cc77ff', '#b0b0b0',
+  ]
   const ANGLES = [0, 45, 90, 135, 180, 225, 270, 315]
 
   return (
     <Frame p="fa" title="Etage 4 – Archiv der Stimmen" svgStyle={svgStyle}>
       <rect x="28" y="48" width="364" height="258" fill="#e8d8a8" stroke={INK} strokeWidth="2"/>
 
-      {/* Kreisführung */}
+      {/* Führungskreis */}
       <circle cx={CX} cy={CY} r={R} fill="none" stroke={INKM}
-        strokeWidth="0.8" strokeDasharray="5,4" opacity="0.5"/>
+        strokeWidth="1" strokeDasharray="6,4" opacity="0.4"/>
 
       {/* 8 Kristall-Sockel */}
       {ANGLES.map((angle, i) => {
-        const rad = (angle-90)*Math.PI/180
-        const px  = CX + R*Math.cos(rad)
-        const py  = CY + R*Math.sin(rad)
+        const rad = (angle - 90) * Math.PI / 180
+        const px  = CX + R * Math.cos(rad)
+        const py  = CY + R * Math.sin(rad)
         return (
           <g key={i}>
-            <line x1={px} y1={py} x2={CX} y2={CY}
-              stroke={COLORS[i]} strokeWidth="0.5" opacity="0.35"/>
+            {/* Sockel */}
+            <rect x={px - 12} y={py + DH - 2} width={24} height={9}
+              fill="#c0a870" stroke={INK} strokeWidth="1"/>
+            {/* Kristall-Diamant */}
             <polygon
-              points={`${px},${py-14} ${px+12},${py} ${px},${py+14} ${px-12},${py}`}
-              fill={COLORS[i]} stroke={INK} strokeWidth="1.2" opacity="0.85"/>
+              points={`${px},${py - DH} ${px + DW},${py} ${px},${py + DH} ${px - DW},${py}`}
+              fill={CRYSTALS[i]} stroke={INK} strokeWidth="1.5" opacity="0.92"/>
+            {/* Glanzpunkt */}
             <polygon
-              points={`${px},${py-8} ${px+7},${py} ${px},${py+8} ${px-7},${py}`}
-              fill="white" opacity="0.45"/>
+              points={`${px},${py - DH + 7} ${px + DW - 7},${py} ${px},${py - 6} ${px - DW + 9},${py - 9}`}
+              fill="white" opacity="0.28"/>
           </g>
         )
       })}
 
       {/* Zentrum-Altar */}
-      <circle cx={CX} cy={CY} r="30" fill="#d4b878" stroke={INK} strokeWidth="2"/>
-      <circle cx={CX} cy={CY} r="22" fill="#dcc890" stroke={INKM} strokeWidth="1"/>
-      <circle cx={CX} cy={CY} r="10" fill={GOLD}   stroke={INK} strokeWidth="1.2" opacity="0.8"/>
-      <Lbl x={CX} y={CY+4} text="Altar" fs={9} bold fill={INK}/>
+      <circle cx={CX} cy={CY} r="34" fill="#d4b878" stroke={INK} strokeWidth="2"/>
+      <circle cx={CX} cy={CY} r="25" fill="#dcc890" stroke={INKM} strokeWidth="1"/>
+      <circle cx={CX} cy={CY} r="11" fill={GOLD} stroke={INK} strokeWidth="1.2" opacity="0.85"/>
+      <Lbl x={CX} y={CY + 4} text="Altar" fs={10} bold fill={INK}/>
 
-      {/* Tür Sanctum */}
-      <rect x="184" y="48" width="52" height="22" fill="#c8a860" stroke={INK} strokeWidth="1.5" rx="1"/>
-      <Lbl x="210" y="63" text="▲ Sanctum" fs={9} bold fill={INK}/>
+      {/* Sanctum-Hinweis oben rechts */}
+      <rect x="322" y="50" width="62" height="19" fill="#c8a860" stroke={INK} strokeWidth="1.2" rx="1"/>
+      <Lbl x="353" y="63" text="↑ Sanctum" fs={8} bold fill={INK}/>
 
-      {/* Treppe */}
-      <StairsIcon x="184" y="272" w="52" h="26"/>
+      {/* Treppe unten links */}
+      <StairsIcon x="34" y="266" w="60" h="26"/>
 
       {marker && <Marker x={CX} y={CY} label={marker.label}/>}
     </Frame>
@@ -437,13 +445,22 @@ export function FloorSanctum({ marker, svgStyle }) {
         const ky  = CY + CR*Math.sin(rad)
         return (
           <g key={i}>
-            <rect x={kx-3} y={ky-8} width={6} height={14}
-              fill="#e8d890" stroke={INK} strokeWidth="0.8"/>
-            <ellipse cx={kx} cy={ky-8} rx={4} ry={2.5} fill="#ffdd40" opacity="0.8"/>
-            <circle cx={kx} cy={ky-8} r="6" fill="#ffcc00" opacity="0.14">
-              <animate attributeName="opacity" values="0.14;0.32;0.14"
+            {/* Leuchtschein */}
+            <circle cx={kx} cy={ky-14} r="9" fill="#ffcc00" opacity="0.12">
+              <animate attributeName="opacity" values="0.12;0.28;0.12"
                 dur={`${1.8+i*0.3}s`} repeatCount="indefinite"/>
             </circle>
+            {/* Flamme */}
+            <ellipse cx={kx} cy={ky-15} rx={3.5} ry={5.5} fill="#ff9910" opacity="0.9"/>
+            <ellipse cx={kx} cy={ky-17} rx={2}   ry={3.5} fill="#ffee60" opacity="0.9"/>
+            {/* Docht */}
+            <line x1={kx} y1={ky-9} x2={kx} y2={ky-11} stroke="#333" strokeWidth="0.9"/>
+            {/* Kerzenkörper */}
+            <rect x={kx-3} y={ky-8} width={6} height={14}
+              fill="#f0ead0" stroke="#c8b880" strokeWidth="0.8"/>
+            {/* Kerzenhalter */}
+            <rect x={kx-5} y={ky+6} width={10} height={4}
+              fill="#806040" stroke={INK} strokeWidth="0.8"/>
           </g>
         )
       })}
