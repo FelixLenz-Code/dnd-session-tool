@@ -11,27 +11,31 @@ const TYPE_COLORS = {
 
 export default function EventPanel() {
   const { state, actions } = useGame()
-  const [expanded, setExpanded] = useState(null)   // eventId currently expanded
-  const [confirm, setConfirm]   = useState(null)   // eventId awaiting confirm
+  const [expanded, setExpanded]   = useState(null)
+  const [confirm, setConfirm]     = useState(null)
   const [triggered, setTriggered] = useState(new Set())
+  const [targetId, setTargetId]   = useState('')   // '' = alle, or player socket id
 
   if (!state.adventure) return <div className="empty-state">Kein Adventure geladen</div>
 
-  const floors = state.adventure.floors ?? []
-  const events = state.adventure.events ?? []
+  const floors  = state.adventure.floors ?? []
+  const events  = state.adventure.events ?? []
+  const players = state.players ?? []
 
-  const byFloor = floors.map(f => ({
-    floor: f,
-    events: events.filter(e => e.floorId === f.id),
-  })).filter(g => g.events.length > 0)
-
+  const byFloor   = floors.map(f => ({ floor: f, events: events.filter(e => e.floorId === f.id) }))
+                          .filter(g => g.events.length > 0)
   const unassigned = events.filter(e => !e.floorId)
 
   function handleTrigger(eventId) {
-    actions.triggerEvent(eventId)
+    actions.triggerEvent(eventId, targetId || null)
     setTriggered(prev => new Set([...prev, eventId]))
     setConfirm(null)
-    setExpanded(null)
+    setTargetId('')
+  }
+
+  function openConfirm(eventId) {
+    setTargetId('')
+    setConfirm(eventId)
   }
 
   return (
@@ -58,10 +62,27 @@ export default function EventPanel() {
                 background: style.bg, border: `1px solid ${style.border}`,
                 borderRadius: 'var(--radius)', padding: '12px 14px',
                 fontSize: '0.88rem', lineHeight: 1.7, whiteSpace: 'pre-wrap',
-                color: 'var(--text)', marginBottom: 16, maxHeight: 200, overflowY: 'auto',
+                color: 'var(--text)', marginBottom: 14, maxHeight: 200, overflowY: 'auto',
               }}>
                 {ev.message}
               </div>
+
+              {/* Empfänger */}
+              <div className="form-group" style={{ marginBottom: 14 }}>
+                <label className="form-label">Empfänger</label>
+                <select className="input" value={targetId} onChange={e => setTargetId(e.target.value)}>
+                  <option value="">Alle Spieler</option>
+                  {players.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+                {targetId && (
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                    Nur {players.find(p => p.id === targetId)?.name} erhält dieses Ereignis.
+                  </div>
+                )}
+              </div>
+
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn-gold" style={{ flex: 1 }} onClick={() => handleTrigger(ev.id)}>
                   ✓ Jetzt auslösen
@@ -85,14 +106,10 @@ export default function EventPanel() {
           <div className="section-title">{floor.label}</div>
           <div className="gap-8">
             {evs.map(ev => (
-              <EventRow
-                key={ev.id}
-                event={ev}
-                triggered={triggered.has(ev.id)}
+              <EventRow key={ev.id} event={ev} triggered={triggered.has(ev.id)}
                 isExpanded={expanded === ev.id}
                 onToggle={() => setExpanded(expanded === ev.id ? null : ev.id)}
-                onConfirm={() => setConfirm(ev.id)}
-              />
+                onConfirm={() => openConfirm(ev.id)}/>
             ))}
           </div>
         </div>
@@ -103,14 +120,10 @@ export default function EventPanel() {
           <div className="section-title">Allgemein</div>
           <div className="gap-8">
             {unassigned.map(ev => (
-              <EventRow
-                key={ev.id}
-                event={ev}
-                triggered={triggered.has(ev.id)}
+              <EventRow key={ev.id} event={ev} triggered={triggered.has(ev.id)}
                 isExpanded={expanded === ev.id}
                 onToggle={() => setExpanded(expanded === ev.id ? null : ev.id)}
-                onConfirm={() => setConfirm(ev.id)}
-              />
+                onConfirm={() => openConfirm(ev.id)}/>
             ))}
           </div>
         </div>
@@ -121,58 +134,26 @@ export default function EventPanel() {
 
 function EventRow({ event, triggered, isExpanded, onToggle, onConfirm }) {
   const style = TYPE_COLORS[event.type] ?? TYPE_COLORS.narrative
-
   return (
     <div style={{
       border: `1px solid ${triggered ? 'var(--border-dim)' : style.border}`,
-      borderRadius: 'var(--radius)',
-      overflow: 'hidden',
-      opacity: triggered ? 0.7 : 1,
+      borderRadius: 'var(--radius)', overflow: 'hidden', opacity: triggered ? 0.7 : 1,
     }}>
-      {/* Header-Zeile */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '9px 12px', background: 'var(--bg-mid)',
-      }}>
-        {/* Typ-Badge */}
-        <span style={{
-          fontSize: '0.7rem', fontWeight: 'bold', color: style.border,
-          textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0,
-        }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', background: 'var(--bg-mid)' }}>
+        <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: style.border, textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>
           {style.label}
         </span>
-
-        {/* Label — klickbar für Detailansicht */}
-        <button onClick={onToggle} style={{
-          flex: 1, textAlign: 'left', background: 'none', border: 'none',
-          color: 'var(--text)', cursor: 'pointer', fontSize: '0.9rem', padding: 0,
-          fontFamily: 'inherit',
-        }}>
+        <button onClick={onToggle} style={{ flex: 1, textAlign: 'left', background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer', fontSize: '0.9rem', padding: 0, fontFamily: 'inherit' }}>
           {event.label}
-          <span style={{ marginLeft: 6, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            {isExpanded ? '▲' : '▼'}
-          </span>
+          <span style={{ marginLeft: 6, fontSize: '0.75rem', color: 'var(--text-muted)' }}>{isExpanded ? '▲' : '▼'}</span>
         </button>
-
-        {triggered && (
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>✓ gesendet</span>
-        )}
-
-        {/* Auslösen-Button */}
+        {triggered && <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>✓ gesendet</span>}
         <button className="btn btn-sm btn-gold" onClick={onConfirm} style={{ flexShrink: 0 }}>
           {triggered ? 'Nochmal' : 'Auslösen'}
         </button>
       </div>
-
-      {/* Detail-Ansicht */}
       {isExpanded && (
-        <div style={{
-          padding: '12px 14px',
-          background: style.bg,
-          borderTop: `1px solid ${style.border}`,
-          fontSize: '0.86rem', lineHeight: 1.7,
-          color: 'var(--text)', whiteSpace: 'pre-wrap',
-        }}>
+        <div style={{ padding: '12px 14px', background: style.bg, borderTop: `1px solid ${style.border}`, fontSize: '0.86rem', lineHeight: 1.7, color: 'var(--text)', whiteSpace: 'pre-wrap' }}>
           {event.message}
         </div>
       )}

@@ -142,6 +142,8 @@ io.on('connection', (socket) => {
       session.unlockedMaps.push(mapId)
     }
     session.currentFloor = floorId
+    // Automatisch zur Etagen-Karte wechseln wenn Etage freigeschaltet wird
+    session.map = { type: mapId, marker: session.map?.marker ?? null }
     io.emit('state_sync', publicState(session))
   })
 
@@ -166,13 +168,19 @@ io.on('connection', (socket) => {
     }
   })
 
-  // DM: trigger event
-  socket.on('dm:trigger_event', ({ eventId }) => {
+  // DM: trigger event (optional: to specific player socket id)
+  socket.on('dm:trigger_event', ({ eventId, playerId }) => {
     const event = session.adventure?.events?.find(e => e.id === eventId)
     if (!event) return
-    const msg = { id: Date.now(), from: 'System', to: null, message: event.message, type: event.type ?? 'event', ts: Date.now() }
+    const to = playerId ?? null
+    const msg = { id: Date.now(), from: 'System', to, message: event.message, type: event.type ?? 'event', ts: Date.now() }
     session.messages.push(msg)
-    io.emit('new_message', msg)
+    if (to) {
+      io.to(to).emit('new_message', msg)
+      socket.emit('new_message', { ...msg, sentTo: session.players[to]?.name })
+    } else {
+      io.emit('new_message', msg)
+    }
     io.emit('event_triggered', { eventId, label: event.label })
   })
 

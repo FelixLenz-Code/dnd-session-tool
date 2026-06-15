@@ -120,7 +120,7 @@ export function GameProvider({ children }) {
 
     sendMessage: (to, message, type) => socket.emit('dm:message', { to, message, type }),
 
-    triggerEvent: (eventId) => socket.emit('dm:trigger_event', { eventId }),
+    triggerEvent: (eventId, playerId = null) => socket.emit('dm:trigger_event', { eventId, playerId }),
 
     startTimer: (seconds) => socket.emit('dm:timer_start', { seconds }),
 
