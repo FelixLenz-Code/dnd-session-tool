@@ -31,9 +31,11 @@ html, body, #root {
 /* ── Layout ──────────────────────────────────────────────────────────── */
 
 .screen {
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh; /* mobil: berücksichtigt Browser-Leisten */
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Seite selbst scrollt nicht — Inhalt scrollt in .scroll-area */
 }
 
 .screen-center {
@@ -326,6 +328,7 @@ select.input { cursor: pointer; }
 .scroll-area {
   overflow-y: auto;
   flex: 1;
+  min-height: 0; /* erlaubt Schrumpfen, damit die Karte in den Viewport passt */
   padding: 16px;
 }
 
