@@ -17,6 +17,8 @@ const initial = {
   messages: [],
   timer: { running: false, endTime: null, totalSeconds: 0 },
   map: { type: null, marker: null },
+  puzzles: {},
+  puzzleWrong: null,   // mapId das kurz rot aufleuchtet
 
   crystal: null,
   inventory: [],
@@ -48,6 +50,10 @@ function reducer(state, action) {
       return { ...state, crystal: action.crystal }
     case 'ITEM_RECEIVED':
       return { ...state, inventory: [...state.inventory, action.item] }
+    case 'PUZZLE_WRONG':
+      return { ...state, puzzleWrong: action.mapId }
+    case 'PUZZLE_WRONG_CLEAR':
+      return { ...state, puzzleWrong: null }
     default:
       return state
   }
@@ -70,6 +76,10 @@ export function GameProvider({ children }) {
     socket.on('map_update', (map) => dispatch({ type: 'MAP_UPDATE', map }))
     socket.on('crystal_assigned', (crystal) => dispatch({ type: 'CRYSTAL_ASSIGNED', crystal }))
     socket.on('item_received', (item) => dispatch({ type: 'ITEM_RECEIVED', item }))
+    socket.on('puzzle_wrong', ({ mapId }) => {
+      dispatch({ type: 'PUZZLE_WRONG', mapId })
+      setTimeout(() => dispatch({ type: 'PUZZLE_WRONG_CLEAR' }), 700)
+    })
 
     return () => socket.removeAllListeners()
   }, [])
@@ -131,6 +141,10 @@ export function GameProvider({ children }) {
     assignCrystal: (playerId, crystalId) => socket.emit('dm:assign_crystal', { playerId, crystalId }),
 
     giveItem: (playerId, item) => socket.emit('dm:give_item', { playerId, item }),
+
+    interactMap: (mapId, elementId) => socket.emit('player:map_interact', { mapId, elementId }),
+
+    resetPuzzle: (mapId) => socket.emit('dm:reset_puzzle', { mapId }),
   }
 
   return (

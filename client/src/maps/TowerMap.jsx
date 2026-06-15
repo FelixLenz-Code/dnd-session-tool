@@ -17,14 +17,15 @@ const GOLDD = '#7a5008'
 const RED   = '#8b1a14'
 const WALL  = '#2a1c0e'
 
-export default function TowerMap({ marker }) {
+export default function TowerMap({ marker, svgStyle }) {
   const { state } = useGame()
   const current  = state?.currentFloor
   const unlocked = state?.unlockedFloors ?? []
 
   return (
     <svg viewBox="0 0 340 580" xmlns="http://www.w3.org/2000/svg"
-      style={{ display: 'block', width: '100%' }}>
+      preserveAspectRatio="xMidYMid meet"
+      style={svgStyle ?? { display: 'block', width: '100%' }}>
       <defs>
         <radialGradient id="tmBg" cx="50%" cy="40%" r="70%">
           <stop offset="0%"   stopColor="#fdf5e0"/>

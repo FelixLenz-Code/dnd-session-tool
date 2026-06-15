@@ -60,11 +60,22 @@ app.post('/api/adventure', (req, res) => {
   session.unlockedMaps = []
   session.currentFloor = null
   session.map = { type: adventure.maps?.[0]?.id ?? null, marker: null }
+  session.puzzles = {}
   io.emit('adventure_loaded', adventure)
   io.emit('state_sync', publicState(session))
   console.log(`Adventure geladen: ${adventure.title}`)
   res.json({ ok: true })
 })
+
+// ── Puzzle-Definitionen ───────────────────────────────────────────────────────
+
+const PUZZLES = {
+  'floor-keller': {
+    solution: ['winter', 'fruehling', 'sommer', 'herbst'],
+    reward: 'floor-1',
+    successMessage: '✨ Die Jahreszeiten-Symbole leuchten auf — die versiegelte Pforte öffnet sich langsam.',
+  },
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -97,6 +108,7 @@ function publicState(s) {
     unlockedMaps: s.unlockedMaps,
     timer: s.timer,
     map: s.map,
+    puzzles: s.puzzles,
   }
 }
 
@@ -210,6 +222,44 @@ io.on('connection', (socket) => {
       if (crystal) {
         io.to(playerId).emit('crystal_assigned', crystal)
       }
+    }
+  })
+
+  // Player: map interaction (puzzle mechanic)
+  socket.on('player:map_interact', ({ mapId, elementId }) => {
+    const def = PUZZLES[mapId]
+    if (!def) return
+    if (!session.puzzles[mapId]) session.puzzles[mapId] = { progress: [], solved: false }
+    const pz = session.puzzles[mapId]
+    if (pz.solved) return
+
+    const expected = def.solution[pz.progress.length]
+    if (elementId === expected) {
+      pz.progress.push(elementId)
+      if (pz.progress.length === def.solution.length) {
+        pz.solved = true
+        const floorId = def.reward
+        if (!session.unlockedFloors.includes(floorId)) session.unlockedFloors.push(floorId)
+        const rewardMap = floorToMapId(floorId)
+        if (!session.unlockedMaps.includes(rewardMap)) session.unlockedMaps.push(rewardMap)
+        session.currentFloor = floorId
+        session.map = { type: rewardMap, marker: session.map?.marker ?? null }
+        const msg = { id: Date.now(), from: 'System', to: null, message: def.successMessage, type: 'event', ts: Date.now() }
+        session.messages.push(msg)
+        io.emit('new_message', msg)
+      }
+    } else {
+      pz.progress = []
+      io.emit('puzzle_wrong', { mapId })
+    }
+    io.emit('state_sync', publicState(session))
+  })
+
+  // DM: Rätsel zurücksetzen
+  socket.on('dm:reset_puzzle', ({ mapId }) => {
+    if (session.puzzles[mapId]) {
+      session.puzzles[mapId] = { progress: [], solved: false }
+      io.emit('state_sync', publicState(session))
     }
   })
 

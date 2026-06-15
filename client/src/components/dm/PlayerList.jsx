@@ -1,6 +1,43 @@
 import { useState } from 'react'
 import { useGame } from '../../context/GameContext'
 
+function GiveItem({ playerId, playerName }) {
+  const { actions } = useGame()
+  const [open, setOpen] = useState(false)
+  const [text, setText] = useState('')
+  const [sent, setSent] = useState(false)
+
+  if (!open) return (
+    <button className="btn btn-sm" style={{ marginTop: 6 }} onClick={() => setOpen(true)}>
+      + Item geben
+    </button>
+  )
+
+  function send() {
+    if (!text.trim()) return
+    actions.giveItem(playerId, { name: text.trim(), description: text.trim() })
+    setSent(true)
+    setText('')
+    setTimeout(() => { setSent(false); setOpen(false) }, 1800)
+  }
+
+  return (
+    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
+      <input className="input" style={{ flex: 1, minWidth: 120, fontSize: '0.85rem' }}
+        placeholder={`Item für ${playerName}…`}
+        value={text}
+        onChange={e => setText(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && send()}
+        autoFocus/>
+      <button className={`btn btn-sm ${sent ? 'btn-green' : 'btn-gold'}`}
+        onClick={send} disabled={!text.trim()}>
+        {sent ? '✓' : 'Geben'}
+      </button>
+      <button className="btn btn-sm" onClick={() => setOpen(false)}>✕</button>
+    </div>
+  )
+}
+
 export default function PlayerList() {
   const { state, actions } = useGame()
   const [newName, setNewName] = useState('')
@@ -112,24 +149,29 @@ export default function PlayerList() {
                     )}
                   </div>
 
-                  {/* Kristall zuweisen (nur wenn online) */}
-                  {slot.online && crystals.length > 0 && (
+                  {/* Kristall zuweisen + Item geben (nur wenn online) */}
+                  {slot.online && (
                     <div style={{ paddingLeft: 16 }}>
-                      <div className="form-label" style={{ marginBottom: 5 }}>Kristall zuweisen</div>
-                      <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                        {crystals.map(c => {
-                          const assigned = player?.crystal === c.id
-                          return (
-                            <button key={c.id} className="btn btn-sm" style={{
-                              borderColor: assigned ? c.color : 'var(--border)',
-                              background: assigned ? `${c.color}22` : 'var(--bg-mid)',
-                              color: assigned ? c.color : 'var(--text-dim)',
-                            }} onClick={() => actions.assignCrystal(player.id, c.id)}>
-                              ● {c.label}
-                            </button>
-                          )
-                        })}
-                      </div>
+                      {crystals.length > 0 && (
+                        <>
+                          <div className="form-label" style={{ marginBottom: 5 }}>Kristall zuweisen</div>
+                          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 4 }}>
+                            {crystals.map(c => {
+                              const assigned = player?.crystal === c.id
+                              return (
+                                <button key={c.id} className="btn btn-sm" style={{
+                                  borderColor: assigned ? c.color : 'var(--border)',
+                                  background: assigned ? `${c.color}22` : 'var(--bg-mid)',
+                                  color: assigned ? c.color : 'var(--text-dim)',
+                                }} onClick={() => actions.assignCrystal(player.id, c.id)}>
+                                  ● {c.label}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </>
+                      )}
+                      <GiveItem playerId={player?.id} playerName={slot.name}/>
                     </div>
                   )}
                 </div>

@@ -9,12 +9,13 @@ const BLUE  = '#4a7a9a'
 const GREEN = '#5a7a3a'
 const WALL  = '#2a1c0e'
 
-export default function VelmoorMap({ marker }) {
+export default function VelmoorMap({ marker, svgStyle }) {
   const { state } = useGame()
 
   return (
     <svg viewBox="0 0 520 400" xmlns="http://www.w3.org/2000/svg"
-      style={{ display: 'block', width: '100%' }}>
+      preserveAspectRatio="xMidYMid meet"
+      style={svgStyle ?? { display: 'block', width: '100%' }}>
       <defs>
         <radialGradient id="vmBg" cx="50%" cy="50%" r="75%">
           <stop offset="0%"   stopColor="#fdf5e0"/>

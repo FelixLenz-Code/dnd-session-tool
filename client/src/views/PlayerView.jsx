@@ -51,9 +51,9 @@ export default function PlayerView() {
         ))}
       </div>
 
-      <div className="scroll-area">
+      <div className="scroll-area" style={tab === 'map' ? { padding: 0, overflow: 'hidden' } : {}}>
         {tab === 'feed'      && <MessageFeed />}
-        {tab === 'map'       && <MapDisplay />}
+        {tab === 'map'       && <MapDisplay fullscreen />}
         {tab === 'crystal'   && <CrystalView />}
         {tab === 'inventory' && <Inventory />}
       </div>

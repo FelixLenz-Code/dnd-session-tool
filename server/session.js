@@ -18,6 +18,7 @@ function createSession() {
     currentFloor: null,
     timer: { running: false, endTime: null, totalSeconds: 0 },
     map: { type: null, marker: null },
+    puzzles: {},   // mapId → { progress: [], solved: false }
   }
 }
 
