@@ -1,194 +1,206 @@
 {
   "id": "turm-des-magiers",
   "title": "Turm des Magiers",
-  "description": "Der exzentrische Magier Aldric Vorn ist tot. Sein versiegelter Turm birgt ein mächtiges Artefakt — und ein Geheimnis.",
+  "description": "Ein Rätsel-Oneshot für 5–8 Spieler in der Handelsstadt Velmoor",
   "dmPassword": "aldric",
   "floors": [
     {
       "id": "keller",
-      "order": 0,
       "label": "Keller – Die Pforte",
-      "description": "Der Eingang zum Turm. Eine schwere eisenbeschlagene Tür mit vier Symbolen der Jahreszeiten.",
-      "mapId": "floor-keller"
+      "description": "Der Eingang zum Turm. Eine versiegelte Tür mit Jahreszeiten-Symbolen."
     },
     {
       "id": "floor-1",
-      "order": 1,
       "label": "Etage 1 – Bibliothek",
-      "description": "Deckenhohe Regale, ein Farbsystem, ein fehlendes Buch, und drei Teile eines Tagebuchs.",
-      "mapId": "floor-1"
+      "description": "Aldrics Bibliothek. Ein Buch fehlt – sein Titel ist das Passwort."
     },
     {
       "id": "floor-2",
-      "order": 2,
       "label": "Etage 2 – Labor",
-      "description": "Drei Arbeitstische, ein brodelndes Experiment, und eine versteckte Vision.",
-      "mapId": "floor-2"
+      "description": "Das alchemistische Labor. Drei Tische, einer aktiv."
     },
     {
       "id": "floor-3",
-      "order": 3,
       "label": "Etage 3 – Spiegelkammer",
-      "description": "Acht Spiegel, jeder zeigt die Vergangenheit zu einem anderen Zeitpunkt.",
-      "mapId": "floor-3"
+      "description": "Acht Spiegel. Spiegel 7 zeigt den Tag des Mordes."
     },
     {
       "id": "floor-4",
-      "order": 4,
       "label": "Etage 4 – Archiv der Stimmen",
-      "description": "Kristalle mit aufgezeichneten Gesprächen — jeder Spieler hört eine andere.",
-      "mapId": "floor-4"
+      "description": "Acht Kristall-Sockel im Kreis. Jeder Kristall flüstert eine Erinnerung."
     },
     {
       "id": "floor-5",
-      "order": 5,
-      "label": "Etage 5 – Sanctum",
-      "description": "Aldrics Geist stellt jedem Helden eine persönliche Frage. Das Erbe wartet.",
-      "mapId": "floor-5"
+      "label": "Etage 5 – Das Sanctum",
+      "description": "Das Herzstück des Turms. Der Aegisstein ruht hier auf dem Altar."
     }
   ],
   "maps": [
-    { "id": "velmoor", "label": "Velmoor – Die Stadt", "renderer": "VelmoorMap" },
-    { "id": "tower", "label": "Der Turm – Übersicht", "renderer": "TowerMap" },
-    { "id": "floor-keller", "label": "Keller", "renderer": "FloorKeller" },
-    { "id": "floor-1", "label": "Bibliothek", "renderer": "FloorBibliothek" },
-    { "id": "floor-2", "label": "Labor", "renderer": "FloorLabor" },
-    { "id": "floor-3", "label": "Spiegelkammer", "renderer": "FloorSpiegel" },
-    { "id": "floor-4", "label": "Archiv", "renderer": "FloorArchiv" },
-    { "id": "floor-5", "label": "Sanctum", "renderer": "FloorSanctum" }
+    {
+      "id": "velmoor",
+      "label": "Velmoor – Stadtplan",
+      "renderer": "velmoor"
+    },
+    {
+      "id": "tower",
+      "label": "Turm des Magiers (Übersicht)",
+      "renderer": "tower"
+    },
+    {
+      "id": "floor-keller",
+      "label": "Keller – Die Pforte",
+      "renderer": "floor-keller"
+    },
+    {
+      "id": "floor-1",
+      "label": "Etage 1 – Bibliothek",
+      "renderer": "floor-1"
+    },
+    {
+      "id": "floor-2",
+      "label": "Etage 2 – Labor",
+      "renderer": "floor-2"
+    },
+    {
+      "id": "floor-3",
+      "label": "Etage 3 – Spiegelkammer",
+      "renderer": "floor-3"
+    },
+    {
+      "id": "floor-4",
+      "label": "Etage 4 – Archiv",
+      "renderer": "floor-4"
+    },
+    {
+      "id": "floor-5",
+      "label": "Etage 5 – Sanctum",
+      "renderer": "floor-5"
+    }
   ],
   "events": [
     {
-      "id": "keller-eingang",
+      "id": "ankunft-velmoor",
+      "label": "Ankunft in Velmoor",
+      "floorId": null,
+      "type": "narrative",
+      "message": "Ihr erreicht die Handelsstadt Velmoor am Abend. Die Stadtmauern werfen lange Schatten. Im Norden, auf einem Hügel, ragt der Turm des verstorbenen Magiers Aldric Vorn in den Himmel – sein Licht erloschen, seine Geheimnisse ungeklärt. Stadtrat Haldin Mor bittet euch dringend: Der Turm muss gesichert werden, bevor ungebetene Gäste eindringen."
+    },
+    {
+      "id": "keller-gedicht",
+      "label": "Das Gedicht an der Wand",
       "floorId": "keller",
-      "label": "Tür öffnet sich",
-      "message": "Mit einem schweren Grollen schwingt die eisenbeschlagene Tür auf. Feuchtigkeit und der Geruch von altem Stein schlägt euch entgegen. Der Turm erwartet euch.",
-      "type": "narrative"
+      "type": "narrative",
+      "message": "In den Stein gemeißelt, kaum lesbar durch Moos und Zeit:\n\n\"Wenn Schnee den letzten Atemzug bedeckt,\nWenn Blüten neu das Dunkel auferweckt,\nWenn Wärme ihren höchsten Bogen zieht,\nWenn buntes Laub im Wind die Abschied sieht –\n\nDrückt jene Hände, die das Jahr umschließt,\nBis sich die Pforte in das Licht ergießt.\""
     },
     {
-      "id": "bibliothek-geheimhinweis",
+      "id": "bibliothek-luecke",
+      "label": "Die Lücke im Regal",
       "floorId": "floor-1",
-      "label": "Geheimer Hinweis (privat)",
-      "message": "Du bemerkst, dass die letzte Seite des Tagebuchs herausgerissen wurde. Die Schnittkante ist frisch. Wer war zuletzt hier?",
-      "type": "secret"
+      "type": "narrative",
+      "message": "Zwischen einem Band über Schutzzauber und einem Werk über alte Runen klafft eine auffällige Lücke. Das Regal ist verstaubt – nur genau hier nicht. Jemand hat dieses Buch kürzlich entfernt. Was stand darin?"
     },
     {
-      "id": "labor-vision",
+      "id": "labor-rezept",
+      "label": "Aldrics Rezept-Notiz",
       "floorId": "floor-2",
-      "label": "Vision auslösen",
-      "message": "Das Experiment pulsiert — und plötzlich seht ihr es alle: Aldric steht an diesem Tisch. Er dreht sich um. Eine Frau in rotem Umhang steht in der Tür. Sie streiten. Lautlos. Sie geht. Die Vision verblasst.",
-      "type": "vision"
+      "type": "secret",
+      "message": "Eine vergilbte Notiz auf dem aktiven Arbeitstisch:\n\n\"Formel für Gedächtnis-Essenz:\nKristallstaub (Basis) + Nebelsuppe (Verdünner) + Kristallstaub (Verstärker)\n\nDie Reihenfolge ist entscheidend. Die Essenz braucht Wiederholung des Grundmotivs. Gib sie dem Kristall – er wird sprechen.\"\n\nDarunter, mit zitternder Hand: \"Vergib mir, Mira.\""
     },
     {
-      "id": "labor-explosion",
-      "floorId": "floor-2",
-      "label": "Falsches Experiment (Knall)",
-      "message": "PENG! Eine schwarze Rußwolke explodiert aus dem Kolben. Alle habt ihr Ruß im Gesicht. Das Experiment hat nicht funktioniert.",
-      "type": "event"
-    },
-    {
-      "id": "spiegel-timer",
+      "id": "spiegel7-vision",
+      "label": "Spiegel 7 – Die Vision",
       "floorId": "floor-3",
-      "label": "Spiegel 7 aktiviert (→ Timer starten!)",
-      "message": "Spiegel 7 beginnt zu leuchten. Eine Szene aus der Vergangenheit wird sichtbar — eine Frau in rotem Umhang öffnet die Truhe in der Ecke. Ihr habt 60 Sekunden.",
-      "type": "vision"
+      "type": "vision",
+      "message": "Als ihr vor Spiegel 7 tretet, zeigt er nicht eure Gesichter. Ihr seht: Diesen Raum, vor vielen Jahren. Aldric Vorn, alt und gebeugt, kniet vor dem Spiegel. Hinter ihm – eine Frau in Ratsgewändern. Ihr Gesicht ist klar. Es ist Mira Vael.\n\nSie hebt die Hand. Ein kurzes Leuchten. Aldric fällt.\n\nDer Spiegel wird wieder blank."
     },
     {
-      "id": "archiv-kristalle",
+      "id": "archiv-stimmen",
+      "label": "Die Kristalle erwachen",
       "floorId": "floor-4",
-      "label": "Kristalle aktivieren",
-      "message": "Die Kristalle erwachen. Jeder von euch zieht einen an sich — und hört etwas anderes. Besprecht, was ihr gehört habt.",
-      "type": "event"
+      "type": "event",
+      "message": "Als ihr den Raum betretet, beginnen die Kristalle auf den Sockeln schwach zu leuchten. Einer nach dem anderen. Eine Stille senkt sich über den Raum – und dann hört ihr es: Flüstern. Nicht aus dem Raum. Aus den Kristallen. Jeder von euch hört etwas anderes."
     },
     {
-      "id": "sanctum-aldric",
+      "id": "aegisstein-entdeckt",
+      "label": "Der Aegisstein",
       "floorId": "floor-5",
-      "label": "Aldric spricht",
-      "message": "Die Kristallkugel erwacht. Ein Abbild erscheint — Aldric Vorn, älter als ihr erwartet hättet. Er sieht euch an. 'Ihr habt meinen Turm verstanden. Nicht weil ihr klug seid — sondern weil ihr zusammen gedacht habt. Ich habe Fragen.'",
-      "type": "narrative"
+      "type": "narrative",
+      "message": "Auf dem Altar im Zentrum des Sanctums liegt er: der Aegisstein. Ein Stein von der Größe einer Faust, tiefblau schimmernd, mit einem Licht darin, das kein Feuer ist. Ihr spürt es sofort – eine Wärme, ein Schutz. Solange dieser Stein im Turm ruht, ist Velmoor sicher vor der Magiepest des Nordens.\n\nWer hat ein Interesse daran, dass er verschwindet?"
     },
     {
-      "id": "sanctum-erbe",
-      "floorId": "floor-5",
-      "label": "Aegisstein erhalten",
-      "message": "Der Glassockel öffnet sich mit einem leisen Klicken. Der Aegisstein pulsiert blau — warm, fast lebendig. Er gehört jetzt euch. Was ihr damit macht, liegt bei euch.",
-      "type": "reward"
+      "id": "mira-konfrontation",
+      "label": "Konfrontation: Mira Vael",
+      "floorId": null,
+      "type": "event",
+      "message": "Mira Vael, Stadtratsmitglied und scheinbar eure Auftraggeberin, tritt euch gegenüber. Ihr Blick ist kalt, kalkuliert. \"Ihr habt zu viel gesehen\", sagt sie. \"Aber es muss nicht so enden.\" Sie bietet euch Schweigen gegen Gold. Was tut ihr?"
     }
   ],
   "crystals": [
     {
       "id": "weiss",
-      "color": "#e8e8ff",
-      "glowColor": "#aaaaff",
       "label": "Weißer Kristall",
+      "color": "#e8e8ff",
       "floorId": "floor-4",
-      "content": "Du berührst den weißen Kristall. Eine warme, stolze Stimme spricht:\n\n„Mira, heute hast du dein erstes Schutzsiegel gezogen. Ich bin stolz auf dich. Du wirst eine große Magierin."\n\nAldrics Stimme klingt jung hier — voller Hoffnung."
+      "content": "Du berührst den weißen Kristall. Eine warme, stolze Stimme spricht:\n\n'Mira, heute hast du dein erstes Schutzsiegel gezogen. Ich bin stolz auf dich. Du wirst eine große Magierin.'\n\nAldrics Stimme klingt jung hier – voller Hoffnung."
     },
     {
       "id": "blau",
-      "color": "#88aaff",
-      "glowColor": "#4466ff",
       "label": "Blauer Kristall",
+      "color": "#88aaff",
       "floorId": "floor-4",
-      "content": "Du berührst den blauen Kristall. Aldrics Stimme, nachdenklich:\n\n„Der Aegisstein könnte mehr. Ich habe die Formeln berechnet. Er könnte Flüche senden statt sie blocken. Aber das werde ich niemals erforschen. Manche Türen bleiben geschlossen.""
+      "content": "Der blaue Kristall zeigt eine Erinnerung in Bildern: Aldric und eine junge Mira, die gemeinsam Formeln studieren. Sie lacht. Er erklärt geduldig. Die Szene ist warm, fast väterlich.\n\nDann springt das Bild: Mira, älter, mit einem Ratsdokument in der Hand. Ihr Gesicht ist verschlossen."
     },
     {
       "id": "gruen",
-      "color": "#88ffaa",
-      "glowColor": "#44bb66",
       "label": "Grüner Kristall",
+      "color": "#88ffaa",
       "floorId": "floor-4",
-      "content": "Du berührst den grünen Kristall. Zwei Stimmen:\n\nMira: „Zeig mir die Offensivformeln. Ich bin bereit."\nAldric: „Nein. Und frag mich nicht nochmal."\n\nStille. Dann Schritte — jemand verlässt den Raum."
+      "content": "Eine ruhige Stimme – Aldric, nachdenklich:\n\n'Der Aegisstein darf den Turm nie verlassen. Nicht solange die Pest im Norden wütet. Ich habe Mira erklärt, warum. Sie hat es verstanden. Ich dachte, sie hat es verstanden.'\n\nEine lange Pause. Dann leise: 'Vielleicht war das mein Fehler.'"
     },
     {
       "id": "gelb",
-      "color": "#ffee88",
-      "glowColor": "#ccaa22",
       "label": "Gelber Kristall",
+      "color": "#ffee88",
       "floorId": "floor-4",
-      "content": "Du berührst den gelben Kristall. Aldric, allein, aufgewühlt:\n\n„Die Seiten über die Zweitfunktion sind weg. Ich habe überall gesucht. Nur eine Person wusste wo sie lagen. Nur eine Person hatte Zugang."\n\nEine lange Pause.\n\n„Ich habe einen Fehler gemacht.""
+      "content": "Der gelbe Kristall flüstert mit Mirabas Stimme – einer anderen Frau, älter:\n\n'Aldric, ich warne dich. Mira Vael fragt zu viel nach dem Stein. Sie hat Kontakte im Rat, die ich nicht kenne. Sei vorsichtig.'\n\nAldrics Antwort, fast belustigt: 'Mira ist meine Schülerin. Ich vertraue ihr.'\n\nDie Stimme der Frau: 'Das ist dein größter Fehler.'"
     },
     {
       "id": "orange",
-      "color": "#ffaa44",
-      "glowColor": "#ee7700",
       "label": "Oranger Kristall",
+      "color": "#ffaa44",
       "floorId": "floor-4",
-      "content": "Du berührst den orangen Kristall. Eine Frauenstimme, gedämpft — als würde sie von weitem sprechen:\n\n„Der alte Mann gibt ihn nicht freiwillig her."\n\nEine unbekannte, tiefere Stimme antwortet: „Dann nehmt ihn."\n\nStille."
+      "content": "Stimmengewirr – dann eine klare Szene: Der Turmeingang, nachts. Mira Vael tritt ein, allein. Sie trägt kein Ratswappen. Sie trägt einen leeren Beutel.\n\nEine Stimme, Aldrics, kommt von oben: 'Mira? So spät?'\n\nIhre Antwort, kalt: 'Ich brauche nur einen Moment, Meister.'\n\nDer Kristall zeigt nichts mehr."
     },
     {
       "id": "rot",
-      "color": "#ff6666",
-      "glowColor": "#cc2222",
       "label": "Roter Kristall",
+      "color": "#ff6666",
       "floorId": "floor-4",
-      "content": "Du berührst den roten Kristall. Aldric, fest und traurig:\n\n„Ich weiß was du getan hast. Ich weiß was du vorhast. Verlass meinen Turm, Mira. Komm nie wieder."\n\nEine Frauenstimme, kalt: „Du wirst es bereuen."\n\nDann ein Klicken — eine Tür, die sich schließt."
+      "content": "Der rote Kristall brennt heiß in deiner Hand. Ein letzter Moment – Aldrics Stimme, schwach:\n\n'Der Stein... muss... bleiben...'\n\nEin Geräusch. Schritte, die sich entfernen.\n\nDann Stille.\n\nDu weißt jetzt, wie Aldric Vorn gestorben ist."
     },
     {
       "id": "violett",
-      "color": "#cc88ff",
-      "glowColor": "#9944cc",
       "label": "Violetter Kristall",
+      "color": "#cc88ff",
       "floorId": "floor-4",
-      "content": "Du berührst den violetten Kristall. Aldric, erschöpft — seine letzte Aufzeichnung:\n\n„Wer auch immer das hier findet — ich vertraue euch. Nicht weil ich euch kenne. Sondern weil mein Turm euch getestet hat.\n\nDer Aegisstein schützt Velmoor. Lasst ihn das tun."\n\nEine Pause.\n\n„Und seid vorsichtig mit denen, die euch geschickt haben.""
+      "content": "Der violette Kristall zeigt dir etwas, das noch nicht geschehen ist – oder vielleicht eine Möglichkeit:\n\nVelmoor, in Flammen. Nicht durch Krieg. Durch die Pest. Kleine blaue Funken tanzen durch die Straßen, berühren Menschen, lassen sie stolpern.\n\nDanach: Stille. Leere Gassen.\n\nDer Kristall erlischt. Du weißt, was auf dem Spiel steht."
     },
     {
       "id": "schwarz",
-      "color": "#888888",
-      "glowColor": "#444444",
       "label": "Schwarzer Kristall",
+      "color": "#aaaaaa",
       "floorId": "floor-4",
-      "content": "Du berührst den schwarzen Kristall. Eine verstellte Stimme — tief, monoton:\n\n„Aldric Vorn ist tot. Sein Turm muss geöffnet werden. Der Aegisstein gehört der Stadt."\n\nDu kennst diese Stimme. Sie klingt — vertraut. Sehr vertraut.\n\nWo hast du sie schon einmal gehört?"
+      "content": "Der schwarze Kristall – eigentlich dunkelgrau, wie Asche – spricht nicht.\n\nStattdessen zeigt er dir dich selbst. Wie du gerade hier stehst. Wie du diesen Kristall hältst.\n\nDarunter, eingraviert in den Sockel, ein Satz:\n\n'Der Zeuge trägt die schwerste Last.'"
     }
   ],
   "aldricQuestions": [
-    "Wem schuldest du deine Loyalität — und was passiert, wenn diese Person falsch liegt?",
-    "Hast du jemals für etwas geschwiegen, das du hättest aussprechen sollen?",
-    "Was ist dir wichtiger: Gerechtigkeit oder Frieden?",
-    "Würdest du eine unschuldige Stadt schützen, auch wenn du dafür bestraft würdest?",
-    "Wem gehört Macht, die gefunden wurde — nicht erschaffen?",
-    "Kannst du jemandem vergeben, der ehrlich böse ist?",
-    "Was würdest du opfern, damit andere sicher sind?",
-    "Wenn du diesen Stein behalten könntest — würdest du es tun?"
+    "Was war dein größtes Versagen als Lehrer?",
+    "Hast du Mira je geliebt – nicht als Schülerin, sondern als Tochter?",
+    "Wusstest du, dass sie den Stein wollte?",
+    "Hättest du sie aufhalten können?",
+    "Was ist wichtiger: Velmoor zu retten oder Mira zu bestrafen?",
+    "Wem gehört der Aegisstein – dem Turm oder der Stadt?",
+    "Was soll mit dem Stein geschehen, wenn ihr Velmoor verlasst?",
+    "Vergibst du Mira Vael?"
   ]
 }
