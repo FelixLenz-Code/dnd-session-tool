@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useGame } from '../context/GameContext'
 import MessageFeed from '../components/player/MessageFeed'
+import PuzzleView from '../components/player/PuzzleView'
 import CrystalView from '../components/player/CrystalView'
 import Inventory from '../components/player/Inventory'
 import TimerBanner from '../components/player/TimerBanner'
@@ -9,15 +10,22 @@ export default function PlayerView() {
   const { state } = useGame()
   const [tab, setTab] = useState('feed')
 
+  // Rätsel-Tab: sichtbar, solange ein interaktives Rätsel der aktuellen Etage offen ist
+  const showRiddle = state.currentFloor === 'keller'
+
   // Kristall-Tab: sichtbar sobald ein Kristall zugewiesen ist ODER Spieler im Archiv
   const crystalFloorId = state.adventure?.crystals?.[0]?.floorId ?? 'floor-4'
   const showCrystal = state.crystal != null || state.currentFloor === crystalFloorId
 
   const TABS = [
     { id: 'feed',      label: 'Feed' },
+    ...(showRiddle ? [{ id: 'riddle', label: 'Rätsel' }] : []),
     ...(showCrystal ? [{ id: 'crystal', label: 'Kristall' }] : []),
     { id: 'inventory', label: 'Inventar' },
   ]
+
+  // Falls der aktive Tab wegfällt (z. B. Rätsel gelöst → Etagenwechsel), auf Feed zurück
+  const activeTab = TABS.some(t => t.id === tab) ? tab : 'feed'
 
   const floorLabel = state.adventure?.floors?.find(f => f.id === state.currentFloor)?.label
 
@@ -40,7 +48,7 @@ export default function PlayerView() {
 
       <div className="tabs">
         {TABS.map(t => (
-          <button key={t.id} className={`tab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
+          <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
             {t.label}
             {t.id === 'crystal' && state.crystal && (
               <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: state.crystal.color, marginLeft: 6 }} />
@@ -50,9 +58,10 @@ export default function PlayerView() {
       </div>
 
       <div className="scroll-area">
-        {tab === 'feed'      && <MessageFeed />}
-        {tab === 'crystal'   && <CrystalView />}
-        {tab === 'inventory' && <Inventory />}
+        {activeTab === 'feed'      && <MessageFeed />}
+        {activeTab === 'riddle'    && <PuzzleView />}
+        {activeTab === 'crystal'   && <CrystalView />}
+        {activeTab === 'inventory' && <Inventory />}
       </div>
     </div>
   )
