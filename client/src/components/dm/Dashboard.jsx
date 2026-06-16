@@ -5,6 +5,7 @@ export default function Dashboard() {
   const { state, actions } = useGame()
   const fileRef = useRef()
   const [lockConfirm, setLockConfirm] = useState(null)
+  const [resetConfirm, setResetConfirm] = useState(false)
 
   function handleFileUpload(e) {
     const file = e.target.files[0]
@@ -25,6 +26,12 @@ export default function Dashboard() {
   const adventure = state.adventure
   const floors = adventure?.floors ?? []
   const currentFloor = floors.find(f => f.id === state.currentFloor)
+
+  // Keller-Jahreszeiten-Rätsel (einziges interaktives Rätsel)
+  const kellerPz   = state.puzzles?.['floor-keller']
+  const pzProgress = kellerPz?.progress?.length ?? 0
+  const pzSolved   = kellerPz?.solved ?? false
+  const pzTouched  = pzSolved || pzProgress > 0
 
   return (
     <div className="gap-12">
@@ -107,6 +114,38 @@ export default function Dashboard() {
                 </div>
               )
             })}
+          </div>
+        </div>
+      )}
+
+      {/* Rätsel */}
+      {adventure && (
+        <div className="card">
+          <div className="section-title">Rätsel</div>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px',
+            background: 'var(--bg-mid)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius)',
+          }}>
+            <span style={{ flex: 1, fontSize: '0.88rem', color: 'var(--text)' }}>
+              Versiegelte Pforte <span style={{ color: 'var(--text-muted)' }}>(Keller)</span>
+            </span>
+            <span style={{ fontSize: '0.8rem', color: pzSolved ? 'var(--gold)' : 'var(--text-muted)' }}>
+              {pzSolved ? '✓ gelöst' : pzProgress > 0 ? `${pzProgress}/4` : 'unberührt'}
+            </span>
+            {resetConfirm ? (
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--red)' }}>Zurücksetzen?</span>
+                <button className="btn btn-sm btn-red"
+                  onClick={() => { actions.resetPuzzle('floor-keller'); setResetConfirm(false) }}>Ja</button>
+                <button className="btn btn-sm" onClick={() => setResetConfirm(false)}>Nein</button>
+              </div>
+            ) : (
+              <button className="btn btn-sm" disabled={!pzTouched}
+                style={{ opacity: pzTouched ? 1 : 0.4, cursor: pzTouched ? 'pointer' : 'not-allowed' }}
+                onClick={() => setResetConfirm(true)}>
+                Zurücksetzen
+              </button>
+            )}
           </div>
         </div>
       )}
