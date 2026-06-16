@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react'
 import { useGame } from '../../context/GameContext'
+import { PUZZLES, SEASON_BY_ID } from '../../puzzles'
 
 export default function Dashboard() {
   const { state, actions } = useGame()
   const fileRef = useRef()
   const [lockConfirm, setLockConfirm] = useState(null)
-  const [resetConfirm, setResetConfirm] = useState(false)
+  const [resetConfirm, setResetConfirm] = useState(null)
 
   function handleFileUpload(e) {
     const file = e.target.files[0]
@@ -26,12 +27,6 @@ export default function Dashboard() {
   const adventure = state.adventure
   const floors = adventure?.floors ?? []
   const currentFloor = floors.find(f => f.id === state.currentFloor)
-
-  // Keller-Jahreszeiten-Rätsel (einziges interaktives Rätsel)
-  const kellerPz   = state.puzzles?.['floor-keller']
-  const pzProgress = kellerPz?.progress?.length ?? 0
-  const pzSolved   = kellerPz?.solved ?? false
-  const pzTouched  = pzSolved || pzProgress > 0
 
   return (
     <div className="gap-12">
@@ -118,34 +113,83 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Rätsel */}
-      {adventure && (
+      {/* Rätsel-Fortschritt */}
+      {adventure && PUZZLES.length > 0 && (
         <div className="card">
-          <div className="section-title">Rätsel</div>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px',
-            background: 'var(--bg-mid)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius)',
-          }}>
-            <span style={{ flex: 1, fontSize: '0.88rem', color: 'var(--text)' }}>
-              Versiegelte Pforte <span style={{ color: 'var(--text-muted)' }}>(Keller)</span>
-            </span>
-            <span style={{ fontSize: '0.8rem', color: pzSolved ? 'var(--gold)' : 'var(--text-muted)' }}>
-              {pzSolved ? '✓ gelöst' : pzProgress > 0 ? `${pzProgress}/4` : 'unberührt'}
-            </span>
-            {resetConfirm ? (
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--red)' }}>Zurücksetzen?</span>
-                <button className="btn btn-sm btn-red"
-                  onClick={() => { actions.resetPuzzle('floor-keller'); setResetConfirm(false) }}>Ja</button>
-                <button className="btn btn-sm" onClick={() => setResetConfirm(false)}>Nein</button>
-              </div>
-            ) : (
-              <button className="btn btn-sm" disabled={!pzTouched}
-                style={{ opacity: pzTouched ? 1 : 0.4, cursor: pzTouched ? 'pointer' : 'not-allowed' }}
-                onClick={() => setResetConfirm(true)}>
-                Zurücksetzen
-              </button>
-            )}
+          <div className="section-title">Rätsel-Fortschritt</div>
+          <div className="gap-8">
+            {PUZZLES.map(pz => {
+              const st        = state.puzzles?.[pz.id] ?? { progress: [], solved: false }
+              const total     = pz.solution.length
+              const done      = st.solved ? total : (st.progress?.length ?? 0)
+              const touched   = done > 0
+              const confirming = resetConfirm === pz.id
+
+              return (
+                <div key={pz.id} style={{
+                  padding: 12, background: 'var(--bg-mid)',
+                  border: `1px solid ${st.solved ? 'var(--gold-dim)' : 'var(--border-dim)'}`,
+                  borderRadius: 'var(--radius)',
+                }}>
+                  {/* Kopf */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <span style={{ flex: 1, fontSize: '0.9rem', color: 'var(--text)' }}>
+                      {pz.label} <span style={{ color: 'var(--text-muted)' }}>({pz.floorLabel})</span>
+                    </span>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 'bold',
+                      color: st.solved ? 'var(--gold)' : 'var(--text-muted)' }}>
+                      {st.solved ? '✓ gelöst' : `${done} / ${total}`}
+                    </span>
+                  </div>
+
+                  {/* Schritt-Sequenz: gelöste Schritte mit Symbol, offene als ○ */}
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                    {pz.solution.map((sid, i) => {
+                      const isDone = i < done
+                      const s = SEASON_BY_ID[sid] ?? { sym: '?', label: sid }
+                      return (
+                        <div key={i} style={{
+                          display: 'flex', alignItems: 'center', gap: 6, padding: '5px 9px',
+                          borderRadius: 'var(--radius)',
+                          background: isDone ? '#243f17' : 'transparent',
+                          border: `1px solid ${isDone ? '#5a8a30' : 'var(--border-dim)'}`,
+                          opacity: isDone ? 1 : 0.55,
+                        }}>
+                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{i + 1}</span>
+                          {isDone ? (
+                            <>
+                              <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{s.sym}</span>
+                              <span style={{ fontSize: '0.8rem', color: 'var(--text)' }}>{s.label}</span>
+                              <span style={{ color: '#7bdc4e', fontSize: '0.8rem' }}>✓</span>
+                            </>
+                          ) : (
+                            <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>○</span>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* Zurücksetzen */}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
+                    {confirming ? (
+                      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.78rem', color: 'var(--red)' }}>Zurücksetzen?</span>
+                        <button className="btn btn-sm btn-red"
+                          onClick={() => { actions.resetPuzzle(pz.id); setResetConfirm(null) }}>Ja</button>
+                        <button className="btn btn-sm" onClick={() => setResetConfirm(null)}>Nein</button>
+                      </div>
+                    ) : (
+                      <button className="btn btn-sm" disabled={!touched}
+                        style={{ opacity: touched ? 1 : 0.4, cursor: touched ? 'pointer' : 'not-allowed' }}
+                        onClick={() => setResetConfirm(pz.id)}>
+                        Zurücksetzen
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

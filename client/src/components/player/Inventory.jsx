@@ -3,33 +3,8 @@ import { useGame } from '../../context/GameContext'
 export default function Inventory() {
   const { state } = useGame()
 
-  const floorLabel = state.adventure?.floors?.find(f => f.id === state.currentFloor)?.label
-
   return (
     <div className="gap-12">
-      {/* Fortschritt */}
-      {state.adventure && (
-        <div className="card">
-          <div className="section-title">Fortschritt</div>
-          <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
-            {state.adventure.floors.map(f => {
-              const unlocked = state.unlockedFloors.includes(f.id)
-              const current = state.currentFloor === f.id
-              return (
-                <div
-                  key={f.id}
-                  className={`progress-step ${current ? 'current' : unlocked ? 'unlocked' : ''}`}
-                  title={f.label}
-                />
-              )
-            })}
-          </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)' }}>
-            {floorLabel ?? 'Noch nicht gestartet'}
-          </div>
-        </div>
-      )}
-
       {/* Items */}
       <div className="card">
         <div className="section-title">Gefundene Items</div>

@@ -1,13 +1,8 @@
 import { useGame } from '../../context/GameContext'
+import { SEASONS } from '../../puzzles'
 
-// Keller – Jahreszeiten-Rätsel. Anordnung wie auf der alten Karte
+// Keller – Jahreszeiten-Rätsel. Anzeige-Reihenfolge wie auf der alten Karte
 // (Winter, Frühling / Herbst, Sommer), damit die Lösung nicht trivial ist.
-const SEASONS = [
-  { id: 'winter',    sym: '❄', label: 'Winter'   },
-  { id: 'fruehling', sym: '🌸', label: 'Frühling' },
-  { id: 'herbst',    sym: '🍂', label: 'Herbst'   },
-  { id: 'sommer',    sym: '☀', label: 'Sommer'   },
-]
 const TOTAL = SEASONS.length
 
 export default function PuzzleView() {
