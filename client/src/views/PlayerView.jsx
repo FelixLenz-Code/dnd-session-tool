@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useGame } from '../context/GameContext'
 import MessageFeed from '../components/player/MessageFeed'
-import MapDisplay from '../components/player/MapDisplay'
 import CrystalView from '../components/player/CrystalView'
 import Inventory from '../components/player/Inventory'
 import TimerBanner from '../components/player/TimerBanner'
@@ -16,7 +15,6 @@ export default function PlayerView() {
 
   const TABS = [
     { id: 'feed',      label: 'Feed' },
-    { id: 'map',       label: 'Karte' },
     ...(showCrystal ? [{ id: 'crystal', label: 'Kristall' }] : []),
     { id: 'inventory', label: 'Inventar' },
   ]
@@ -51,9 +49,8 @@ export default function PlayerView() {
         ))}
       </div>
 
-      <div className="scroll-area" style={tab === 'map' ? { padding: 0, overflow: 'hidden' } : {}}>
+      <div className="scroll-area">
         {tab === 'feed'      && <MessageFeed />}
-        {tab === 'map'       && <MapDisplay fullscreen />}
         {tab === 'crystal'   && <CrystalView />}
         {tab === 'inventory' && <Inventory />}
       </div>

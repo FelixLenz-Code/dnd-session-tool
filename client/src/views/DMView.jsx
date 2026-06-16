@@ -4,13 +4,11 @@ import EventPanel from '../components/dm/EventPanel'
 import PlayerList from '../components/dm/PlayerList'
 import MessageComposer from '../components/dm/MessageComposer'
 import TimerPanel from '../components/dm/TimerPanel'
-import MapControl from '../components/dm/MapControl'
 import { useGame } from '../context/GameContext'
 
 const TABS = [
   { id: 'dashboard', label: 'Übersicht' },
   { id: 'events',    label: 'Ereignisse' },
-  { id: 'map',       label: 'Karte' },
   { id: 'messages',  label: 'Nachrichten' },
   { id: 'timer',     label: 'Timer' },
   { id: 'players',   label: 'Spieler' },
@@ -38,7 +36,6 @@ export default function DMView() {
       <div className="scroll-area">
         {tab === 'dashboard' && <Dashboard />}
         {tab === 'events'    && <EventPanel />}
-        {tab === 'map'       && <MapControl />}
         {tab === 'messages'  && <MessageComposer />}
         {tab === 'timer'     && <TimerPanel />}
         {tab === 'players'   && <PlayerList />}
