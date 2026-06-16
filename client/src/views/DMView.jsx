@@ -7,16 +7,28 @@ import TimerPanel from '../components/dm/TimerPanel'
 import { useGame } from '../context/GameContext'
 
 const TABS = [
-  { id: 'dashboard', label: 'Übersicht' },
-  { id: 'events',    label: 'Ereignisse' },
-  { id: 'messages',  label: 'Nachrichten' },
-  { id: 'timer',     label: 'Timer' },
-  { id: 'players',   label: 'Spieler' },
+  { id: 'leitung', label: 'Leitung' },
+  { id: 'players', label: 'Spieler' },
 ]
+
+// Ein Block im Leitungs-Layout — bleibt beim Umbruch zusammen.
+function Block({ title, children }) {
+  return (
+    <div style={{ breakInside: 'avoid', marginBottom: 16 }}>
+      <div style={{
+        fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+        color: 'var(--gold-dim)', margin: '0 0 8px 2px',
+      }}>
+        {title}
+      </div>
+      {children}
+    </div>
+  )
+}
 
 export default function DMView() {
   const { state } = useGame()
-  const [tab, setTab] = useState('dashboard')
+  const [tab, setTab] = useState('leitung')
 
   return (
     <div className="screen">
@@ -34,11 +46,16 @@ export default function DMView() {
       </div>
 
       <div className="scroll-area">
-        {tab === 'dashboard' && <Dashboard />}
-        {tab === 'events'    && <EventPanel />}
-        {tab === 'messages'  && <MessageComposer />}
-        {tab === 'timer'     && <TimerPanel />}
-        {tab === 'players'   && <PlayerList />}
+        {tab === 'leitung' && (
+          // Mehrspaltig: auf breiten Schirmen mehrere Reihen, alles auf einmal sichtbar.
+          <div style={{ columnWidth: '380px', columnGap: '16px' }}>
+            <Block title="Übersicht"><Dashboard /></Block>
+            <Block title="Ereignisse"><EventPanel /></Block>
+            <Block title="Nachrichten"><MessageComposer /></Block>
+            <Block title="Timer"><TimerPanel /></Block>
+          </div>
+        )}
+        {tab === 'players' && <PlayerList />}
       </div>
     </div>
   )

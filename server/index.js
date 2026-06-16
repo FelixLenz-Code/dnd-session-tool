@@ -81,9 +81,16 @@ app.post('/api/adventure', (req, res) => {
 
 const PUZZLES = {
   'floor-keller': {
+    type: 'sequence',
     solution: ['winter', 'fruehling', 'sommer', 'herbst'],
     reward: 'floor-1',
     successMessage: '✨ Eines nach dem anderen sinken die vier Reliefs in den Stein. Wärme breitet sich aus, ein feiner Riss läuft durch die Pforte – und mit einem Laut wie ein endlich ausgeatmeter Atemzug teilt sie sich. Staub rieselt herab. Dahinter windet sich eine schmale Treppe hinauf ins Dunkel, der Bibliothek entgegen. Auf der ersten Stufe liegt, vom Zug hergeweht, ein einzelnes vertrocknetes Ahornblatt.',
+  },
+  'floor-1': {
+    type: 'password',
+    answers: ['das binden des aegis', 'binden des aegis', 'aegis', 'der aegis'],
+    reward: 'floor-2',
+    successMessage: 'Kaum ist der Titel gesprochen, glüht die Messingplatte warm auf und der Bann über der Treppe zerfasert wie Rauch. »Das Binden des Aegis« – das Buch, das beschreibt, wie man den Schutzstein aus seinem Siegel löst. Wer es nahm, wollte den Aegisstein. Frei liegt nun die Treppe hinauf ins Labor.',
   },
 }
 
@@ -243,23 +250,41 @@ io.on('connection', (socket) => {
     const pz = session.puzzles[mapId]
     if (pz.solved) return
 
-    const expected = def.solution[pz.progress.length]
-    if (elementId === expected) {
-      pz.progress.push(elementId)
-      if (pz.progress.length === def.solution.length) {
-        pz.solved = true
-        const floorId = def.reward
-        if (!session.unlockedFloors.includes(floorId)) session.unlockedFloors.push(floorId)
-        const rewardMap = floorToMapId(floorId)
-        if (!session.unlockedMaps.includes(rewardMap)) session.unlockedMaps.push(rewardMap)
-        session.currentFloor = floorId
-        session.map = { type: rewardMap, marker: session.map?.marker ?? null }
-        const msg = { id: Date.now(), from: 'System', to: null, message: def.successMessage, type: 'event', ts: Date.now() }
-        session.messages.push(msg)
-        io.emit('new_message', msg)
+    const type = def.type ?? 'sequence'
+    let solvedNow = false
+    let wrong = false
+
+    if (type === 'password') {
+      const norm = s => String(s).toLowerCase().trim().replace(/\s+/g, ' ')
+      if (def.answers.some(a => norm(a) === norm(elementId))) {
+        pz.progress = [elementId]
+        solvedNow = true
+      } else {
+        wrong = true
       }
     } else {
-      pz.progress = []
+      const expected = def.solution[pz.progress.length]
+      if (elementId === expected) {
+        pz.progress.push(elementId)
+        if (pz.progress.length === def.solution.length) solvedNow = true
+      } else {
+        pz.progress = []
+        wrong = true
+      }
+    }
+
+    if (solvedNow) {
+      pz.solved = true
+      const floorId = def.reward
+      if (!session.unlockedFloors.includes(floorId)) session.unlockedFloors.push(floorId)
+      const rewardMap = floorToMapId(floorId)
+      if (!session.unlockedMaps.includes(rewardMap)) session.unlockedMaps.push(rewardMap)
+      session.currentFloor = floorId
+      session.map = { type: rewardMap, marker: session.map?.marker ?? null }
+      const msg = { id: Date.now(), from: 'System', to: null, message: def.successMessage, type: 'event', ts: Date.now() }
+      session.messages.push(msg)
+      io.emit('new_message', msg)
+    } else if (wrong) {
       io.emit('puzzle_wrong', { mapId })
     }
     io.emit('state_sync', publicState(session))

@@ -5,13 +5,14 @@ import PuzzleView from '../components/player/PuzzleView'
 import CrystalView from '../components/player/CrystalView'
 import Inventory from '../components/player/Inventory'
 import TimerBanner from '../components/player/TimerBanner'
+import { PUZZLE_BY_FLOOR } from '../puzzles'
 
 export default function PlayerView() {
   const { state } = useGame()
   const [tab, setTab] = useState('feed')
 
-  // Rätsel-Tab: sichtbar, solange ein interaktives Rätsel der aktuellen Etage offen ist
-  const showRiddle = state.currentFloor === 'keller'
+  // Rätsel-Tab: sichtbar, sobald die aktuelle Etage ein interaktives Rätsel hat
+  const showRiddle = !!PUZZLE_BY_FLOOR[state.currentFloor]
 
   // Kristall-Tab: sichtbar sobald ein Kristall zugewiesen ist ODER Spieler im Archiv
   const crystalFloorId = state.adventure?.crystals?.[0]?.floorId ?? 'floor-4'

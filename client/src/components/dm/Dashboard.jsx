@@ -120,9 +120,10 @@ export default function Dashboard() {
           <div className="gap-8">
             {PUZZLES.map(pz => {
               const st        = state.puzzles?.[pz.id] ?? { progress: [], solved: false }
-              const total     = pz.solution.length
-              const done      = st.solved ? total : (st.progress?.length ?? 0)
-              const touched   = done > 0
+              const isSeq     = pz.type === 'sequence'
+              const total     = isSeq ? pz.solution.length : 1
+              const done      = st.solved ? total : (isSeq ? (st.progress?.length ?? 0) : 0)
+              const touched   = st.solved || done > 0
               const confirming = resetConfirm === pz.id
 
               return (
@@ -138,37 +139,44 @@ export default function Dashboard() {
                     </span>
                     <span style={{ fontSize: '0.78rem', fontWeight: 'bold',
                       color: st.solved ? 'var(--gold)' : 'var(--text-muted)' }}>
-                      {st.solved ? '✓ gelöst' : `${done} / ${total}`}
+                      {st.solved ? '✓ gelöst' : isSeq ? `${done} / ${total}` : 'offen'}
                     </span>
                   </div>
 
-                  {/* Schritt-Sequenz: gelöste Schritte mit Symbol, offene als ○ */}
-                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                    {pz.solution.map((sid, i) => {
-                      const isDone = i < done
-                      const s = SEASON_BY_ID[sid] ?? { sym: '?', label: sid }
-                      return (
-                        <div key={i} style={{
-                          display: 'flex', alignItems: 'center', gap: 6, padding: '5px 9px',
-                          borderRadius: 'var(--radius)',
-                          background: isDone ? '#243f17' : 'transparent',
-                          border: `1px solid ${isDone ? '#5a8a30' : 'var(--border-dim)'}`,
-                          opacity: isDone ? 1 : 0.55,
-                        }}>
-                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{i + 1}</span>
-                          {isDone ? (
-                            <>
-                              <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{s.sym}</span>
-                              <span style={{ fontSize: '0.8rem', color: 'var(--text)' }}>{s.label}</span>
-                              <span style={{ color: '#7bdc4e', fontSize: '0.8rem' }}>✓</span>
-                            </>
-                          ) : (
-                            <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>○</span>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
+                  {isSeq ? (
+                    /* Schritt-Sequenz: gelöste Schritte mit Symbol, offene als ○ */
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      {pz.solution.map((sid, i) => {
+                        const isDone = i < done
+                        const s = SEASON_BY_ID[sid] ?? { sym: '?', label: sid }
+                        return (
+                          <div key={i} style={{
+                            display: 'flex', alignItems: 'center', gap: 6, padding: '5px 9px',
+                            borderRadius: 'var(--radius)',
+                            background: isDone ? '#243f17' : 'transparent',
+                            border: `1px solid ${isDone ? '#5a8a30' : 'var(--border-dim)'}`,
+                            opacity: isDone ? 1 : 0.55,
+                          }}>
+                            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{i + 1}</span>
+                            {isDone ? (
+                              <>
+                                <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{s.sym}</span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text)' }}>{s.label}</span>
+                                <span style={{ color: '#7bdc4e', fontSize: '0.8rem' }}>✓</span>
+                              </>
+                            ) : (
+                              <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>○</span>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    /* Passwort-Rätsel: kein Schritt-Fortschritt */
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                      Passwort-Eingabe — {pz.prompt}
+                    </div>
+                  )}
 
                   {/* Zurücksetzen */}
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>

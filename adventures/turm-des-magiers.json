@@ -121,11 +121,39 @@
       "message": "Unten am Türrahmen, nicht gemeißelt sondern hastig in den Stein geritzt, findet ihr zwei Namenskürzel: »A. V.« – und dicht daneben, halb wieder ausgekratzt, »M. V.«. Darunter ein einzelnes Wort, mit fester Hand eingegraben: »verzeih.« Der Stein ist hier dunkler, als hätte ihn jemand sehr oft berührt."
     },
     {
+      "id": "bibliothek-ankunft",
+      "label": "Die Bibliothek",
+      "floorId": "floor-1",
+      "type": "narrative",
+      "message": "Die Bibliothek riecht nach Staub und kaltem Wachs. Regale reichen bis zur Decke, die meisten Bände unberührt. Auf einem Lesepult steht eine heruntergebrannte Kerze. Über der Treppe nach oben flirrt die Luft – ein Bann liegt über ihr. In eine Messingplatte am Treppenfuß ist, in Aldrics feiner Handschrift, eine Frage graviert:\n\n»Nenne das Buch, das hier fehlt – nur wer weiß, was ich verbarg, darf weiter.«"
+    },
+    {
       "id": "bibliothek-luecke",
       "label": "Die Lücke im Regal",
       "floorId": "floor-1",
       "type": "narrative",
       "message": "Zwischen einem Band über Schutzzauber und einem Werk über alte Runen klafft eine auffällige Lücke. Das Regal ist verstaubt – nur genau hier nicht. Jemand hat dieses Buch kürzlich entfernt. Was stand darin?"
+    },
+    {
+      "id": "bibliothek-katalog",
+      "label": "Der Zettelkasten",
+      "floorId": "floor-1",
+      "type": "secret",
+      "message": "Im Zettelkasten fehlt die Karteikarte zum entnommenen Buch. Doch auf dem Kärtchen dahinter hat sie sich durchgedrückt. Haltet ihr es ins schräge Licht, wird die Prägung lesbar:\n\n»Das Binden des Aegis« — A. Vorn"
+    },
+    {
+      "id": "bibliothek-ausleihe",
+      "label": "Aldrics Ausleih-Buch",
+      "floorId": "floor-1",
+      "type": "secret",
+      "message": "Aldrics Ausleih-Buch liegt aufgeschlagen auf dem Pult. Der letzte Eintrag stammt aus den Tagen vor seinem Tod – in fremder, eiliger Schrift. Der Titel ist hastig geschwärzt, daneben stehen nur zwei Buchstaben: »M. V.«"
+    },
+    {
+      "id": "bibliothek-falsch",
+      "label": "Falsches Wort gesprochen",
+      "floorId": "floor-1",
+      "type": "event",
+      "message": "Das falsche Wort verhallt zwischen den Regalen. Der Bann über der Treppe zieht sich zischend zusammen, Staub rieselt aus den Borden, die Kerze erlischt. Nichts öffnet sich."
     },
     {
       "id": "labor-rezept",
