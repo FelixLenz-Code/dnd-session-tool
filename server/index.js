@@ -2,6 +2,7 @@ const express = require('express')
 const { createServer } = require('http')
 const { Server } = require('socket.io')
 const path = require('path')
+const fs = require('fs')
 const { createSession } = require('./session')
 
 const app = express()
@@ -12,6 +13,15 @@ app.use(express.json({ limit: '10mb' }))
 app.use(express.static(path.join(__dirname, '../client/dist')))
 
 let session = createSession()
+
+// Standard-Adventure beim Start laden (der DM kann es jederzeit überschreiben).
+try {
+  const advPath = path.join(__dirname, '../adventures/turm-des-magiers.json')
+  session.adventure = JSON.parse(fs.readFileSync(advPath, 'utf-8'))
+  console.log(`📖 Standard-Adventure geladen: ${session.adventure.title}`)
+} catch (err) {
+  console.warn('⚠ Kein Standard-Adventure geladen:', err.message)
+}
 
 // ── REST ──────────────────────────────────────────────────────────────────────
 
@@ -73,7 +83,7 @@ const PUZZLES = {
   'floor-keller': {
     solution: ['winter', 'fruehling', 'sommer', 'herbst'],
     reward: 'floor-1',
-    successMessage: '✨ Die Jahreszeiten-Symbole leuchten auf — die versiegelte Pforte öffnet sich langsam.',
+    successMessage: '✨ Eines nach dem anderen sinken die vier Reliefs in den Stein. Wärme breitet sich aus, ein feiner Riss läuft durch die Pforte – und mit einem Laut wie ein endlich ausgeatmeter Atemzug teilt sie sich. Staub rieselt herab. Dahinter windet sich eine schmale Treppe hinauf ins Dunkel, der Bibliothek entgegen. Auf der ersten Stufe liegt, vom Zug hergeweht, ein einzelnes vertrocknetes Ahornblatt.',
   },
 }
 

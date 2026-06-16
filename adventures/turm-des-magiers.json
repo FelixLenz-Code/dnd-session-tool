@@ -86,11 +86,39 @@
       "message": "Ihr erreicht die Handelsstadt Velmoor am Abend. Die Stadtmauern werfen lange Schatten. Im Norden, auf einem Hügel, ragt der Turm des verstorbenen Magiers Aldric Vorn in den Himmel – sein Licht erloschen, seine Geheimnisse ungeklärt. Stadtrat Haldin Mor bittet euch dringend: Der Turm muss gesichert werden, bevor ungebetene Gäste eindringen."
     },
     {
+      "id": "keller-ankunft",
+      "label": "Hinab in den Keller",
+      "floorId": "keller",
+      "type": "narrative",
+      "message": "Eine enge Wendeltreppe führt euch hinab in feuchte Kälte. Der Lichtkegel eurer Lampe fällt auf eine mächtige Pforte aus schwarzem Stein – fugenlos, ohne Griff, ohne Schloss. Um sie herum, in den Fels gehauen, vier verwitterte Reliefs: ein kahler Ast, eine berstende Knospe, eine hochstehende Sonne, fallendes Laub. Daneben, kaum noch lesbar, ein Gedicht. Die Luft riecht nach nassem Stein und sehr altem Frost."
+    },
+    {
       "id": "keller-gedicht",
       "label": "Das Gedicht an der Wand",
       "floorId": "keller",
       "type": "narrative",
       "message": "In den Stein gemeißelt, kaum lesbar durch Moos und Zeit:\n\n\"Wenn Schnee den letzten Atemzug bedeckt,\nWenn Blüten neu das Dunkel auferweckt,\nWenn Wärme ihren höchsten Bogen zieht,\nWenn buntes Laub im Wind die Abschied sieht –\n\nDrückt jene Hände, die das Jahr umschließt,\nBis sich die Pforte in das Licht ergießt.\""
+    },
+    {
+      "id": "keller-reliefs",
+      "label": "Die Reliefs untersuchen",
+      "floorId": "keller",
+      "type": "secret",
+      "message": "Tretet ihr näher an die vier Reliefs, erkennt ihr Einzelheiten: Der kahle Ast trägt einen letzten, gefrorenen Tropfen. Die Knospe sprengt den Stein, als wolle sie atmen. Die Sonne steht im Zenit, die Strahlen tief eingekerbt. Das Laub löst sich im Fall vom Zweig. Jedes Relief ist an einer Stelle glatt gewetzt – dort, wo über Jahre hinweg Finger es berührt haben. Wer hier ein und aus ging, kannte die Reihenfolge im Schlaf."
+    },
+    {
+      "id": "keller-fehlversuch",
+      "label": "Falsches Zeichen berührt",
+      "floorId": "keller",
+      "type": "event",
+      "message": "Eure Hand legt sich auf das falsche Zeichen. Ein Hauch eisiger Kälte fährt durch den Stein, ein dumpfes Grollen wandert die Wände hinauf – und das schwache Glimmen der Reliefs erlischt. Die Pforte bleibt verschlossen. Was immer ihr begonnen habt: Ihr müsst von vorn beginnen."
+    },
+    {
+      "id": "keller-fund",
+      "label": "Geritzte Namen am Türrahmen",
+      "floorId": "keller",
+      "type": "secret",
+      "message": "Unten am Türrahmen, nicht gemeißelt sondern hastig in den Stein geritzt, findet ihr zwei Namenskürzel: »A. V.« – und dicht daneben, halb wieder ausgekratzt, »M. V.«. Darunter ein einzelnes Wort, mit fester Hand eingegraben: »verzeih.« Der Stein ist hier dunkler, als hätte ihn jemand sehr oft berührt."
     },
     {
       "id": "bibliothek-luecke",
