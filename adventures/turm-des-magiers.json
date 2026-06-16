@@ -156,11 +156,32 @@
       "message": "Das falsche Wort verhallt zwischen den Regalen. Der Bann über der Treppe zieht sich zischend zusammen, Staub rieselt aus den Borden, die Kerze erlischt. Nichts öffnet sich."
     },
     {
+      "id": "labor-ankunft",
+      "label": "Das Labor",
+      "floorId": "floor-2",
+      "type": "narrative",
+      "message": "Das Labor empfängt euch mit dem Geruch von kaltem Metall und altem Rauch. Drei Arbeitstische: zwei von Staub bedeckt, ihre Phiolen längst eingetrocknet. Der dritte ist sauber gewischt – hier wurde zuletzt gearbeitet. In der Mitte ruht ein bauchiger Kessel über erloschener Glut. Auf dem aktiven Tisch liegt ein winziger, dunkler Kristall, reglos. Daneben Phiolen mit getrockneten Zutaten."
+    },
+    {
       "id": "labor-rezept",
       "label": "Aldrics Rezept-Notiz",
       "floorId": "floor-2",
       "type": "secret",
       "message": "Eine vergilbte Notiz auf dem aktiven Arbeitstisch:\n\n\"Formel für Gedächtnis-Essenz:\nKristallstaub (Basis) + Nebelsuppe (Verdünner) + Kristallstaub (Verstärker)\n\nDie Reihenfolge ist entscheidend. Die Essenz braucht Wiederholung des Grundmotivs. Gib sie dem Kristall – er wird sprechen.\"\n\nDarunter, mit zitternder Hand: \"Vergib mir, Mira.\""
+    },
+    {
+      "id": "labor-tische",
+      "label": "Die drei Arbeitstische",
+      "floorId": "floor-2",
+      "type": "secret",
+      "message": "Die beiden alten Tische tragen verblasste Versuche – Notizen über Schutzformeln, durchgestrichen und verworfen. Der aktive Tisch dagegen ist frisch benutzt: ein Ring aus Kristallstaub, ein verschütteter Tropfen, der den Lack verätzt hat. Wer hier zuletzt braute, arbeitete in Eile – und allein."
+    },
+    {
+      "id": "labor-falsch",
+      "label": "Der Sud verdirbt",
+      "floorId": "floor-2",
+      "type": "event",
+      "message": "Die falsche Zutat trifft den Sud. Er zischt, schlägt Blasen, verfärbt sich gallig – und versickert mit einem widerlichen Gestank im Abfluss des Kessels. Der Kessel ist wieder leer. Ihr müsst von vorn beginnen."
     },
     {
       "id": "spiegel7-vision",

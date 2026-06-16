@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useGame } from '../../context/GameContext'
 import { PUZZLE_BY_FLOOR } from '../../puzzles'
 
@@ -12,6 +12,7 @@ export default function PuzzleView() {
   }
   if (pz.type === 'sequence') return <SequencePuzzle pz={pz} />
   if (pz.type === 'password') return <PasswordPuzzle pz={pz} />
+  if (pz.type === 'mix')      return <MixPuzzle pz={pz} />
   return null
 }
 
@@ -138,6 +139,131 @@ function PasswordPuzzle({ pz }) {
           </form>
         )}
       </div>
+    </div>
+  )
+}
+
+// ── Misch-Rätsel (Labor: Zutaten in den Kessel ziehen — Maus & Touch) ───────────
+function MixPuzzle({ pz }) {
+  const { state, actions } = useGame()
+  const st       = state.puzzles?.[pz.id] ?? { progress: [], solved: false }
+  const wrong    = state.puzzleWrong === pz.id
+  const solved   = st.solved
+  const progress = st.progress ?? []
+  const optById  = Object.fromEntries(pz.options.map(o => [o.id, o]))
+
+  const cauldronRef = useRef(null)
+  const [drag, setDrag] = useState(null)   // { id, x, y, over }
+
+  function pointInCauldron(x, y) {
+    const r = cauldronRef.current?.getBoundingClientRect()
+    return !!r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
+  }
+  function onDown(e, id) {
+    if (solved) return
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+    setDrag({ id, x: e.clientX, y: e.clientY, over: false })
+  }
+  function onMove(e) {
+    if (!drag) return
+    setDrag(d => ({ ...d, x: e.clientX, y: e.clientY, over: pointInCauldron(e.clientX, e.clientY) }))
+  }
+  function onUp(e) {
+    if (!drag) return
+    const over = pointInCauldron(e.clientX, e.clientY)
+    const id = drag.id
+    setDrag(null)
+    if (over) actions.interactMap(pz.id, id)
+  }
+
+  return (
+    <div className="gap-12">
+      <div className="card">
+        <div className="section-title">{pz.label}</div>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+          Braut die Essenz: zieht die Zutaten <strong>in der richtigen Reihenfolge</strong> in den
+          Kessel. Eine falsche Zutat lässt den Sud verderben.
+        </p>
+      </div>
+
+      <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+        {/* Kessel (Drop-Ziel) */}
+        <div
+          ref={cauldronRef}
+          style={{
+            width: 180, height: 130, borderRadius: '0 0 90px 90px',
+            border: `3px solid ${solved ? '#5a8a30' : wrong ? '#8b1a14' : drag?.over ? 'var(--gold)' : 'var(--gold-dim)'}`,
+            borderTopLeftRadius: 16, borderTopRightRadius: 16,
+            background: solved ? 'radial-gradient(ellipse at 50% 30%, #2a4a18, #14100c)'
+              : wrong ? 'radial-gradient(ellipse at 50% 30%, #3a1410, #14100c)'
+              : 'radial-gradient(ellipse at 50% 30%, #241c10, #14100c)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap',
+            gap: 6, padding: 14, transition: 'border-color .15s',
+            boxShadow: drag?.over ? '0 0 18px rgba(184,122,10,0.5)' : 'none',
+          }}
+        >
+          {solved ? (
+            <span style={{ color: '#7bdc4e', fontWeight: 'bold', textAlign: 'center', fontSize: '0.9rem' }}>
+              ✨ Die Essenz<br />leuchtet silbern.
+            </span>
+          ) : progress.length === 0 ? (
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem', textAlign: 'center' }}>
+              {wrong ? 'Der Sud verdirbt…' : 'Zutaten hierher ziehen'}
+            </span>
+          ) : (
+            progress.map((id, i) => (
+              <span key={i} title={optById[id]?.label} style={{
+                width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
+                background: optById[id]?.color ?? '#888',
+                border: '2px solid rgba(0,0,0,0.35)',
+              }} />
+            ))
+          )}
+        </div>
+
+        {!solved && (
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            {progress.length} Zutat{progress.length === 1 ? '' : 'en'} im Kessel
+          </div>
+        )}
+
+        {/* Zutaten-Regal */}
+        {!solved && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+            {pz.options.map(opt => (
+              <div
+                key={opt.id}
+                onPointerDown={e => onDown(e, opt.id)}
+                onPointerMove={onMove}
+                onPointerUp={onUp}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  padding: '10px 12px', borderRadius: 'var(--radius)', minWidth: 84,
+                  background: 'var(--bg-mid)', border: '1px solid var(--border-dim)',
+                  cursor: 'grab', touchAction: 'none', userSelect: 'none',
+                  opacity: drag?.id === opt.id ? 0.4 : 1,
+                }}
+              >
+                <span style={{
+                  width: 26, height: 26, borderRadius: '50%',
+                  background: opt.color, border: '2px solid rgba(0,0,0,0.35)',
+                }} />
+                <span style={{ fontSize: '0.78rem', color: 'var(--text)' }}>{opt.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Schwebende Zutat während des Ziehens */}
+      {drag && (
+        <div style={{
+          position: 'fixed', left: drag.x, top: drag.y, transform: 'translate(-50%, -50%)',
+          width: 30, height: 30, borderRadius: '50%', pointerEvents: 'none', zIndex: 100,
+          background: optById[drag.id]?.color ?? '#888',
+          border: '2px solid rgba(0,0,0,0.4)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+        }} />
+      )}
     </div>
   )
 }

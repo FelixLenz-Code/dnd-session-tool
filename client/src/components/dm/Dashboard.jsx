@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useGame } from '../../context/GameContext'
-import { PUZZLES, SEASON_BY_ID } from '../../puzzles'
+import { PUZZLES } from '../../puzzles'
 
 export default function Dashboard() {
   const { state, actions } = useGame()
@@ -86,14 +86,15 @@ export default function Dashboard() {
           <div className="gap-8">
             {PUZZLES.map(pz => {
               const st        = state.puzzles?.[pz.id] ?? { progress: [], solved: false }
-              const isSeq     = pz.type === 'sequence'
-              const total     = isSeq ? pz.solution.length : 1
-              const done      = st.solved ? total : (isSeq ? (st.progress?.length ?? 0) : 0)
+              const isOrdered = pz.type === 'sequence' || pz.type === 'mix'
+              const optById   = Object.fromEntries((pz.options ?? []).map(o => [o.id, o]))
+              const total     = isOrdered ? pz.solution.length : 1
+              const done      = st.solved ? total : (isOrdered ? (st.progress?.length ?? 0) : 0)
               const touched   = st.solved || done > 0
               const confirming = resetConfirm === pz.id
               const showInfo  = infoOpen === pz.id
-              const solutionText = isSeq
-                ? pz.solution.map(id => SEASON_BY_ID[id]?.label ?? id).join(' → ')
+              const solutionText = isOrdered
+                ? pz.solution.map(id => optById[id]?.label ?? id).join(' → ')
                 : pz.answer
 
               return (
@@ -122,7 +123,7 @@ export default function Dashboard() {
                     </button>
                     <span style={{ fontSize: '0.78rem', fontWeight: 'bold',
                       color: st.solved ? 'var(--gold)' : 'var(--text-muted)' }}>
-                      {st.solved ? '✓ gelöst' : isSeq ? `${done} / ${total}` : 'offen'}
+                      {st.solved ? '✓ gelöst' : isOrdered ? `${done} / ${total}` : 'offen'}
                     </span>
                   </div>
 
@@ -137,12 +138,12 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  {isSeq ? (
-                    /* Schritt-Sequenz: gelöste Schritte mit Symbol, offene als ○ */
+                  {isOrdered ? (
+                    /* Geordnete Schritte: gelöste mit Symbol/Farbe, offene als ○ */
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {pz.solution.map((sid, i) => {
                         const isDone = i < done
-                        const s = SEASON_BY_ID[sid] ?? { sym: '?', label: sid }
+                        const s = optById[sid] ?? { label: sid }
                         return (
                           <div key={i} style={{
                             display: 'flex', alignItems: 'center', gap: 6, padding: '5px 9px',
@@ -154,7 +155,9 @@ export default function Dashboard() {
                             <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{i + 1}</span>
                             {isDone ? (
                               <>
-                                <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{s.sym}</span>
+                                {s.sym
+                                  ? <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{s.sym}</span>
+                                  : <span style={{ width: 14, height: 14, borderRadius: '50%', background: s.color ?? '#888', border: '1px solid rgba(0,0,0,0.3)' }} />}
                                 <span style={{ fontSize: '0.8rem', color: 'var(--text)' }}>{s.label}</span>
                                 <span style={{ color: '#7bdc4e', fontSize: '0.8rem' }}>✓</span>
                               </>

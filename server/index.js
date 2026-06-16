@@ -92,6 +92,12 @@ const PUZZLES = {
     reward: 'floor-2',
     successMessage: 'Kaum ist der Titel gesprochen, glüht die Messingplatte warm auf und der Bann über der Treppe zerfasert wie Rauch. »Das Binden des Aegis« – das Buch, das beschreibt, wie man den Schutzstein aus seinem Siegel löst. Wer es nahm, wollte den Aegisstein. Frei liegt nun die Treppe hinauf ins Labor.',
   },
+  'floor-2': {
+    type: 'sequence',
+    solution: ['kristallstaub', 'nebelsuppe', 'kristallstaub'],
+    reward: 'floor-3',
+    successMessage: 'Die letzte Prise Kristallstaub sinkt in die Nebelsuppe – und der Sud beginnt silbern zu leuchten. Ihr gebt die Essenz dem kleinen Kristall auf dem Tisch. Er erwärmt sich, ein Flüstern erfüllt den Raum … und über der Treppe verblasst der Widerstand. Der Weg in die Spiegelkammer ist frei.',
+  },
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

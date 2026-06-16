@@ -10,6 +10,15 @@ export const SEASONS = [
 ]
 export const SEASON_BY_ID = Object.fromEntries(SEASONS.map(s => [s.id, s]))
 
+// Zutaten fürs Labor-Mischrätsel (mit Decoys).
+export const INGREDIENTS = [
+  { id: 'kristallstaub', label: 'Kristallstaub', color: '#bcd0ee' },
+  { id: 'nebelsuppe',    label: 'Nebelsuppe',    color: '#9aa6ae' },
+  { id: 'aschewurz',     label: 'Aschewurz',     color: '#7a5a3c' },
+  { id: 'mondtau',       label: 'Mondtau',       color: '#6fcfc0' },
+  { id: 'drachengalle',  label: 'Drachengalle',  color: '#86b840' },
+]
+
 // Alle interaktiven Rätsel der Kampagne.
 // id          = mapId für interactMap / Server-Schlüssel (Keller hat historisch 'floor-keller')
 // floorId     = Etage, auf der das Rätsel aktiv ist (steuert Sichtbarkeit des Tabs)
@@ -27,6 +36,12 @@ export const PUZZLES = [
     prompt: 'Nenne das Buch, das hier fehlt.',
     placeholder: 'Titel des fehlenden Buches…',
     answer: 'Das Binden des Aegis',
+  },
+  {
+    id: 'floor-2', floorId: 'floor-2', type: 'mix',
+    label: 'Die Gedächtnis-Essenz', floorLabel: 'Labor',
+    options: INGREDIENTS,
+    solution: ['kristallstaub', 'nebelsuppe', 'kristallstaub'],
   },
 ]
 
