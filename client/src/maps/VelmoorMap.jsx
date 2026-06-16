@@ -140,15 +140,15 @@ export default function VelmoorMap({ marker, svgStyle }) {
       <path d="M 72 116 Q 130 120 175 158" fill="none" stroke={INKL} strokeWidth="1.4" strokeDasharray="5,4"/>
       <Plaque cx={61} cy={148} text="Turm des Magiers" fs={7.5}/>
 
-      {/* Kompassrose (Südosten) */}
-      <circle cx="466" cy="350" r="26" fill="#e8d8a8" stroke={INK} strokeWidth="1.5"/>
-      <circle cx="466" cy="350" r="22" fill="none" stroke={INKM} strokeWidth="0.6"/>
-      <polygon points="466,328 461,344 471,344" fill={INK}/>
-      <polygon points="466,372 461,356 471,356" fill={INKL}/>
-      <polygon points="444,350 460,345 460,355" fill={INKL}/>
-      <polygon points="488,350 472,345 472,355" fill={INKL}/>
-      <circle cx="466" cy="350" r="3.5" fill="#e8d8a8" stroke={INK} strokeWidth="1"/>
-      <text x="466" y="336" textAnchor="middle" fill={INK} fontSize="8.5" fontFamily="Georgia,serif" fontWeight="bold">N</text>
+      {/* Kompassrose (Südost-Ecke, frei in der Mauerlücke) */}
+      <circle cx="476" cy="356" r="22" fill="#e8d8a8" stroke={INK} strokeWidth="1.5"/>
+      <circle cx="476" cy="356" r="18" fill="none" stroke={INKM} strokeWidth="0.6"/>
+      <polygon points="476,334 471,350 481,350" fill={INK}/>
+      <polygon points="476,378 471,362 481,362" fill={INKL}/>
+      <polygon points="454,356 470,351 470,361" fill={INKL}/>
+      <polygon points="498,356 482,351 482,361" fill={INKL}/>
+      <circle cx="476" cy="356" r="3.5" fill="#e8d8a8" stroke={INK} strokeWidth="1"/>
+      <text x="476" y="342" textAnchor="middle" fill={INK} fontSize="8.5" fontFamily="Georgia,serif" fontWeight="bold">N</text>
 
       {/* Legende */}
       <rect x="20" y="332" width="118" height="50" fill="#f4ead0" stroke={INKM} strokeWidth="1.1" rx="3"/>

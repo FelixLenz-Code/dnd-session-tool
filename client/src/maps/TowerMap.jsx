@@ -90,6 +90,17 @@ export default function TowerMap({ marker, svgStyle }) {
         const isUnlocked = unlocked.includes(floor.id)
         const isLocked   = !isUnlocked && !isCurrent
 
+        // Oberste Etage steckt unter dem Dach: Inhalt erst ab Mauerkante (y72),
+        // damit Hintergrund und Beschriftung nicht in Zinnen/Dach ragen.
+        const isTop   = floor.y === 36
+        const bgY     = isTop ? 72 : floor.y + 1
+        const bgH     = isTop ? 32 : 67
+        const winY    = isTop ? 78 : floor.y + 18
+        const winH    = isTop ? 20 : 24
+        const labelY  = isTop ? 84 : floor.y + 32
+        const subY    = isTop ? 95 : floor.y + 47
+        const curY    = isTop ? 105 : floor.y + 62
+
         return (
           <g key={floor.id}>
             {/* Etagenboden-Linie */}
@@ -97,43 +108,43 @@ export default function TowerMap({ marker, svgStyle }) {
               stroke={isCurrent ? GOLD : INKM} strokeWidth={isCurrent ? 2 : 1}/>
 
             {/* Etagen-Hintergrund */}
-            <rect x="89" y={floor.y + 1} width="162" height="67"
+            <rect x="89" y={bgY} width="162" height={bgH}
               fill={isCurrent ? '#f0e8c0' : isUnlocked ? '#ede0b8' : '#c8b878'}
               opacity={isLocked ? 0.5 : 1}/>
 
             {/* Aktiver Glow */}
             {isCurrent && (
-              <rect x="89" y={floor.y + 1} width="162" height="67"
+              <rect x="89" y={bgY} width="162" height={bgH}
                 fill="none" stroke={GOLD} strokeWidth="2.5" filter="url(#tmGold)" opacity="0.6"/>
             )}
 
             {/* Fenster-Bogen */}
             {!isLocked && (
               <>
-                <rect x="102" y={floor.y + 18} width="14" height="24"
+                <rect x="102" y={winY} width="14" height={winH}
                   fill={isCurrent ? '#d4e8f0' : '#c8c0a0'} stroke={INKM} strokeWidth="1"/>
-                <path d={`M 102 ${floor.y+18} Q 109 ${floor.y+11} 116 ${floor.y+18}`}
+                <path d={`M 102 ${winY} Q 109 ${winY-7} 116 ${winY}`}
                   fill={isCurrent ? '#b8d8f0' : '#b8b090'} stroke={INKM} strokeWidth="0.8"/>
-                <rect x="228" y={floor.y + 18} width="14" height="24"
+                <rect x="228" y={winY} width="14" height={winH}
                   fill={isCurrent ? '#d4e8f0' : '#c8c0a0'} stroke={INKM} strokeWidth="1"/>
-                <path d={`M 228 ${floor.y+18} Q 235 ${floor.y+11} 242 ${floor.y+18}`}
+                <path d={`M 228 ${winY} Q 235 ${winY-7} 242 ${winY}`}
                   fill={isCurrent ? '#b8d8f0' : '#b8b090'} stroke={INKM} strokeWidth="0.8"/>
               </>
             )}
 
             {/* Beschriftung */}
-            <text x="170" y={floor.y + 32} textAnchor="middle" fill={isCurrent ? GOLDD : isLocked ? INKL : INKM}
+            <text x="170" y={labelY} textAnchor="middle" fill={isCurrent ? GOLDD : isLocked ? INKL : INKM}
               fontSize={isCurrent ? '11' : '10'} fontFamily="Georgia,serif"
               fontWeight={isCurrent ? 'bold' : 'normal'}
               filter={isCurrent ? 'url(#tmGold)' : 'none'}>
               {isLocked ? '🔒 ' : ''}{floor.label}
             </text>
-            <text x="170" y={floor.y + 47} textAnchor="middle"
+            <text x="170" y={subY} textAnchor="middle"
               fill={isCurrent ? INKM : isLocked ? '#c0b090' : INKL} fontSize="8" fontFamily="Georgia,serif">
               {isLocked ? 'gesperrt' : floor.sub}
             </text>
             {isCurrent && (
-              <text x="170" y={floor.y + 62} textAnchor="middle"
+              <text x="170" y={curY} textAnchor="middle"
                 fill={GOLD} fontSize="8.5" fontFamily="Georgia,serif" fontWeight="bold"
                 filter="url(#tmGold)">
                 ▶ Aktuelle Etage

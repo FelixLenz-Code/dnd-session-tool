@@ -341,8 +341,8 @@ export function FloorLabor({ marker, svgStyle }) {
       <Lbl x="102" y="277" text="(vergilbt, kaum lesbar)" fs={7.5} fill={INKL}/>
 
       {/* TREPPE */}
-      <StairRect x="300" y="240" w="76" h="50"/>
-      <Plaque cx={338} cy={277} text="▲ Treppe" fs={9}/>
+      <StairRect x="238" y="240" w="76" h="50"/>
+      <Plaque cx={276} cy={277} text="▲ Treppe" fs={9}/>
 
       <FooterEntrance y={316} totalH={360}/>
       {marker && <Marker x={210} y={216} label={marker.label}/>}
