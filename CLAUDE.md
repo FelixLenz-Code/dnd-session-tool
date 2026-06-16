@@ -1,6 +1,6 @@
 # CLAUDE.md – DnD Session Tool ("Turm des Magiers")
 
-Stand: v0.9.0. Web-Tool, mit dem ein DM eine Rätsel-Oneshot leitet und Spieler
+Stand: v0.10.0. Web-Tool, mit dem ein DM eine Rätsel-Oneshot leitet und Spieler
 (per Code) an ihren Geräten mitspielen. Echtzeit über Socket.io.
 
 ## Stack & Struktur
