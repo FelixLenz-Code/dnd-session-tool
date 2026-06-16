@@ -10,6 +10,18 @@ export const SEASONS = [
 ]
 export const SEASON_BY_ID = Object.fromEntries(SEASONS.map(s => [s.id, s]))
 
+// Spiegel der Spiegelkammer. Sieben zeigen Trug, Nr. 7 zeigt den Mord.
+export const MIRRORS = [
+  { id: 'spiegel-1', label: 'Spiegel 1', reflection: 'Der Raum, wie er jetzt ist – staubig und leer. Euer Atem dampft im kalten Glas.' },
+  { id: 'spiegel-2', label: 'Spiegel 2', reflection: 'Eure eigenen Gesichter, doch um Jahre gealtert und müde.' },
+  { id: 'spiegel-3', label: 'Spiegel 3', reflection: 'Ein sonniger Garten – und mittendrin steht ihr selbst, lachend. Ein Wunsch, kein Gestern.' },
+  { id: 'spiegel-4', label: 'Spiegel 4', reflection: 'Der Turm von außen, schwarze Wolken ziehen auf. Etwas, das erst kommen wird.' },
+  { id: 'spiegel-5', label: 'Spiegel 5', reflection: 'Euer Spiegelbild – doch die Augen darin gehören jemand anderem.' },
+  { id: 'spiegel-6', label: 'Spiegel 6', reflection: 'Nur Schwärze, in der ein blauer Funke aufglüht und wieder erlischt.' },
+  { id: 'spiegel-7', label: 'Spiegel 7', reflection: 'Dieser Raum – vor Jahren. Aldric Vorn kniet, alt und gebeugt. Hinter ihm tritt eine Gestalt aus dem Schatten, die Hand erhoben. Ihr seht den Tag des Mordes.' },
+  { id: 'spiegel-8', label: 'Spiegel 8', reflection: 'Euer Spiegelbild blinzelt – einen Lidschlag zu spät.' },
+]
+
 // Zutaten fürs Labor-Mischrätsel (mit Decoys).
 export const INGREDIENTS = [
   { id: 'kristallstaub', label: 'Kristallstaub', color: '#bcd0ee' },
@@ -42,6 +54,13 @@ export const PUZZLES = [
     label: 'Die Gedächtnis-Essenz', floorLabel: 'Labor',
     options: INGREDIENTS,
     solution: ['kristallstaub', 'nebelsuppe', 'kristallstaub'],
+  },
+  {
+    id: 'floor-3', floorId: 'floor-3', type: 'choice',
+    label: 'Der wahre Spiegel', floorLabel: 'Spiegelkammer',
+    prompt: 'Wähle den Spiegel, der die Wahrheit zeigt.',
+    options: MIRRORS,
+    solution: ['spiegel-7'],
   },
 ]
 

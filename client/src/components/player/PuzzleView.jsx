@@ -13,6 +13,7 @@ export default function PuzzleView() {
   if (pz.type === 'sequence') return <SequencePuzzle pz={pz} />
   if (pz.type === 'password') return <PasswordPuzzle pz={pz} />
   if (pz.type === 'mix')      return <MixPuzzle pz={pz} />
+  if (pz.type === 'choice')   return <ChoicePuzzle pz={pz} />
   return null
 }
 
@@ -264,6 +265,85 @@ function MixPuzzle({ pz }) {
           border: '2px solid rgba(0,0,0,0.4)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
         }} />
       )}
+    </div>
+  )
+}
+
+// ── Auswahl-Rätsel (Spiegelkammer: den wahren Spiegel finden) ───────────────────
+function ChoicePuzzle({ pz }) {
+  const { state, actions } = useGame()
+  const st        = state.puzzles?.[pz.id] ?? { solved: false }
+  const solved    = st.solved
+  const correctId = pz.solution[0]
+  const [pick, setPick] = useState(null)
+
+  function choose(id) {
+    if (solved) return
+    setPick(id)
+    actions.interactMap(pz.id, id)
+  }
+
+  const shownId  = solved ? correctId : pick
+  const shownOpt = pz.options.find(o => o.id === shownId)
+
+  return (
+    <div className="gap-12">
+      <div className="card">
+        <div className="section-title">{pz.label}</div>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+          Acht Spiegel. Sieben zeigen Trug – <strong>einer zeigt, was geschah</strong>.
+          Tretet vor sie und schaut hinein.
+        </p>
+      </div>
+
+      <div className="card">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+          {pz.options.map((o, i) => {
+            const isCorrect = solved && o.id === correctId
+            const dim = solved && o.id !== correctId
+            return (
+              <button
+                key={o.id}
+                onClick={() => choose(o.id)}
+                disabled={solved}
+                title={o.label}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                  padding: 6, borderRadius: 'var(--radius)', cursor: solved ? 'default' : 'pointer',
+                  background: 'transparent', border: 'none', opacity: dim ? 0.4 : 1,
+                  transition: 'opacity .2s',
+                }}
+              >
+                <span style={{
+                  width: '100%', aspectRatio: '0.62', borderRadius: 6,
+                  background: isCorrect
+                    ? 'linear-gradient(160deg, #3a6a4a, #14241a)'
+                    : pick === o.id
+                    ? 'linear-gradient(160deg, #5a4a2a, #1a140a)'
+                    : 'linear-gradient(160deg, #6a7a86, #1a2026)',
+                  border: `2px solid ${isCorrect ? '#5a8a30' : 'var(--gold-dim)'}`,
+                  boxShadow: isCorrect ? '0 0 14px rgba(90,138,48,0.6)' : 'inset 0 0 12px rgba(255,255,255,0.12)',
+                }} />
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{i + 1}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        {shownOpt && (
+          <div style={{
+            marginTop: 14, padding: '10px 12px', borderRadius: 'var(--radius)',
+            background: solved ? '#16240f' : 'var(--bg-mid)',
+            border: `1px solid ${solved ? '#5a8a30' : 'var(--gold-dim)'}`,
+            fontSize: '0.86rem', lineHeight: 1.6, color: 'var(--text)',
+          }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 4 }}>
+              {shownOpt.label}
+            </div>
+            {solved ? '✨ ' : ''}{shownOpt.reflection}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

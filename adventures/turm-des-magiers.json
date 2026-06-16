@@ -184,6 +184,20 @@
       "message": "Die falsche Zutat trifft den Sud. Er zischt, schlägt Blasen, verfärbt sich gallig – und versickert mit einem widerlichen Gestank im Abfluss des Kessels. Der Kessel ist wieder leer. Ihr müsst von vorn beginnen."
     },
     {
+      "id": "spiegel-ankunft",
+      "label": "Die Spiegelkammer",
+      "floorId": "floor-3",
+      "type": "narrative",
+      "message": "Acht hohe Spiegel stehen im Kreis, in geschwärzten Rahmen. Tretet ihr ein, vervielfacht sich euer Bild ins Unendliche – doch nicht jeder Spiegel zeigt dasselbe. Manche Bilder hinken nach, andere zeigen, was nie war. Neben einem der Spiegel führt eine schmale Tür weiter nach oben – verschlossen, ohne Klinke."
+    },
+    {
+      "id": "spiegel-inschrift",
+      "label": "Inschrift am Boden",
+      "floorId": "floor-3",
+      "type": "secret",
+      "message": "In den Steinboden in der Mitte des Kreises ist eine Zeile gemeißelt:\n\n»Sieben werfen dein Bild zurück. Einer zeigt, was war.«"
+    },
+    {
       "id": "spiegel7-vision",
       "label": "Spiegel 7 – Die Vision",
       "floorId": "floor-3",

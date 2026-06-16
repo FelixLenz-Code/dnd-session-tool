@@ -95,6 +95,8 @@ export default function Dashboard() {
               const showInfo  = infoOpen === pz.id
               const solutionText = isOrdered
                 ? pz.solution.map(id => optById[id]?.label ?? id).join(' → ')
+                : pz.type === 'choice'
+                ? (optById[pz.solution?.[0]]?.label ?? pz.solution?.[0])
                 : pz.answer
 
               return (
@@ -169,9 +171,9 @@ export default function Dashboard() {
                       })}
                     </div>
                   ) : (
-                    /* Passwort-Rätsel: kein Schritt-Fortschritt */
+                    /* Passwort-/Auswahl-Rätsel: kein Schritt-Fortschritt */
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                      Passwort-Eingabe — {pz.prompt}
+                      {pz.type === 'choice' ? 'Auswahl' : 'Passwort-Eingabe'} — {pz.prompt}
                     </div>
                   )}
 

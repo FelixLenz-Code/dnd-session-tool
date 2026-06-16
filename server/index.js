@@ -98,6 +98,12 @@ const PUZZLES = {
     reward: 'floor-3',
     successMessage: 'Die letzte Prise Kristallstaub sinkt in die Nebelsuppe – und der Sud beginnt silbern zu leuchten. Ihr gebt die Essenz dem kleinen Kristall auf dem Tisch. Er erwärmt sich, ein Flüstern erfüllt den Raum … und über der Treppe verblasst der Widerstand. Der Weg in die Spiegelkammer ist frei.',
   },
+  'floor-3': {
+    type: 'sequence',
+    solution: ['spiegel-7'],
+    reward: 'floor-4',
+    successMessage: 'Spiegel 7 hält die Wahrheit fest: Aldric, kniend; hinter ihm Mira Vael, die Hand erhoben. Im Glas wechselt ein blauer Stein den Besitzer. Dann verblasst das Bild – und neben dem Spiegel springt eine schmale Tür auf. Der Weg zum Archiv der Stimmen liegt frei.',
+  },
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
