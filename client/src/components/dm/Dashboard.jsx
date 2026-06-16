@@ -1,28 +1,12 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useGame } from '../../context/GameContext'
 import { PUZZLES, SEASON_BY_ID } from '../../puzzles'
 
 export default function Dashboard() {
   const { state, actions } = useGame()
-  const fileRef = useRef()
   const [lockConfirm, setLockConfirm] = useState(null)
   const [resetConfirm, setResetConfirm] = useState(null)
-
-  function handleFileUpload(e) {
-    const file = e.target.files[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (ev) => {
-      try {
-        const json = JSON.parse(ev.target.result)
-        actions.loadAdventure(json)
-      } catch {
-        alert('Ungültige JSON-Datei')
-      }
-    }
-    reader.readAsText(file)
-    e.target.value = ''
-  }
+  const [infoOpen, setInfoOpen] = useState(null)
 
   const adventure = state.adventure
   const floors = adventure?.floors ?? []
@@ -30,24 +14,6 @@ export default function Dashboard() {
 
   return (
     <div className="gap-12">
-
-      {/* Adventure laden */}
-      <div className="card">
-        <div className="section-title">Adventure</div>
-        {adventure ? (
-          <>
-            <div style={{ fontSize: '1.1rem', color: 'var(--gold)', marginBottom: 4 }}>{adventure.title}</div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)', marginBottom: 12 }}>{adventure.description}</div>
-            <button className="btn btn-sm" onClick={() => fileRef.current.click()}>Adventure wechseln</button>
-          </>
-        ) : (
-          <>
-            <div className="empty-state" style={{ padding: '20px 0' }}>Kein Adventure geladen</div>
-            <button className="btn btn-gold btn-full" onClick={() => fileRef.current.click()}>Adventure-JSON laden</button>
-          </>
-        )}
-        <input ref={fileRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleFileUpload} />
-      </div>
 
       {/* Fortschritt */}
       {adventure && (
@@ -125,6 +91,10 @@ export default function Dashboard() {
               const done      = st.solved ? total : (isSeq ? (st.progress?.length ?? 0) : 0)
               const touched   = st.solved || done > 0
               const confirming = resetConfirm === pz.id
+              const showInfo  = infoOpen === pz.id
+              const solutionText = isSeq
+                ? pz.solution.map(id => SEASON_BY_ID[id]?.label ?? id).join(' → ')
+                : pz.answer
 
               return (
                 <div key={pz.id} style={{
@@ -137,11 +107,35 @@ export default function Dashboard() {
                     <span style={{ flex: 1, fontSize: '0.9rem', color: 'var(--text)' }}>
                       {pz.label} <span style={{ color: 'var(--text-muted)' }}>({pz.floorLabel})</span>
                     </span>
+                    <button
+                      onClick={() => setInfoOpen(showInfo ? null : pz.id)}
+                      title="Lösung anzeigen"
+                      style={{
+                        flexShrink: 0, width: 22, height: 22, borderRadius: '50%',
+                        border: `1px solid ${showInfo ? 'var(--gold)' : 'var(--border-dim)'}`,
+                        background: showInfo ? 'var(--gold)' : 'transparent',
+                        color: showInfo ? '#1a0e06' : 'var(--text-muted)',
+                        fontSize: '0.8rem', fontStyle: 'italic', fontWeight: 'bold',
+                        cursor: 'pointer', lineHeight: 1,
+                      }}>
+                      i
+                    </button>
                     <span style={{ fontSize: '0.78rem', fontWeight: 'bold',
                       color: st.solved ? 'var(--gold)' : 'var(--text-muted)' }}>
                       {st.solved ? '✓ gelöst' : isSeq ? `${done} / ${total}` : 'offen'}
                     </span>
                   </div>
+
+                  {/* Lösung (nur DM, auf Knopfdruck) */}
+                  {showInfo && (
+                    <div style={{
+                      marginBottom: 10, padding: '8px 10px', borderRadius: 'var(--radius)',
+                      background: '#1a1408', border: '1px solid var(--gold-dim)',
+                      fontSize: '0.82rem', color: 'var(--gold)',
+                    }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Lösung: </span>{solutionText}
+                    </div>
+                  )}
 
                   {isSeq ? (
                     /* Schritt-Sequenz: gelöste Schritte mit Symbol, offene als ○ */

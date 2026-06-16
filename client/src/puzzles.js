@@ -26,6 +26,7 @@ export const PUZZLES = [
     label: 'Der Bann über der Treppe', floorLabel: 'Bibliothek',
     prompt: 'Nenne das Buch, das hier fehlt.',
     placeholder: 'Titel des fehlenden Buches…',
+    answer: 'Das Binden des Aegis',
   },
 ]
 

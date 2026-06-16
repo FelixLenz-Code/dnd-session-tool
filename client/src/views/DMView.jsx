@@ -4,11 +4,13 @@ import EventPanel from '../components/dm/EventPanel'
 import PlayerList from '../components/dm/PlayerList'
 import MessageComposer from '../components/dm/MessageComposer'
 import TimerPanel from '../components/dm/TimerPanel'
+import AdventurePanel from '../components/dm/AdventurePanel'
 import { useGame } from '../context/GameContext'
 
 const TABS = [
-  { id: 'leitung', label: 'Leitung' },
-  { id: 'players', label: 'Spieler' },
+  { id: 'leitung',   label: 'Leitung' },
+  { id: 'players',   label: 'Spieler' },
+  { id: 'adventure', label: 'Adventure' },
 ]
 
 // Ein Block im Leitungs-Layout — bleibt beim Umbruch zusammen.
@@ -56,6 +58,7 @@ export default function DMView() {
           </div>
         )}
         {tab === 'players' && <PlayerList />}
+        {tab === 'adventure' && <AdventurePanel />}
       </div>
     </div>
   )

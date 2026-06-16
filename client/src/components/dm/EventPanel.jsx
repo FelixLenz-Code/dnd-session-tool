@@ -22,9 +22,10 @@ export default function EventPanel() {
   const events  = state.adventure.events ?? []
   const players = state.players ?? []
 
-  const byFloor   = floors.map(f => ({ floor: f, events: events.filter(e => e.floorId === f.id) }))
-                          .filter(g => g.events.length > 0)
-  const unassigned = events.filter(e => !e.floorId)
+  // Immer auf die aktuelle Etage fokussiert: der DM sieht nur deren Ereignisse.
+  const current       = floors.find(f => f.id === state.currentFloor)
+  const currentEvents = current ? events.filter(e => e.floorId === current.id) : []
+  const unassigned    = events.filter(e => !e.floorId)
 
   function handleTrigger(eventId) {
     actions.triggerEvent(eventId, targetId || null)
@@ -101,19 +102,29 @@ export default function EventPanel() {
         )
       })()}
 
-      {byFloor.map(({ floor, events: evs }) => (
-        <div key={floor.id} className="card">
-          <div className="section-title">{floor.label}</div>
-          <div className="gap-8">
-            {evs.map(ev => (
-              <EventRow key={ev.id} event={ev} triggered={triggered.has(ev.id)}
-                isExpanded={expanded === ev.id}
-                onToggle={() => setExpanded(expanded === ev.id ? null : ev.id)}
-                onConfirm={() => openConfirm(ev.id)}/>
-            ))}
+      {current ? (
+        <div className="card">
+          <div className="section-title">{current.label}</div>
+          {currentEvents.length === 0 ? (
+            <div className="empty-state" style={{ padding: '12px 0' }}>Keine Ereignisse für diese Etage</div>
+          ) : (
+            <div className="gap-8">
+              {currentEvents.map(ev => (
+                <EventRow key={ev.id} event={ev} triggered={triggered.has(ev.id)}
+                  isExpanded={expanded === ev.id}
+                  onToggle={() => setExpanded(expanded === ev.id ? null : ev.id)}
+                  onConfirm={() => openConfirm(ev.id)}/>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="card">
+          <div className="empty-state" style={{ padding: '12px 0' }}>
+            Noch keine Etage aktiv — schalte im „Übersicht"-Fortschritt eine Etage frei.
           </div>
         </div>
-      ))}
+      )}
 
       {unassigned.length > 0 && (
         <div className="card">
