@@ -2,14 +2,13 @@ import { useState, useRef } from 'react'
 import { useGame } from '../../context/GameContext'
 import { PUZZLE_BY_FLOOR } from '../../puzzles'
 
-// Steuert, was auf dem geteilten Spieler-Display zu sehen ist (die „Bühne").
-export default function StagePanel() {
+// Bühnen-Umschaltung: was zeigt das geteilte Spieler-Display gerade?
+export function SceneControls() {
   const { state, actions } = useGame()
   const mode = state.stage?.mode ?? 'cover'
   const hasPuzzle = !!PUZZLE_BY_FLOOR[state.currentFloor]
   const hasCrystals = (state.adventure?.crystals ?? []).length > 0
   const hasQuestions = (state.adventure?.aldricQuestions ?? []).length > 0
-  const currentUrl = state.stage?.payload?.url
 
   const SceneButton = ({ active, disabled, onClick, icon, label, hint }) => (
     <button
@@ -34,46 +33,28 @@ export default function StagePanel() {
   )
 
   return (
-    <div className="gap-12">
-      <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span className="player-dot" style={{ background: state.displayOnline ? 'var(--green)' : 'var(--text-muted)', boxShadow: state.displayOnline ? '0 0 4px var(--green)' : 'none' }} />
-        <span style={{ color: state.displayOnline ? 'var(--text)' : 'var(--text-muted)', fontSize: '0.9rem' }}>
-          {state.displayOnline ? 'Spieler-Display verbunden' : 'Spieler-Display nicht verbunden'}
-        </span>
-        <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-          Code: <strong style={{ color: 'var(--gold)', letterSpacing: '0.12em' }}>{state.code ?? '—'}</strong>
-        </span>
-      </div>
+    <div className="card gap-8">
+      <div className="section-title">Was zeigt das Display?</div>
 
-      <div className="card gap-8">
-        <div className="section-title">Was zeigt das Display?</div>
+      <SceneButton active={mode === 'cover'} onClick={() => actions.setStage('cover')}
+        icon="🗼" label="Titelbild" hint="Ruhezustand zwischen den Szenen" />
 
-        <SceneButton active={mode === 'cover'} onClick={() => actions.setStage('cover')}
-          icon="🗼" label="Titelbild" hint="Ruhezustand zwischen den Szenen" />
+      <SceneButton active={mode === 'puzzle'} disabled={!hasPuzzle}
+        onClick={() => actions.setStage('puzzle')}
+        icon="🧩" label="Rätsel der aktuellen Etage"
+        hint={hasPuzzle ? 'Die Gruppe tippt direkt am Display' : 'Diese Etage hat kein Rätsel'} />
 
-        <SceneButton active={mode === 'puzzle'} disabled={!hasPuzzle}
-          onClick={() => actions.setStage('puzzle')}
-          icon="🧩" label="Rätsel der aktuellen Etage"
-          hint={hasPuzzle ? 'Die Gruppe tippt direkt am Display' : 'Diese Etage hat kein Rätsel'} />
+      <SceneButton active={mode === 'crystals'} disabled={!hasCrystals}
+        onClick={() => actions.setStage('crystals')}
+        icon="🔮" label="Kristall-Galerie" hint="Archiv der Stimmen (Etage 4)" />
 
-        <SceneButton active={mode === 'crystals'} disabled={!hasCrystals}
-          onClick={() => actions.setStage('crystals')}
-          icon="🔮" label="Kristall-Galerie" hint="Archiv der Stimmen (Etage 4)" />
-
-        <SceneButton active={mode === 'questions'} disabled={!hasQuestions}
-          onClick={() => actions.setStage('questions')}
-          icon="🔵" label="Aldrics Fragen" hint="Sanctum (Etage 5) – Roleplay-Fragen" />
-      </div>
-
-      <ImageManager mode={mode} currentUrl={currentUrl} />
-
-      <SoundManager />
-
-      <FindsManager />
+      <SceneButton active={mode === 'questions'} disabled={!hasQuestions}
+        onClick={() => actions.setStage('questions')}
+        icon="🔵" label="Aldrics Fragen" hint="Sanctum (Etage 5) – Roleplay-Fragen" />
 
       {mode === 'narration' && (
-        <div className="card" style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          Aktuell wird ein Erzähltext angezeigt. Über den „Titelbild"-Knopf zurück zur Ruheansicht.
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: 4 }}>
+          Aktuell läuft ein Erzähltext/Vision. „Titelbild" bringt das Display zur Ruhe zurück.
         </div>
       )}
     </div>
@@ -81,7 +62,7 @@ export default function StagePanel() {
 }
 
 // Eigene Sounddateien hochladen, benennen und aufs Spieler-Display abspielen.
-function SoundManager() {
+export function SoundManager() {
   const { state, actions } = useGame()
   const [name, setName] = useState('')
   const [busy, setBusy] = useState(false)
@@ -178,7 +159,7 @@ function SoundManager() {
 }
 
 // Geteilte Funde der Gruppe ein-/ausblenden (erscheinen als Leiste am Display).
-function FindsManager() {
+export function FindsManager() {
   const { state, actions } = useGame()
   const [label, setLabel] = useState('')
   const finds = state.finds ?? []
@@ -238,8 +219,10 @@ function FindsManager() {
 }
 
 // Karten/Handouts/Visionen als Bild aufs Display bringen — Upload oder URL.
-function ImageManager({ mode, currentUrl }) {
+export function ImageManager() {
   const { state, actions } = useGame()
+  const mode = state.stage?.mode ?? 'cover'
+  const currentUrl = state.stage?.payload?.url
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [busy, setBusy] = useState(false)
