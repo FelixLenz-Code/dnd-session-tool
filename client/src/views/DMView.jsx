@@ -2,16 +2,11 @@ import { useState } from 'react'
 import Dashboard from '../components/dm/Dashboard'
 import EventPanel from '../components/dm/EventPanel'
 import StagePanel from '../components/dm/StagePanel'
+import ConfrontationPanel from '../components/dm/ConfrontationPanel'
 import MessageComposer from '../components/dm/MessageComposer'
 import TimerPanel from '../components/dm/TimerPanel'
 import AdventurePanel from '../components/dm/AdventurePanel'
 import { useGame } from '../context/GameContext'
-
-const TABS = [
-  { id: 'leitung',   label: 'Leitung' },
-  { id: 'anzeige',   label: 'Anzeige' },
-  { id: 'adventure', label: 'Adventure' },
-]
 
 // Ein Block im Leitungs-Layout — bleibt beim Umbruch zusammen.
 function Block({ title, children }) {
@@ -32,6 +27,16 @@ export default function DMView() {
   const { state } = useGame()
   const [tab, setTab] = useState('leitung')
 
+  const hasFinale = (state.adventure?.floors ?? []).some(f => f.id === 'konfrontation')
+  const TABS = [
+    { id: 'leitung',   label: 'Leitung' },
+    { id: 'anzeige',   label: 'Anzeige' },
+    ...(hasFinale ? [{ id: 'finale', label: 'Finale' }] : []),
+    { id: 'adventure', label: 'Adventure' },
+  ]
+  // Falls der aktive Tab wegfällt (z. B. Adventure ohne Finale), auf Leitung zurück.
+  const activeTab = TABS.some(t => t.id === tab) ? tab : 'leitung'
+
   return (
     <div className="screen">
       <div className="header">
@@ -43,14 +48,14 @@ export default function DMView() {
 
       <div className="tabs">
         {TABS.map(t => (
-          <button key={t.id} className={`tab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
+          <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
             {t.label}
           </button>
         ))}
       </div>
 
       <div className="scroll-area">
-        {tab === 'leitung' && (
+        {activeTab === 'leitung' && (
           // Mehrspaltig: auf breiten Schirmen mehrere Reihen, alles auf einmal sichtbar.
           <div style={{ columnWidth: '380px', columnGap: '16px' }}>
             <Block title="Übersicht"><Dashboard /></Block>
@@ -59,8 +64,9 @@ export default function DMView() {
             <Block title="Timer"><TimerPanel /></Block>
           </div>
         )}
-        {tab === 'anzeige' && <StagePanel />}
-        {tab === 'adventure' && <AdventurePanel />}
+        {activeTab === 'anzeige' && <StagePanel />}
+        {activeTab === 'finale' && <ConfrontationPanel />}
+        {activeTab === 'adventure' && <AdventurePanel />}
       </div>
     </div>
   )
