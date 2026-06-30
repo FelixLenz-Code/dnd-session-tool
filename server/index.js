@@ -77,6 +77,7 @@ app.post('/api/adventure', (req, res) => {
   session.currentFloor = null
   session.map = { type: adventure.maps?.[0]?.id ?? null, marker: null }
   session.stage = { mode: 'cover', payload: null }
+  session.finds = []
   session.puzzles = {}
   io.emit('adventure_loaded', adventure)
   io.emit('state_sync', publicState(session))
@@ -130,6 +131,7 @@ function publicState(s) {
     adventure: s.adventure,
     displayOnline: !!s.displaySocketId,
     images: s.images,
+    finds: s.finds,
     currentFloor: s.currentFloor,
     unlockedFloors: s.unlockedFloors,
     unlockedMaps: s.unlockedMaps,
@@ -168,6 +170,21 @@ io.on('connection', (socket) => {
   socket.on('dm:set_stage', ({ mode, payload }) => {
     session.stage = { mode: mode ?? 'cover', payload: payload ?? null }
     io.emit('stage_update', session.stage)
+  })
+
+  // DM: Fund der Gruppe einblenden / entfernen (geteilte Funde-Leiste am Display)
+  socket.on('dm:add_find', ({ id, label, icon }) => {
+    const text = String(label ?? '').trim()
+    if (!text) return
+    const findId = id ?? `find-${Date.now()}`
+    if (session.finds.some(f => f.id === findId)) return
+    session.finds.push({ id: findId, label: text, icon: icon ?? '✦' })
+    io.emit('finds_update', session.finds)
+  })
+
+  socket.on('dm:remove_find', ({ id }) => {
+    session.finds = session.finds.filter(f => f.id !== id)
+    io.emit('finds_update', session.finds)
   })
 
   // DM: floor management

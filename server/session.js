@@ -12,6 +12,7 @@ function createSession() {
     adventure: null,
     displaySocketId: null,   // das eine geteilte Spieler-iPad
     images: [],              // hochgeladene Bilder/Karten: [{ id, name, url }]
+    finds: [],               // Funde der Gruppe (geteilt): [{ id, label, icon }]
     messages: [],
     unlockedFloors: [],
     unlockedMaps: [],    // nur wachsend — bleibt unlocked auch wenn Floor gesperrt

@@ -67,9 +67,71 @@ export default function StagePanel() {
 
       <ImageManager mode={mode} currentUrl={currentUrl} />
 
+      <FindsManager />
+
       {mode === 'narration' && (
         <div className="card" style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
           Aktuell wird ein Erzähltext angezeigt. Über den „Titelbild"-Knopf zurück zur Ruheansicht.
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Geteilte Funde der Gruppe ein-/ausblenden (erscheinen als Leiste am Display).
+function FindsManager() {
+  const { state, actions } = useGame()
+  const [label, setLabel] = useState('')
+  const finds = state.finds ?? []
+  const catalog = state.adventure?.items ?? []
+  const shownIds = new Set(finds.map(f => f.id))
+
+  function addFree() {
+    const text = label.trim()
+    if (!text) return
+    actions.addFind({ label: text })
+    setLabel('')
+  }
+
+  return (
+    <div className="card gap-12">
+      <div className="section-title">Funde der Gruppe</div>
+
+      {catalog.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {catalog.map(item => {
+            const active = shownIds.has(item.id)
+            return (
+              <button key={item.id}
+                className={`btn btn-sm ${active ? 'btn-green' : ''}`}
+                onClick={() => active ? actions.removeFind(item.id) : actions.addFind(item)}
+                title={active ? 'Vom Display entfernen' : 'Aufs Display einblenden'}>
+                {item.icon ?? '✦'} {item.label}{active ? ' ✓' : ''}
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: 8 }}>
+        <input className="input" placeholder="Eigener Fund…" value={label}
+          onChange={e => setLabel(e.target.value)} onKeyDown={e => e.key === 'Enter' && addFree()} />
+        <button className="btn" disabled={!label.trim()} onClick={addFree}>+ Einblenden</button>
+      </div>
+
+      {finds.length > 0 && (
+        <div className="gap-8">
+          {finds.map(f => (
+            <div key={f.id} style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
+              background: 'var(--bg-mid)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius)',
+            }}>
+              <span style={{ flexShrink: 0 }}>{f.icon}</span>
+              <span style={{ flex: 1, fontSize: '0.88rem' }}>{f.label}</span>
+              <button className="btn btn-sm" style={{ color: 'var(--text-muted)' }}
+                onClick={() => actions.removeFind(f.id)} title="Vom Display entfernen">✕</button>
+            </div>
+          ))}
         </div>
       )}
     </div>

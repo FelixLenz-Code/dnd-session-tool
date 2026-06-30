@@ -445,5 +445,42 @@
     "Wem gehört der Aegisstein – dem Turm oder der Stadt?",
     "Was soll mit dem Stein geschehen, wenn ihr Velmoor verlasst?",
     "Vergibst du Mira Vael?"
+  ],
+  "items": [
+    {
+      "id": "tagebuch-1",
+      "label": "Tagebuch – Teil 1",
+      "icon": "📖"
+    },
+    {
+      "id": "tagebuch-2",
+      "label": "Tagebuch – Teil 2",
+      "icon": "📖"
+    },
+    {
+      "id": "tagebuch-3",
+      "label": "Tagebuch – Teil 3",
+      "icon": "📖"
+    },
+    {
+      "id": "ausleihbuch",
+      "label": "Ausleih-Buch (Spur „M. V.“)",
+      "icon": "🔖"
+    },
+    {
+      "id": "rezept",
+      "label": "Rezept-Notiz",
+      "icon": "📜"
+    },
+    {
+      "id": "flaeschchen",
+      "label": "Geruchloses Fläschchen (Gift)",
+      "icon": "🧪"
+    },
+    {
+      "id": "aegisstein",
+      "label": "Der Aegisstein",
+      "icon": "🔷"
+    }
   ]
 }

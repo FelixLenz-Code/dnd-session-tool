@@ -1,6 +1,6 @@
 # CLAUDE.md – DnD Session Tool ("Turm des Magiers")
 
-Stand: v0.13.0. Web-Tool, mit dem ein DM eine Rätsel-Oneshot leitet. **Zwei-iPad-Modell**:
+Stand: v0.14.0. Web-Tool, mit dem ein DM eine Rätsel-Oneshot leitet. **Zwei-iPad-Modell**:
 ein **DM-Gerät** (Steuerkonsole) und ein **geteiltes Spieler-Display** (den Spielern zugewandt).
 Der DM bespielt das Display über eine zentrale **Bühne** (`stage`). Echtzeit über Socket.io.
 
@@ -41,6 +41,7 @@ Der DM bespielt das Display über eine zentrale **Bühne** (`stage`). Echtzeit �
 - Rätsel sind **gemischt**: am Display tippbar (`display:interact` → Server-Validierung wie früher). Beim Lösen setzt der Server die Bühne automatisch auf `narration` mit der Erfolgs-Nachricht.
 - Nachrichten/Ereignisse gehen an **alle** (ein Display); `showOnStage`-Flag zeigt den Text zusätzlich groß (`narration`).
 - **Bilder/Karten**: DM lädt ein Bild hoch (`POST /api/dm/image`, data-URL) oder gibt eine URL an. Rohdaten in `imageStore` (Speicher), Metadaten in `session.images` (broadcast `images_update`), Anzeige über `/api/image/:id`. Bühne `image` mit `payload.url`.
+- **Gruppen-Funde**: geteilte Fund-Leiste, dauerhaft unten am Display (`FindsBar` in `DisplayView`). DM blendet ein/aus via `dm:add_find`/`dm:remove_find` (`session.finds`, broadcast `finds_update`). Schnell-Auswahl aus `adventure.items` (kuratierte Liste) oder Freitext im `FindsManager` (StagePanel).
 
 ## Rätsel-Architektur (wichtig)
 Jede Etage hat ihr **interaktives Element**, gesteuert über `currentFloor`. Auf dem Display
@@ -93,7 +94,6 @@ Komponente isoliert bauen + rendern; `useGame` per Vite-Alias auf einen Mock bie
 - Server läuft als Hintergrund-Task; nach Code-Änderung an `server/` oder am Adventure-JSON **neu starten**. Client-Änderungen nur neu **bauen** (Server liefert `dist` von Platte).
 
 ## Nächster Schritt
-Alle Etagen + Finale sind inhaltlich da, das Finale hat ein eigenes Panel. Mögliche Ausbauten:
-- Gemeinsame **„Gruppen-Funde"-Leiste** auf dem Display (Ersatz fürs frühere private Inventar).
+Alle Etagen + Finale + Gruppen-Funde sind da. Mögliche Ausbauten:
 - Karten-/Bild-Material für das Adventure hinterlegen (Velmoor-Stadtplan etc.) statt nur Upload.
 - Politur: Timer prominenter aufs Display, Sound-Events.

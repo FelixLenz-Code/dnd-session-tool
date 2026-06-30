@@ -11,6 +11,7 @@ const initial = {
   adventure: null,
   displayOnline: false,
   images: [],
+  finds: [],
   currentFloor: null,
   unlockedFloors: [],
   unlockedMaps: [],
@@ -44,6 +45,8 @@ function reducer(state, action) {
       return { ...state, stage: action.stage }
     case 'IMAGES_UPDATE':
       return { ...state, images: action.images }
+    case 'FINDS_UPDATE':
+      return { ...state, finds: action.finds }
     case 'PUZZLE_WRONG':
       return { ...state, puzzleWrong: action.mapId }
     case 'PUZZLE_WRONG_CLEAR':
@@ -68,6 +71,7 @@ export function GameProvider({ children }) {
     socket.on('map_update', (map) => dispatch({ type: 'MAP_UPDATE', map }))
     socket.on('stage_update', (stage) => dispatch({ type: 'STAGE_UPDATE', stage }))
     socket.on('images_update', (images) => dispatch({ type: 'IMAGES_UPDATE', images }))
+    socket.on('finds_update', (finds) => dispatch({ type: 'FINDS_UPDATE', finds }))
     socket.on('puzzle_wrong', ({ mapId }) => {
       dispatch({ type: 'PUZZLE_WRONG', mapId })
       setTimeout(() => dispatch({ type: 'PUZZLE_WRONG_CLEAR' }), 700)
@@ -143,6 +147,9 @@ export function GameProvider({ children }) {
     updateMap: (mapId, marker = null) => socket.emit('dm:map_update', { mapId, marker }),
 
     setStage: (mode, payload = null) => socket.emit('dm:set_stage', { mode, payload }),
+
+    addFind: (find) => socket.emit('dm:add_find', find),
+    removeFind: (id) => socket.emit('dm:remove_find', { id }),
 
     interactMap: (mapId, elementId) => socket.emit('display:interact', { mapId, elementId }),
 

@@ -31,6 +31,34 @@ export default function DisplayView() {
       <div className="scroll-area" style={{ display: 'flex', flexDirection: 'column' }}>
         <Stage mode={mode} payload={state.stage?.payload} />
       </div>
+
+      <FindsBar />
+    </div>
+  )
+}
+
+// Geteilte Funde der Gruppe – dauerhaft unten sichtbar, über alle Bühnen hinweg.
+function FindsBar() {
+  const { state } = useGame()
+  const finds = state.finds ?? []
+  if (finds.length === 0) return null
+  return (
+    <div style={{
+      flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+      padding: '8px 16px', background: 'var(--bg-mid)', borderTop: '1px solid var(--border)',
+    }}>
+      <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--gold-dim)', flexShrink: 0 }}>
+        Funde
+      </span>
+      {finds.map(f => (
+        <span key={f.id} style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px',
+          borderRadius: 999, background: 'var(--bg-card)', border: '1px solid var(--border)',
+          fontSize: '0.9rem', color: 'var(--text)',
+        }}>
+          <span>{f.icon}</span>{f.label}
+        </span>
+      ))}
     </div>
   )
 }
