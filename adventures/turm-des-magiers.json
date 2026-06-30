@@ -40,48 +40,6 @@
       "description": "Vor dem Turm. Kein Kampf – reines Roleplay. Mira hat sich vorbereitet."
     }
   ],
-  "maps": [
-    {
-      "id": "velmoor",
-      "label": "Velmoor – Stadtplan",
-      "renderer": "velmoor"
-    },
-    {
-      "id": "tower",
-      "label": "Turm des Magiers (Übersicht)",
-      "renderer": "tower"
-    },
-    {
-      "id": "floor-keller",
-      "label": "Keller – Die Pforte",
-      "renderer": "floor-keller"
-    },
-    {
-      "id": "floor-1",
-      "label": "Etage 1 – Bibliothek",
-      "renderer": "floor-1"
-    },
-    {
-      "id": "floor-2",
-      "label": "Etage 2 – Labor",
-      "renderer": "floor-2"
-    },
-    {
-      "id": "floor-3",
-      "label": "Etage 3 – Spiegelkammer",
-      "renderer": "floor-3"
-    },
-    {
-      "id": "floor-4",
-      "label": "Etage 4 – Archiv",
-      "renderer": "floor-4"
-    },
-    {
-      "id": "floor-5",
-      "label": "Etage 5 – Sanctum",
-      "renderer": "floor-5"
-    }
-  ],
   "events": [
     {
       "id": "ankunft-velmoor",

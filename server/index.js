@@ -96,9 +96,7 @@ app.post('/api/adventure', (req, res) => {
   if (!adventure?.id || !adventure?.title) return res.status(400).json({ error: 'Ungültiges Adventure-Format' })
   session.adventure = adventure
   session.unlockedFloors = []
-  session.unlockedMaps = []
   session.currentFloor = null
-  session.map = { type: adventure.maps?.[0]?.id ?? null, marker: null }
   session.stage = { mode: 'cover', payload: null }
   session.finds = []
   session.puzzles = {}
@@ -139,11 +137,6 @@ const PUZZLES = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-// Gibt die Map-ID für eine Floor-ID zurück (keller → floor-keller, rest identisch)
-function floorToMapId(floorId) {
-  return floorId === 'keller' ? 'floor-keller' : floorId
-}
-
 function randomImageId() {
   return Math.random().toString(36).slice(2, 10)
 }
@@ -158,9 +151,7 @@ function publicState(s) {
     finds: s.finds,
     currentFloor: s.currentFloor,
     unlockedFloors: s.unlockedFloors,
-    unlockedMaps: s.unlockedMaps,
     timer: s.timer,
-    map: s.map,
     stage: s.stage,
     puzzles: s.puzzles,
   }
@@ -251,13 +242,7 @@ io.on('connection', (socket) => {
     if (!session.unlockedFloors.includes(floorId)) {
       session.unlockedFloors.push(floorId)
     }
-    const mapId = floorToMapId(floorId)
-    if (!session.unlockedMaps.includes(mapId)) {
-      session.unlockedMaps.push(mapId)
-    }
     session.currentFloor = floorId
-    // Automatisch zur Etagen-Karte wechseln wenn Etage freigeschaltet wird
-    session.map = { type: mapId, marker: session.map?.marker ?? null }
     io.emit('state_sync', publicState(session))
   })
 
@@ -266,7 +251,6 @@ io.on('connection', (socket) => {
     if (session.currentFloor === floorId) {
       session.currentFloor = session.unlockedFloors[session.unlockedFloors.length - 1] ?? null
     }
-    // unlockedMaps bleibt absichtlich unverändert — Karten bleiben sichtbar
     io.emit('state_sync', publicState(session))
   })
 
@@ -306,12 +290,6 @@ io.on('connection', (socket) => {
     io.emit('timer_update', session.timer)
   })
 
-  // DM: map
-  socket.on('dm:map_update', ({ mapId, marker }) => {
-    session.map = { type: mapId, marker: marker ?? null }
-    io.emit('map_update', session.map)
-  })
-
   // Display: Rätsel-Interaktion (die Gruppe tippt am geteilten iPad)
   socket.on('display:interact', ({ mapId, elementId }) => {
     const def = PUZZLES[mapId]
@@ -347,10 +325,7 @@ io.on('connection', (socket) => {
       pz.solved = true
       const floorId = def.reward
       if (!session.unlockedFloors.includes(floorId)) session.unlockedFloors.push(floorId)
-      const rewardMap = floorToMapId(floorId)
-      if (!session.unlockedMaps.includes(rewardMap)) session.unlockedMaps.push(rewardMap)
       session.currentFloor = floorId
-      session.map = { type: rewardMap, marker: session.map?.marker ?? null }
       const msg = { id: Date.now(), from: 'System', to: null, message: def.successMessage, type: 'event', ts: Date.now() }
       session.messages.push(msg)
       io.emit('new_message', msg)

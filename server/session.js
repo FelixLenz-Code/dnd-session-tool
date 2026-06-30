@@ -16,10 +16,8 @@ function createSession() {
     finds: [],               // Funde der Gruppe (geteilt): [{ id, label, icon }]
     messages: [],
     unlockedFloors: [],
-    unlockedMaps: [],    // nur wachsend — bleibt unlocked auch wenn Floor gesperrt
     currentFloor: null,
     timer: { running: false, endTime: null, totalSeconds: 0 },
-    map: { type: null, marker: null },
     stage: { mode: 'cover', payload: null },   // was das Display gerade zeigt
     puzzles: {},   // mapId → { progress: [], solved: false }
   }

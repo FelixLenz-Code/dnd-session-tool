@@ -16,10 +16,8 @@ const initial = {
   finds: [],
   currentFloor: null,
   unlockedFloors: [],
-  unlockedMaps: [],
   messages: [],
   timer: { running: false, endTime: null, totalSeconds: 0 },
-  map: { type: null, marker: null },
   stage: { mode: 'cover', payload: null },   // was das Display gerade zeigt
   puzzles: {},
   puzzleWrong: null,   // mapId das kurz rot aufleuchtet
@@ -41,8 +39,6 @@ function reducer(state, action) {
       return { ...state, messages: action.messages }
     case 'TIMER_UPDATE':
       return { ...state, timer: action.timer }
-    case 'MAP_UPDATE':
-      return { ...state, map: action.map }
     case 'STAGE_UPDATE':
       return { ...state, stage: action.stage }
     case 'IMAGES_UPDATE':
@@ -72,7 +68,6 @@ export function GameProvider({ children }) {
     socket.on('new_message', (message) => dispatch({ type: 'NEW_MESSAGE', message }))
     socket.on('message_history', (messages) => dispatch({ type: 'MESSAGE_HISTORY', messages }))
     socket.on('timer_update', (timer) => dispatch({ type: 'TIMER_UPDATE', timer }))
-    socket.on('map_update', (map) => dispatch({ type: 'MAP_UPDATE', map }))
     socket.on('stage_update', (stage) => dispatch({ type: 'STAGE_UPDATE', stage }))
     socket.on('images_update', (images) => dispatch({ type: 'IMAGES_UPDATE', images }))
     socket.on('finds_update', (finds) => dispatch({ type: 'FINDS_UPDATE', finds }))
@@ -152,8 +147,6 @@ export function GameProvider({ children }) {
     startTimer: (seconds) => socket.emit('dm:timer_start', { seconds }),
 
     stopTimer: () => socket.emit('dm:timer_stop'),
-
-    updateMap: (mapId, marker = null) => socket.emit('dm:map_update', { mapId, marker }),
 
     setStage: (mode, payload = null) => socket.emit('dm:set_stage', { mode, payload }),
 

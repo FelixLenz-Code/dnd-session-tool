@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useGame } from '../context/GameContext'
 import { unlockAudio } from '../sounds'
-import PuzzleView from '../components/player/PuzzleView'
+import PuzzleView from '../components/display/PuzzleView'
 import CrystalGallery from '../components/display/CrystalGallery'
 import AldricQuestions from '../components/display/AldricQuestions'
-import TimerBanner from '../components/player/TimerBanner'
+import TimerBanner from '../components/display/TimerBanner'
 
 // Das geteilte Spieler-iPad. Zeigt immer nur die aktuelle Bühne, die der DM steuert.
 export default function DisplayView() {

@@ -263,31 +263,6 @@ select.input { cursor: pointer; }
 
 @keyframes pulse { from { opacity: 1; } to { opacity: 0.5; } }
 
-/* ── Map ─────────────────────────────────────────────────────────────── */
-
-.map-container {
-  width: 100%;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: #0e0c08;
-}
-
-.map-container svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ── Marker pulse ────────────────────────────────────────────────────── */
-
-@keyframes markerPulse {
-  0%   { r: 6; opacity: 1; }
-  100% { r: 14; opacity: 0; }
-}
-
-.marker-pulse { animation: markerPulse 1.5s ease-out infinite; }
-
 /* ── Crystal ─────────────────────────────────────────────────────────── */
 
 .crystal-card {
