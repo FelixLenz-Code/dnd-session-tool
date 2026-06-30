@@ -200,17 +200,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
-      {/* Display-Status */}
-      <div className="card">
-        <div className="section-title">Spieler-Display</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="player-dot" style={{ background: state.displayOnline ? 'var(--green)' : 'var(--text-muted)', boxShadow: state.displayOnline ? '0 0 4px var(--green)' : 'none' }} />
-          <span style={{ color: state.displayOnline ? 'var(--text)' : 'var(--text-muted)' }}>
-            {state.displayOnline ? 'Verbunden' : 'Nicht verbunden'}
-          </span>
-        </div>
-      </div>
     </div>
   )
 }

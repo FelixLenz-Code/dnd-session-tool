@@ -19,16 +19,25 @@ function sceneLabel(state) {
   }
 }
 
-// Ein Block im Cockpit-Board — bleibt beim Spaltenumbruch zusammen.
+// Ein benannter Block im Cockpit-Board.
 function Block({ title, children }) {
   return (
-    <div style={{ breakInside: 'avoid', marginBottom: 16 }}>
+    <div>
       <div style={{
         fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase',
         color: 'var(--gold-dim)', margin: '0 0 8px 2px',
       }}>
         {title}
       </div>
+      {children}
+    </div>
+  )
+}
+
+// Eine feste Spalte — vertikaler Stapel, Inhalte bleiben an ihrem Platz.
+function Column({ children }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
       {children}
     </div>
   )
@@ -72,16 +81,31 @@ export default function Cockpit() {
         </div>
       </div>
 
-      {/* Board: mehrspaltig auf breiten Schirmen, alles auf einen Blick. */}
-      <div style={{ columnWidth: '360px', columnGap: '16px' }}>
-        <Block title="Bühne"><SceneControls /></Block>
-        <Block title="Karten"><ImageManager /></Block>
-        <Block title="Audio"><SoundManager /></Block>
-        <Block title="Etagen & Rätsel"><Dashboard /></Block>
-        <Block title="Ereignisse"><EventPanel /></Block>
-        <Block title="Nachrichten"><MessageComposer /></Block>
-        <Block title="Funde der Gruppe"><FindsManager /></Block>
-        <Block title="Timer"><TimerPanel /></Block>
+      {/* Festes Spalten-Board: jede Karte hat ihren festen Platz, kein Umfließen.
+          Spalten klappen auf schmalen Geräten untereinander, Inhalte bleiben gruppiert. */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))',
+        gap: 16, alignItems: 'start',
+      }}>
+        {/* Spalte 1 — Display steuern */}
+        <Column>
+          <Block title="Bühne"><SceneControls /></Block>
+          <Block title="Karten"><ImageManager /></Block>
+          <Block title="Audio"><SoundManager /></Block>
+        </Column>
+
+        {/* Spalte 2 — Spielverlauf */}
+        <Column>
+          <Block title="Etagen & Rätsel"><Dashboard /></Block>
+          <Block title="Ereignisse"><EventPanel /></Block>
+        </Column>
+
+        {/* Spalte 3 — Kommunikation */}
+        <Column>
+          <Block title="Nachrichten"><MessageComposer /></Block>
+          <Block title="Funde der Gruppe"><FindsManager /></Block>
+          <Block title="Timer"><TimerPanel /></Block>
+        </Column>
       </div>
     </div>
   )
