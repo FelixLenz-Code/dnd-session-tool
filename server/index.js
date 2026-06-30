@@ -9,10 +9,14 @@ const app = express()
 const httpServer = createServer(app)
 const io = new Server(httpServer, { cors: { origin: '*' } })
 
-app.use(express.json({ limit: '10mb' }))
+app.use(express.json({ limit: '25mb' }))
 app.use(express.static(path.join(__dirname, '../client/dist')))
 
 let session = createSession()
+
+// Hochgeladene Bilder (Karten/Handouts/Visionen) — Rohdaten im Speicher,
+// Metadaten in session.images. Reicht für eine lokale Oneshot-Session.
+const imageStore = new Map()   // id → { buffer, contentType }
 
 // Standard-Adventure beim Start laden (der DM kann es jederzeit überschreiben).
 try {
@@ -27,32 +31,34 @@ try {
 
 app.get('/api/code', (_, res) => res.json({ code: session.code }))
 
-// Spieler mit persönlichem Code beitreten
-app.post('/api/join', (req, res) => {
-  const { playerCode } = req.body
-  const code = playerCode?.toUpperCase()
-  const slot = session.playerSlots[code]
-  if (!slot) return res.status(401).json({ error: 'Ungültiger Spieler-Code' })
-  if (slot.socketId) return res.status(409).json({ error: 'Dieser Code ist bereits aktiv' })
-  res.json({ ok: true, name: slot.name })
-})
-
-// DM legt Spieler-Slot an
-app.post('/api/dm/create-player', (req, res) => {
-  const { name } = req.body
-  if (!name?.trim()) return res.status(400).json({ error: 'Name fehlt' })
-  const code = generatePlayerCode()
-  session.playerSlots[code] = { name: name.trim(), socketId: null }
-  io.emit('slots_update', slotsPublic(session))
-  res.json({ ok: true, code, name: name.trim() })
-})
-
-// DM löscht Spieler-Slot
-app.delete('/api/dm/player/:code', (req, res) => {
-  const code = req.params.code.toUpperCase()
-  delete session.playerSlots[code]
-  io.emit('slots_update', slotsPublic(session))
+// Das geteilte Spieler-Display verbindet sich mit dem Session-Code
+app.post('/api/display/join', (req, res) => {
+  const { code } = req.body
+  if (code?.toUpperCase() !== session.code) {
+    return res.status(401).json({ error: 'Ungültiger Session-Code' })
+  }
   res.json({ ok: true })
+})
+
+// DM lädt ein Bild hoch (als data-URL) → wird unter /api/image/:id ausgeliefert
+app.post('/api/dm/image', (req, res) => {
+  const { name, dataUrl } = req.body
+  const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl ?? '')
+  if (!m) return res.status(400).json({ error: 'Ungültiges Bild' })
+  const id = randomImageId()
+  imageStore.set(id, { buffer: Buffer.from(m[2], 'base64'), contentType: m[1] })
+  const meta = { id, name: name?.trim() || 'Bild', url: `/api/image/${id}` }
+  session.images.push(meta)
+  io.emit('images_update', session.images)
+  res.json(meta)
+})
+
+app.get('/api/image/:id', (req, res) => {
+  const img = imageStore.get(req.params.id)
+  if (!img) return res.status(404).end()
+  res.set('Content-Type', img.contentType)
+  res.set('Cache-Control', 'public, max-age=3600')
+  res.send(img.buffer)
 })
 
 app.post('/api/dm/auth', (req, res) => {
@@ -70,6 +76,7 @@ app.post('/api/adventure', (req, res) => {
   session.unlockedMaps = []
   session.currentFloor = null
   session.map = { type: adventure.maps?.[0]?.id ?? null, marker: null }
+  session.stage = { mode: 'cover', payload: null }
   session.puzzles = {}
   io.emit('adventure_loaded', adventure)
   io.emit('state_sync', publicState(session))
@@ -108,35 +115,27 @@ const PUZZLES = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function generatePlayerCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  let code
-  do { code = Array.from({length:6}, () => chars[Math.floor(Math.random()*chars.length)]).join('') }
-  while (session.playerSlots[code])
-  return code
-}
-
-function slotsPublic(s) {
-  return Object.entries(s.playerSlots).map(([code, slot]) => ({
-    code, name: slot.name, online: !!slot.socketId,
-  }))
-}
-
 // Gibt die Map-ID für eine Floor-ID zurück (keller → floor-keller, rest identisch)
 function floorToMapId(floorId) {
   return floorId === 'keller' ? 'floor-keller' : floorId
 }
 
+function randomImageId() {
+  return Math.random().toString(36).slice(2, 10)
+}
+
 function publicState(s) {
   return {
+    code: s.code,
     adventure: s.adventure,
-    players: Object.values(s.players),
-    playerSlots: slotsPublic(s),
+    displayOnline: !!s.displaySocketId,
+    images: s.images,
     currentFloor: s.currentFloor,
     unlockedFloors: s.unlockedFloors,
     unlockedMaps: s.unlockedMaps,
     timer: s.timer,
     map: s.map,
+    stage: s.stage,
     puzzles: s.puzzles,
   }
 }
@@ -144,33 +143,31 @@ function publicState(s) {
 // ── Socket.io ─────────────────────────────────────────────────────────────────
 
 io.on('connection', (socket) => {
-  // Player joins mit persönlichem Code
-  socket.on('player:join', ({ playerCode }) => {
-    const code = playerCode?.toUpperCase()
-    const slot = session.playerSlots[code]
-    if (!slot) { socket.emit('error', 'Ungültiger Code'); return }
-    slot.socketId = socket.id
-    session.players[socket.id] = { id: socket.id, name: slot.name, crystal: null, playerCode: code }
-    io.emit('players_update', Object.values(session.players))
-    io.emit('slots_update', slotsPublic(session))
-    socket.emit('state_sync', publicState(session))
-    socket.emit('message_history', session.messages.filter(m => !m.to || m.to === socket.id))
+  // Das geteilte Spieler-Display verbindet sich mit dem Session-Code
+  socket.on('display:join', ({ code }) => {
+    if (code?.toUpperCase() !== session.code) { socket.emit('error', 'Ungültiger Code'); return }
+    session.displaySocketId = socket.id
+    io.emit('state_sync', publicState(session))
+    socket.emit('message_history', session.messages)
   })
 
   socket.on('disconnect', () => {
-    const player = session.players[socket.id]
-    if (player?.playerCode && session.playerSlots[player.playerCode]) {
-      session.playerSlots[player.playerCode].socketId = null
+    if (session.displaySocketId === socket.id) {
+      session.displaySocketId = null
+      io.emit('state_sync', publicState(session))
     }
-    delete session.players[socket.id]
-    io.emit('players_update', Object.values(session.players))
-    io.emit('slots_update', slotsPublic(session))
   })
 
   // DM: state sync on connect
   socket.on('dm:join', () => {
     socket.emit('state_sync', publicState(session))
     socket.emit('message_history', session.messages)
+  })
+
+  // DM: Bühne des Displays umschalten
+  socket.on('dm:set_stage', ({ mode, payload }) => {
+    session.stage = { mode: mode ?? 'cover', payload: payload ?? null }
+    io.emit('stage_update', session.stage)
   })
 
   // DM: floor management
@@ -197,30 +194,27 @@ io.on('connection', (socket) => {
     io.emit('state_sync', publicState(session))
   })
 
-  // DM: send message
-  socket.on('dm:message', ({ to, message, type }) => {
-    const msg = { id: Date.now(), from: 'DM', to: to ?? null, message, type: type ?? 'narrative', ts: Date.now() }
+  // DM: Nachricht an alle (ein geteiltes Display)
+  socket.on('dm:message', ({ message, type, showOnStage }) => {
+    const msg = { id: Date.now(), from: 'DM', to: null, message, type: type ?? 'narrative', ts: Date.now() }
     session.messages.push(msg)
-    if (to) {
-      io.to(to).emit('new_message', msg)
-      socket.emit('new_message', { ...msg, sentTo: session.players[to]?.name })
-    } else {
-      io.emit('new_message', msg)
+    io.emit('new_message', msg)
+    if (showOnStage) {
+      session.stage = { mode: 'narration', payload: { text: message, type: msg.type } }
+      io.emit('stage_update', session.stage)
     }
   })
 
-  // DM: trigger event (optional: to specific player socket id)
-  socket.on('dm:trigger_event', ({ eventId, playerId }) => {
+  // DM: Ereignis auslösen — landet im Feed, optional groß auf der Bühne
+  socket.on('dm:trigger_event', ({ eventId, showOnStage }) => {
     const event = session.adventure?.events?.find(e => e.id === eventId)
     if (!event) return
-    const to = playerId ?? null
-    const msg = { id: Date.now(), from: 'System', to, message: event.message, type: event.type ?? 'event', ts: Date.now() }
+    const msg = { id: Date.now(), from: 'System', to: null, message: event.message, type: event.type ?? 'event', ts: Date.now() }
     session.messages.push(msg)
-    if (to) {
-      io.to(to).emit('new_message', msg)
-      socket.emit('new_message', { ...msg, sentTo: session.players[to]?.name })
-    } else {
-      io.emit('new_message', msg)
+    io.emit('new_message', msg)
+    if (showOnStage) {
+      session.stage = { mode: 'narration', payload: { text: event.message, type: msg.type, label: event.label } }
+      io.emit('stage_update', session.stage)
     }
     io.emit('event_triggered', { eventId, label: event.label })
   })
@@ -242,20 +236,8 @@ io.on('connection', (socket) => {
     io.emit('map_update', session.map)
   })
 
-  // DM: crystal assign
-  socket.on('dm:assign_crystal', ({ playerId, crystalId }) => {
-    if (session.players[playerId]) {
-      session.players[playerId].crystal = crystalId
-      io.emit('players_update', Object.values(session.players))
-      const crystal = session.adventure?.crystals?.find(c => c.id === crystalId)
-      if (crystal) {
-        io.to(playerId).emit('crystal_assigned', crystal)
-      }
-    }
-  })
-
-  // Player: map interaction (puzzle mechanic)
-  socket.on('player:map_interact', ({ mapId, elementId }) => {
+  // Display: Rätsel-Interaktion (die Gruppe tippt am geteilten iPad)
+  socket.on('display:interact', ({ mapId, elementId }) => {
     const def = PUZZLES[mapId]
     if (!def) return
     if (!session.puzzles[mapId]) session.puzzles[mapId] = { progress: [], solved: false }
@@ -296,6 +278,9 @@ io.on('connection', (socket) => {
       const msg = { id: Date.now(), from: 'System', to: null, message: def.successMessage, type: 'event', ts: Date.now() }
       session.messages.push(msg)
       io.emit('new_message', msg)
+      // Erfolg groß auf der Bühne zeigen
+      session.stage = { mode: 'narration', payload: { text: def.successMessage, type: 'event' } }
+      io.emit('stage_update', session.stage)
     } else if (wrong) {
       io.emit('puzzle_wrong', { mapId })
     }
@@ -308,14 +293,6 @@ io.on('connection', (socket) => {
       session.puzzles[mapId] = { progress: [], solved: false }
       io.emit('state_sync', publicState(session))
     }
-  })
-
-  // DM: unlock inventory item for player
-  socket.on('dm:give_item', ({ playerId, item }) => {
-    const msg = { id: Date.now(), from: 'System', to: playerId, message: item.description, type: 'item', item, ts: Date.now() }
-    session.messages.push(msg)
-    io.to(playerId).emit('new_message', msg)
-    io.to(playerId).emit('item_received', item)
   })
 })
 

@@ -14,13 +14,12 @@ export default function EventPanel() {
   const [expanded, setExpanded]   = useState(null)
   const [confirm, setConfirm]     = useState(null)
   const [triggered, setTriggered] = useState(new Set())
-  const [targetId, setTargetId]   = useState('')   // '' = alle, or player socket id
+  const [onStage, setOnStage]     = useState(true)   // groß aufs Spieler-Display?
 
   if (!state.adventure) return <div className="empty-state">Kein Adventure geladen</div>
 
   const floors  = state.adventure.floors ?? []
   const events  = state.adventure.events ?? []
-  const players = state.players ?? []
 
   // Immer auf die aktuelle Etage fokussiert: der DM sieht nur deren Ereignisse.
   const current       = floors.find(f => f.id === state.currentFloor)
@@ -28,14 +27,13 @@ export default function EventPanel() {
   const unassigned    = events.filter(e => !e.floorId)
 
   function handleTrigger(eventId) {
-    actions.triggerEvent(eventId, targetId || null)
+    actions.triggerEvent(eventId, onStage)
     setTriggered(prev => new Set([...prev, eventId]))
     setConfirm(null)
-    setTargetId('')
   }
 
   function openConfirm(eventId) {
-    setTargetId('')
+    setOnStage(true)
     setConfirm(eventId)
   }
 
@@ -68,21 +66,11 @@ export default function EventPanel() {
                 {ev.message}
               </div>
 
-              {/* Empfänger */}
-              <div className="form-group" style={{ marginBottom: 14 }}>
-                <label className="form-label">Empfänger</label>
-                <select className="input" value={targetId} onChange={e => setTargetId(e.target.value)}>
-                  <option value="">Alle Spieler</option>
-                  {players.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
-                </select>
-                {targetId && (
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                    Nur {players.find(p => p.id === targetId)?.name} erhält dieses Ereignis.
-                  </div>
-                )}
-              </div>
+              {/* Anzeige-Option */}
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14, cursor: 'pointer', fontSize: '0.85rem', color: 'var(--text)' }}>
+                <input type="checkbox" checked={onStage} onChange={e => setOnStage(e.target.checked)} />
+                Groß auf dem Spieler-Display zeigen
+              </label>
 
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn-gold" style={{ flex: 1 }} onClick={() => handleTrigger(ev.id)}>

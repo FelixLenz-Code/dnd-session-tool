@@ -1,13 +1,13 @@
 import { GameProvider, useGame } from './context/GameContext'
 import JoinView from './views/JoinView'
 import DMView from './views/DMView'
-import PlayerView from './views/PlayerView'
+import DisplayView from './views/DisplayView'
 
 function AppContent() {
   const { state } = useGame()
   if (!state.joined) return <JoinView />
   if (state.role === 'dm') return <DMView />
-  return <PlayerView />
+  return <DisplayView />
 }
 
 export default function App() {

@@ -3,18 +3,18 @@ import { useGame } from '../context/GameContext'
 
 export default function JoinView() {
   const { actions } = useGame()
-  const [tab, setTab] = useState('player')
-  const [playerCode, setPlayerCode] = useState('')
+  const [tab, setTab] = useState('display')
+  const [code, setCode] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handlePlayerJoin(e) {
+  async function handleDisplayJoin(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
     try {
-      await actions.joinAsPlayer(playerCode.trim())
+      await actions.joinAsDisplay(code.trim())
     } catch (err) {
       setError(err.message)
     } finally {
@@ -42,33 +42,33 @@ export default function JoinView() {
         <div className="join-subtitle">Verbinde dich mit deiner Session</div>
 
         <div className="tabs" style={{ marginBottom: 20, borderRadius: 'var(--radius)' }}>
-          <button className={`tab ${tab === 'player' ? 'active' : ''}`}
-            onClick={() => { setTab('player'); setError('') }}>Spieler</button>
+          <button className={`tab ${tab === 'display' ? 'active' : ''}`}
+            onClick={() => { setTab('display'); setError('') }}>Spieler-Display</button>
           <button className={`tab ${tab === 'dm' ? 'active' : ''}`}
             onClick={() => { setTab('dm'); setError('') }}>Dungeon Master</button>
         </div>
 
-        {tab === 'player' && (
-          <form onSubmit={handlePlayerJoin} className="gap-12">
+        {tab === 'display' && (
+          <form onSubmit={handleDisplayJoin} className="gap-12">
             <div className="form-group">
-              <label className="form-label">Dein persönlicher Code</label>
+              <label className="form-label">Session-Code</label>
               <input
                 className="input code-input"
-                value={playerCode}
-                onChange={e => setPlayerCode(e.target.value.toUpperCase())}
-                maxLength={6}
-                placeholder="XXXXXX"
+                value={code}
+                onChange={e => setCode(e.target.value.toUpperCase())}
+                maxLength={4}
+                placeholder="XXXX"
                 autoFocus
                 autoComplete="off"
               />
               <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                Den Code bekommst du vom DM
+                Den Code zeigt der DM auf seinem Gerät an
               </div>
             </div>
             {error && <div className="form-error">{error}</div>}
             <button type="submit" className="btn btn-gold btn-full"
-              disabled={loading || playerCode.length < 4}>
-              {loading ? 'Verbinde…' : 'Beitreten'}
+              disabled={loading || code.length < 4}>
+              {loading ? 'Verbinde…' : 'Display verbinden'}
             </button>
           </form>
         )}
@@ -91,7 +91,7 @@ export default function JoinView() {
               {loading ? 'Prüfe…' : 'Als DM einloggen'}
             </button>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-              Standard-Passwort: <code style={{ color: 'var(--gold)' }}>dm</code>
+              Passwort laut Adventure (Turm des Magiers: <code style={{ color: 'var(--gold)' }}>aldric</code>)
             </div>
           </form>
         )}

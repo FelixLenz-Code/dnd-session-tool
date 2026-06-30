@@ -10,14 +10,13 @@ const MESSAGE_TYPES = [
 
 export default function MessageComposer() {
   const { state, actions } = useGame()
-  const [to, setTo] = useState('all')
   const [message, setMessage] = useState('')
   const [type, setType] = useState('narrative')
   const [sent, setSent] = useState(false)
 
-  function send() {
+  function send(showOnStage) {
     if (!message.trim()) return
-    actions.sendMessage(to === 'all' ? null : to, message.trim(), type)
+    actions.sendMessage(message.trim(), type, showOnStage)
     setSent(true)
     setMessage('')
     setTimeout(() => setSent(false), 2000)
@@ -26,21 +25,11 @@ export default function MessageComposer() {
   return (
     <div className="gap-12">
       <div className="card">
-        <div className="section-title">Nachricht senden</div>
-
-        <div className="form-group">
-          <label className="form-label">An</label>
-          <select className="input" value={to} onChange={e => setTo(e.target.value)}>
-            <option value="all">Alle Spieler</option>
-            {state.players.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-        </div>
+        <div className="section-title">Nachricht an die Gruppe</div>
 
         <div className="form-group">
           <label className="form-label">Typ</label>
-          <div style={{ display: 'flex', gap: 6 }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {MESSAGE_TYPES.map(t => (
               <button
                 key={t.id}
@@ -64,9 +53,16 @@ export default function MessageComposer() {
           />
         </div>
 
-        <button className={`btn btn-full ${sent ? 'btn-green' : 'btn-gold'}`} onClick={send} disabled={!message.trim()}>
-          {sent ? '✓ Gesendet' : 'Senden'}
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className={`btn btn-full ${sent ? 'btn-green' : ''}`} onClick={() => send(false)} disabled={!message.trim()}
+            title="Nur in den Verlauf (nicht groß aufs Display)">
+            {sent ? '✓ Gesendet' : 'In den Verlauf'}
+          </button>
+          <button className="btn btn-full btn-gold" onClick={() => send(true)} disabled={!message.trim()}
+            title="Groß auf dem Spieler-Display anzeigen">
+            Aufs Display
+          </button>
+        </div>
       </div>
 
       {/* Nachrichten-Verlauf für DM */}
@@ -77,7 +73,7 @@ export default function MessageComposer() {
           : [...state.messages].reverse().slice(0, 20).map(msg => (
               <div key={msg.id} className={`message ${msg.type}`} style={{ marginBottom: 8 }}>
                 <div className="message-header">
-                  <span>{msg.to ? `→ Privat` : '→ Alle'}</span>
+                  <span>{msg.from}</span>
                   <span>{new Date(msg.ts).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
                 <div className="message-text" style={{ fontSize: '0.85rem' }}>{msg.message}</div>

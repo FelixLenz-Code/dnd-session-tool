@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Dashboard from '../components/dm/Dashboard'
 import EventPanel from '../components/dm/EventPanel'
-import PlayerList from '../components/dm/PlayerList'
+import StagePanel from '../components/dm/StagePanel'
 import MessageComposer from '../components/dm/MessageComposer'
 import TimerPanel from '../components/dm/TimerPanel'
 import AdventurePanel from '../components/dm/AdventurePanel'
@@ -9,7 +9,7 @@ import { useGame } from '../context/GameContext'
 
 const TABS = [
   { id: 'leitung',   label: 'Leitung' },
-  { id: 'players',   label: 'Spieler' },
+  { id: 'anzeige',   label: 'Anzeige' },
   { id: 'adventure', label: 'Adventure' },
 ]
 
@@ -36,7 +36,9 @@ export default function DMView() {
     <div className="screen">
       <div className="header">
         <h1>DM – {state.adventure?.title ?? 'Kein Adventure geladen'}</h1>
-        <span className="badge badge-green">{state.players.length} online</span>
+        <span className={`badge ${state.displayOnline ? 'badge-green' : 'badge-red'}`}>
+          Display {state.displayOnline ? 'verbunden' : 'offline'}
+        </span>
       </div>
 
       <div className="tabs">
@@ -57,7 +59,7 @@ export default function DMView() {
             <Block title="Timer"><TimerPanel /></Block>
           </div>
         )}
-        {tab === 'players' && <PlayerList />}
+        {tab === 'anzeige' && <StagePanel />}
         {tab === 'adventure' && <AdventurePanel />}
       </div>
     </div>

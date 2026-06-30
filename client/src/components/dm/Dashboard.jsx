@@ -201,18 +201,15 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Spieler online */}
+      {/* Display-Status */}
       <div className="card">
-        <div className="section-title">Verbundene Spieler ({state.players.length})</div>
-        {state.players.length === 0
-          ? <div className="empty-state" style={{ padding: '12px 0' }}>Noch niemand verbunden</div>
-          : state.players.map(p => (
-            <div key={p.id} style={{ display: 'flex', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
-              <span className="player-dot" />
-              <span>{p.name}</span>
-            </div>
-          ))
-        }
+        <div className="section-title">Spieler-Display</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span className="player-dot" style={{ background: state.displayOnline ? 'var(--green)' : 'var(--text-muted)', boxShadow: state.displayOnline ? '0 0 4px var(--green)' : 'none' }} />
+          <span style={{ color: state.displayOnline ? 'var(--text)' : 'var(--text-muted)' }}>
+            {state.displayOnline ? 'Verbunden' : 'Nicht verbunden'}
+          </span>
+        </div>
       </div>
     </div>
   )
