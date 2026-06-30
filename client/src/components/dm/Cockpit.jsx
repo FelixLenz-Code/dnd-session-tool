@@ -3,6 +3,7 @@ import Dashboard from './Dashboard'
 import EventPanel from './EventPanel'
 import MessageComposer from './MessageComposer'
 import TimerPanel from './TimerPanel'
+import DirectorPanel from './DirectorPanel'
 import { SceneControls, ImageManager, SoundManager, FindsManager } from './StagePanel'
 
 // Lesbarer Name dessen, was das Display gerade zeigt.
@@ -79,6 +80,17 @@ export default function Cockpit() {
             🗼 Titelbild
           </button>
         </div>
+      </div>
+
+      {/* Regie: was sage/erzähle ich bei diesem Schritt? Immer prominent oben. */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{
+          fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+          color: 'var(--gold-dim)', margin: '0 0 8px 2px',
+        }}>
+          Regie – Was erzähle ich hier?
+        </div>
+        <DirectorPanel />
       </div>
 
       {/* Festes Spalten-Board: jede Karte hat ihren festen Platz, kein Umfließen.

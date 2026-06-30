@@ -7,37 +7,115 @@
     {
       "id": "keller",
       "label": "Keller – Die Pforte",
-      "description": "Der Eingang zum Turm. Eine versiegelte Tür mit Jahreszeiten-Symbolen."
+      "description": "Der Eingang zum Turm. Eine versiegelte Tür mit Jahreszeiten-Symbolen.",
+      "dmGuide": {
+        "scene": "Eine enge, kalte Kellertreppe endet vor einer versiegelten Steinpforte. Vier Reliefs – die Jahreszeiten – zieren sie. Es riecht nach altem Stein und Staub.",
+        "say": "„Vor euch liegt eine versiegelte Pforte. Vier Jahreszeiten, in den Stein gehauen. Sie scheinen auf eine Berührung zu warten – in der richtigen Ordnung.\"",
+        "goal": "Die vier Jahreszeiten-Symbole in der richtigen Reihenfolge berühren, um das Siegel zu brechen.",
+        "details": [
+          "Der Turm gehörte dem Magier Aldric Vorn, vor wenigen Tagen tot aufgefunden.",
+          "Die Stadt Velmoor hat die Gruppe beauftragt, den Turm zu öffnen und den Aegisstein zu sichern.",
+          "Auf der ersten Stufe dahinter liegt ein vertrocknetes Ahornblatt – ein leiser Wink Richtung Herbst."
+        ],
+        "solution": "Reihenfolge: Winter → Frühling → Sommer → Herbst."
+      }
     },
     {
       "id": "floor-1",
       "label": "Etage 1 – Bibliothek",
-      "description": "Aldrics Bibliothek. Ein Buch fehlt – sein Titel ist das Passwort."
+      "description": "Aldrics Bibliothek. Ein Buch fehlt – sein Titel ist das Passwort.",
+      "dmGuide": {
+        "scene": "Eine staubige Bibliothek, Regale bis zur Decke. Über der Treppe nach oben liegt ein magischer Bann. Eine Messingplatte verlangt ein Wort.",
+        "say": "„Ein Bann verschließt den Weg nach oben. Die Messingplatte verlangt den Titel eines Buches – ausgerechnet das eine Buch, das hier fehlt.\"",
+        "goal": "Den Titel des fehlenden Buches herausfinden und aussprechen.",
+        "details": [
+          "Aldrics Tagebuch (in 3 Teilen): jemand stahl die Seiten über die Zweitfunktion des Aegissteins.",
+          "Ein Ausleih-Buch trägt die Spur „M. V.\" – Mira Vael, Aldrics Ex-Schülerin.",
+          "Lass die Gruppe sich aufteilen: ein Team sucht das Buch, ein anderes durchsucht die roten Regale."
+        ],
+        "solution": "Passwort: „Das Binden des Aegis\" (auch „Aegis\" wird akzeptiert)."
+      }
     },
     {
       "id": "floor-2",
       "label": "Etage 2 – Labor",
-      "description": "Das alchemistische Labor. Drei Tische, einer aktiv."
+      "description": "Das alchemistische Labor. Drei Tische, einer aktiv.",
+      "dmGuide": {
+        "scene": "Ein alchemistisches Labor. Drei Arbeitstische, einer noch aktiv. Ein Kessel, Zutatengläser, eine angefangene Rezept-Notiz.",
+        "say": "„Auf dem Tisch ein halbfertiges Rezept, der Kessel dampft noch leise. Die richtigen Zutaten – in der richtigen Reihenfolge – erwecken die Essenz.\"",
+        "goal": "Die Essenz brauen: die Zutaten in der richtigen Reihenfolge in den Kessel ziehen.",
+        "details": [
+          "Decoy-Zutaten: Aschewurz, Mondtau, Drachengalle – eine falsche Wahl verdirbt den Sud.",
+          "Hier verdichtet sich der Verdacht: Aldric forschte an einer Schutz-Essenz für den Stein.",
+          "Mehr Hände = schneller; lass alle gleichzeitig ausprobieren."
+        ],
+        "solution": "Reihenfolge: Kristallstaub → Nebelsuppe → Kristallstaub."
+      }
     },
     {
       "id": "floor-3",
       "label": "Etage 3 – Spiegelkammer",
-      "description": "Acht Spiegel. Spiegel 7 zeigt den Tag des Mordes."
+      "description": "Acht Spiegel. Spiegel 7 zeigt den Tag des Mordes.",
+      "dmGuide": {
+        "scene": "Acht hohe Spiegel. Sieben zeigen Trugbilder, einer die Wahrheit. Eine Inschrift mahnt: »Einer zeigt, was war.«",
+        "say": "„Acht Spiegel. Sieben lügen. Einer hält den Tag des Mordes fest. Tretet vor sie und schaut genau hin.\"",
+        "goal": "Den wahren Spiegel finden, der den Mord zeigt.",
+        "details": [
+          "Die Vision zeigt: Mira nimmt ein ledernes Päckchen (die Aegis-Seiten) aus der Truhe und legt ein Fläschchen hinein – geruchloses Gift.",
+          "Die Truhe hat ein von innen aufgebrochenes Schloss – ein stiller Hinweis.",
+          "Optional kannst du einen 60-Sekunden-Timer laufen lassen, solange die Vision sichtbar ist."
+        ],
+        "solution": "Der wahre Spiegel ist Nr. 7."
+      }
     },
     {
       "id": "floor-4",
       "label": "Etage 4 – Archiv der Stimmen",
-      "description": "Acht Kristall-Sockel im Kreis. Jeder Kristall flüstert eine Erinnerung."
+      "description": "Acht Kristall-Sockel im Kreis. Jeder Kristall flüstert eine Erinnerung.",
+      "dmGuide": {
+        "scene": "Eine Wand voller Kristall-Halterungen. Acht Kristalle leuchten, jeder eine aufgezeichnete Erinnerung. Erst die richtige Reihenfolge öffnet die Tür zum Sanctum.",
+        "say": "„Acht Stimmen aus der Vergangenheit. Hört sie an – und ordnet sie nach der Zeit, in der sie gesprochen wurden.\"",
+        "goal": "Die Kristall-Galerie zeigen, die Erinnerungen anhören und gemeinsam die chronologische Reihenfolge bestimmen.",
+        "details": [
+          "Der schwarze Kristall ist Miras anonyme Meldung an den Stadtrat – ihre Stimme klingt vertraut.",
+          "Die Erinnerungen zeichnen Miras Weg vom Schützling zur Mörderin nach.",
+          "Bei kleiner Gruppe genügen Weiß/Grün/Orange/Rot/Violett für die Geschichte."
+        ],
+        "solution": "Chronologie: Weiß → Blau → Grün → Gelb → Orange → Rot → Violett → Schwarz."
+      }
     },
     {
       "id": "floor-5",
       "label": "Etage 5 – Das Sanctum",
-      "description": "Das Herzstück des Turms. Der Aegisstein ruht hier auf dem Altar."
+      "description": "Das Herzstück des Turms. Der Aegisstein ruht hier auf dem Altar.",
+      "dmGuide": {
+        "scene": "Ein schlichter runder Raum. In der Mitte, auf einem Glassockel, der Aegisstein – pulsierend blau. Davor ein Messingpodest mit einer Kristallkugel.",
+        "say": "„Die Kugel erwacht. Aldrics Abbild erscheint, ruhig und müde: ›Ihr habt meinen Turm verstanden – nicht weil ihr klug seid, sondern weil ihr zusammen gedacht habt.‹\"",
+        "goal": "Reines Roleplay: Aldrics Fragen stellen (Bühne „Aldrics Fragen\"), dann den Aegisstein übergeben.",
+        "details": [
+          "Kein echter Geist – eine Aufzeichnung. Der Stein leuchtet heller bei ehrlichen Antworten, bleibt kalt bei Ausweichen.",
+          "Wähle eine Frage pro Spieler, passend zum Charakter.",
+          "Danach liegt der Stein in ihrer Hand. Was sie damit tun, ist ihre Entscheidung – das Finale wartet draußen."
+        ],
+        "solution": "Kein Rätsel – freies Rollenspiel."
+      }
     },
     {
       "id": "konfrontation",
       "label": "Finale – Konfrontation mit Mira",
-      "description": "Vor dem Turm. Kein Kampf – reines Roleplay. Mira hat sich vorbereitet."
+      "description": "Vor dem Turm. Kein Kampf – reines Roleplay. Mira hat sich vorbereitet.",
+      "dmGuide": {
+        "scene": "Vor dem Turm wartet Mira Vael. Gefasst, freundlich, bestens vorbereitet. Sie will nur eines: den Stein, schnell und ohne Fragen.",
+        "say": "„›Ihr habt es geschafft. Der Stadtrat wird euch dankbar sein. Habt ihr den Stein?‹ – Sie schaut auf den Stein, nicht auf eure Gesichter.\"",
+        "goal": "Soziales Finale, kein Kampf. Im „Finale\"-Tab die Phasen P1–P4 leiten und am Ende eines der vier Enden auslösen.",
+        "details": [
+          "Mira lügt gut, bleibt ruhig und entschuldigt sich nie. Aldric war für sie ein Hindernis, kein Mensch.",
+          "Belastendes Material: der schwarze Kristall, Brennan Coles Gift-Analyse, Sera Dusks Aussage (Mira am Nordkai).",
+          "Ihr einziger emotionaler Moment: gefragt, ob sie Aldric geliebt hat.",
+          "Nutze das „Finale\"-Tab für ihre Zeilen pro Phase und die 4 Enden."
+        ],
+        "solution": "Kein Rätsel – der Ausgang ist offen (vier mögliche Enden)."
+      }
     }
   ],
   "events": [
