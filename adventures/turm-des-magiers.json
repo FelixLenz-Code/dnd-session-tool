@@ -13,9 +13,10 @@
         "say": "„Vor euch liegt eine versiegelte Pforte. Vier Jahreszeiten, in den Stein gehauen. Sie scheinen auf eine Berührung zu warten – in der richtigen Ordnung.\"",
         "goal": "Die vier Jahreszeiten-Symbole in der richtigen Reihenfolge berühren, um das Siegel zu brechen.",
         "details": [
-          "Der Turm gehörte dem Magier Aldric Vorn, vor wenigen Tagen tot aufgefunden.",
-          "Die Stadt Velmoor hat die Gruppe beauftragt, den Turm zu öffnen und den Aegisstein zu sichern.",
-          "Auf der ersten Stufe dahinter liegt ein vertrocknetes Ahornblatt – ein leiser Wink Richtung Herbst."
+          "Velmoor ist eine Handelsstadt am Fluss Velmaar (~4.000 Einwohner), bekannt als „Stadt ohne Seuchen\" – dank Aldric Vorns Aegisstein, den die meisten für einen Mythos halten.",
+          "Seit einer Woche sind im Außenbezirk Familien rätselhaft krank; der Stadtrat redet von „schlechter Luft\", insgeheim sind alle nervös.",
+          "Bürgermeister Garen Holtz hat die Gruppe beauftragt (auf Miras Rat), den Turm zu öffnen und den Aegisstein zu sichern. Die Helden wohnen im Gasthaus „Der Goldene Anker\".",
+          "Der Turm steht als dunkle Nadel auf dem Hügel über der Stadt – seit Aldrics Tod brennt darin kein Licht mehr."
         ],
         "solution": "Reihenfolge: Winter → Frühling → Sommer → Herbst."
       }
@@ -109,10 +110,12 @@
         "say": "„›Ihr habt es geschafft. Der Stadtrat wird euch dankbar sein. Habt ihr den Stein?‹ – Sie schaut auf den Stein, nicht auf eure Gesichter.\"",
         "goal": "Soziales Finale, kein Kampf. Im „Finale\"-Tab die Phasen P1–P4 leiten und am Ende eines der vier Enden auslösen.",
         "details": [
-          "Mira lügt gut, bleibt ruhig und entschuldigt sich nie. Aldric war für sie ein Hindernis, kein Mensch.",
-          "Belastendes Material: der schwarze Kristall, Brennan Coles Gift-Analyse, Sera Dusks Aussage (Mira am Nordkai).",
-          "Ihr einziger emotionaler Moment: gefragt, ob sie Aldric geliebt hat.",
-          "Nutze das „Finale\"-Tab für ihre Zeilen pro Phase und die 4 Enden."
+          "Mira Vael (38, stets in Dunkelrot, ruhig, kontrolliert): machthungrig aus Überzeugung, nicht aus Gier. Sie fürchtet nur eines – öffentlich auf dem Marktplatz bloßgestellt zu werden.",
+          "Beweise: der schwarze Kristall (ihre Stimme), Brennan Coles Gift-Analyse (Stilltod-Extrakt, aus dem Süden, im Hafenviertel gehandelt), Sera Dusks Aussage (sah Mira nachts am Nordkai mit einem Fremden in grauem Umhang – sie redet sofort, ohne Druck).",
+          "Wachhauptmann Fenn verhaftet nur mit Beweisen und muss den Kristall selbst hören; er zögert, weil er glaubt, Mira halte den Rat zusammen.",
+          "Garen Holtz ist kein Schurke, sondern ein betrogener, gutmütiger alter Mann – er will es zuerst nicht glauben.",
+          "Schauplätze: der Marktplatz (öffentliche Konfrontation = Zeugen), das Lagerhaus am Nordkai (heimlich Miras – ihr Fluchtweg per Boot).",
+          "Ihr einziger emotionaler Moment: gefragt, ob sie Aldric geliebt hat. Nutze das „Finale\"-Tab für ihre Zeilen pro Phase und die 4 Enden."
         ],
         "solution": "Kein Rätsel – der Ausgang ist offen (vier mögliche Enden)."
       }
