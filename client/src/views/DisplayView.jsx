@@ -1,6 +1,7 @@
 import { useGame } from '../context/GameContext'
 import PuzzleView from '../components/player/PuzzleView'
 import CrystalGallery from '../components/display/CrystalGallery'
+import AldricQuestions from '../components/display/AldricQuestions'
 import TimerBanner from '../components/player/TimerBanner'
 
 // Das geteilte Spieler-iPad. Zeigt immer nur die aktuelle Bühne, die der DM steuert.
@@ -38,6 +39,7 @@ function Stage({ mode, payload }) {
   if (mode === 'puzzle')   return <div style={wrap}><PuzzleView /></div>
   if (mode === 'narration') return <Narration payload={payload} />
   if (mode === 'crystals') return <div style={wrap}><CrystalGallery /></div>
+  if (mode === 'questions') return <div style={wrap}><AldricQuestions /></div>
   if (mode === 'image')    return <DisplayImage payload={payload} />
   return <Cover />
 }

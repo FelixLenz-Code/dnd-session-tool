@@ -8,6 +8,7 @@ export default function StagePanel() {
   const mode = state.stage?.mode ?? 'cover'
   const hasPuzzle = !!PUZZLE_BY_FLOOR[state.currentFloor]
   const hasCrystals = (state.adventure?.crystals ?? []).length > 0
+  const hasQuestions = (state.adventure?.aldricQuestions ?? []).length > 0
   const currentUrl = state.stage?.payload?.url
 
   const SceneButton = ({ active, disabled, onClick, icon, label, hint }) => (
@@ -58,6 +59,10 @@ export default function StagePanel() {
         <SceneButton active={mode === 'crystals'} disabled={!hasCrystals}
           onClick={() => actions.setStage('crystals')}
           icon="🔮" label="Kristall-Galerie" hint="Archiv der Stimmen (Etage 4)" />
+
+        <SceneButton active={mode === 'questions'} disabled={!hasQuestions}
+          onClick={() => actions.setStage('questions')}
+          icon="🔵" label="Aldrics Fragen" hint="Sanctum (Etage 5) – Roleplay-Fragen" />
       </div>
 
       <ImageManager mode={mode} currentUrl={currentUrl} />

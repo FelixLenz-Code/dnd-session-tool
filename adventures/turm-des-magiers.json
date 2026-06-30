@@ -33,6 +33,11 @@
       "id": "floor-5",
       "label": "Etage 5 – Das Sanctum",
       "description": "Das Herzstück des Turms. Der Aegisstein ruht hier auf dem Altar."
+    },
+    {
+      "id": "konfrontation",
+      "label": "Finale – Konfrontation mit Mira",
+      "description": "Vor dem Turm. Kein Kampf – reines Roleplay. Mira hat sich vorbereitet."
     }
   ],
   "maps": [
@@ -219,11 +224,158 @@
       "message": "Auf dem Altar im Zentrum des Sanctums liegt er: der Aegisstein. Ein Stein von der Größe einer Faust, tiefblau schimmernd, mit einem Licht darin, das kein Feuer ist. Ihr spürt es sofort – eine Wärme, ein Schutz. Solange dieser Stein im Turm ruht, ist Velmoor sicher vor der Magiepest des Nordens.\n\nWer hat ein Interesse daran, dass er verschwindet?"
     },
     {
+      "id": "aldric-erwacht",
+      "label": "Aldric erwacht",
+      "floorId": "floor-5",
+      "type": "vision",
+      "message": "Die Kristallkugel auf dem Messingpodest erwacht. Aldrics Abbild erscheint – ruhig, müde, vorbereitet. Kein Geist; eine Aufzeichnung.\n\n»Ihr habt meinen Turm verstanden. Nicht weil ihr klug seid – sondern weil ihr zusammen gedacht habt. Bevor ich euch gebe was ihr sucht, habe ich Fragen. Nicht Prüfungen. Nur Fragen. Antwortet ehrlich – der Stein weiß den Unterschied.«\n\nDer Aegisstein leuchtet heller, wenn eine Antwort ehrlich gemeint ist. Er bleibt kalt bei Ausweichen."
+    },
+    {
+      "id": "aldric-fragen",
+      "label": "Aldrics Fragen",
+      "floorId": "floor-5",
+      "type": "secret",
+      "message": "Aldric stellt seine Fragen – eine nach der anderen, ruhig, ohne zu drängen. (Im »Anzeige«-Tab über »Aldrics Fragen« groß auf dem Display einblenden; eine Frage pro Spieler wählen.)"
+    },
+    {
+      "id": "aegisstein-erhalten",
+      "label": "Der Stein wird euer",
+      "floorId": "floor-5",
+      "type": "reward",
+      "message": "Aldrics Abbild verblasst mit einem letzten Wort: »Danke.« Der Glassockel öffnet sich lautlos. Der Aegisstein liegt nun in eurer Hand – warm, schwer, lebendig.\n\nWas ihr mit ihm tut, liegt allein bei euch. Verlasst den Turm – draußen wartet jemand."
+    },
+    {
       "id": "mira-konfrontation",
       "label": "Konfrontation: Mira Vael",
       "floorId": null,
       "type": "event",
       "message": "Mira Vael, Stadtratsmitglied und scheinbar eure Auftraggeberin, tritt euch gegenüber. Ihr Blick ist kalt, kalkuliert. \"Ihr habt zu viel gesehen\", sagt sie. \"Aber es muss nicht so enden.\" Sie bietet euch Schweigen gegen Gold. Was tut ihr?"
+    },
+    {
+      "id": "konf-empfang",
+      "label": "P1 · Empfang",
+      "floorId": "konfrontation",
+      "type": "narrative",
+      "message": "Mira Vael wartet vor dem Turm – aufrecht, gefasst. Sie wurde als Erste informiert (sie hat die Wache bestochen).\n\n»Ihr habt es geschafft. Der Stadtrat wird euch dankbar sein. Habt ihr den Stein?«\n\nSie schaut auf den Stein, nicht auf eure Gesichter."
+    },
+    {
+      "id": "konf-aldric",
+      "label": "P1 · Über Aldric",
+      "floorId": "konfrontation",
+      "type": "narrative",
+      "message": "»Ein tragischer Verlust. Er war ein großer Mann. Sein Turm hat euch sicher einiges gezeigt.«"
+    },
+    {
+      "id": "konf-beziehung",
+      "label": "P1 · Beziehung zu Aldric",
+      "floorId": "konfrontation",
+      "type": "narrative",
+      "message": "»Ich war seine Schülerin, vor vielen Jahren. Wir haben uns auseinandergelebt – das passiert.«"
+    },
+    {
+      "id": "konf-warum-sie",
+      "label": "P1 · Warum sie wartet",
+      "floorId": "konfrontation",
+      "type": "narrative",
+      "message": "»Bürgermeister Holtz ist beschäftigt. Ich übernehme gerne solche Aufgaben.«\n\n(Sie weicht aus – aber nicht offensichtlich genug, um sofort Verdacht zu erregen.)"
+    },
+    {
+      "id": "konf-tagebuch",
+      "label": "P2 · Auf das Tagebuch",
+      "floorId": "konfrontation",
+      "type": "secret",
+      "message": "»Aldric war paranoid in seinen letzten Jahren. Er hat mir Dinge vorgeworfen, die nie passiert sind. Das ist traurig, nicht verdächtig.«"
+    },
+    {
+      "id": "konf-vision",
+      "label": "P2 · Auf die Vision im Labor",
+      "floorId": "konfrontation",
+      "type": "secret",
+      "message": "»Ein Experiment, das Erinnerungen verzerrt. Ihr habt etwas gesehen – aber Magie lügt manchmal. Das solltet ihr wissen.«"
+    },
+    {
+      "id": "konf-spiegel",
+      "label": "P2 · Auf die Spiegelkammer",
+      "floorId": "konfrontation",
+      "type": "secret",
+      "message": "»Ich war einmal in diesem Turm – vor Jahren, als Schülerin. Wenn der Spiegel mich zeigt, dann zeigt er damals. Nicht drei Tage vor seinem Tod.«\n\n(Eine gute, vorbereitete Lüge. Die Helden brauchen etwas Schlagfertiges.)"
+    },
+    {
+      "id": "konf-schwarz",
+      "label": "P3 · Schwarzer Kristall",
+      "floorId": "konfrontation",
+      "type": "event",
+      "message": "(kurze Pause) »Das beweist gar nichts. Stimmen lassen sich aufzeichnen, nachahmen, fälschen.«\n\n(Aber ihre Hände bewegen sich jetzt nicht mehr.)"
+    },
+    {
+      "id": "konf-gift",
+      "label": "P3 · Gift-Analyse (Brennan Cole)",
+      "floorId": "konfrontation",
+      "type": "event",
+      "message": "»Ein Heiler mit einem Rachegefühl. Er mochte mich nie.«"
+    },
+    {
+      "id": "konf-wahrheit",
+      "label": "P3 · Der erste wahre Satz",
+      "floorId": "konfrontation",
+      "type": "event",
+      "message": "»Ihr habt keine Ahnung, was ihr damit anrichten würdet. Diese Stadt funktioniert wegen mir. Nicht wegen Garen. Nicht wegen Fenn. Wegen mir.«\n\n(Das erste Mal, dass sie etwas Wahres sagt.)"
+    },
+    {
+      "id": "konf-liebe",
+      "label": "P3 · Hat sie ihn geliebt?",
+      "floorId": "konfrontation",
+      "type": "secret",
+      "message": "(Kurze Stille – ihr einziger emotionaler Moment.)\n»Er hat mich für das gehalten, was ich sein sollte, nicht was ich bin.«\n\nMehr sagt sie nicht."
+    },
+    {
+      "id": "konf-angebot",
+      "label": "P4A · Geständnis + Angebot",
+      "floorId": "konfrontation",
+      "type": "event",
+      "message": "»Gut.« (Stille) »Ihr seid klüger, als ich gedacht habe.«\n\n»Aldric war feige. Er hatte eine Waffe in der Hand und wollte sie nicht benutzen. Diese Stadt hat Feinde – im Süden, im Osten, überall. Der Aegisstein hätte uns aktiv schützen können. Nicht nur als Schild für Leute, die nicht einmal wissen, dass er existiert.«\n\n»Ich biete euch das Doppelte eurer Belohnung. Ihr gebt mir den Stein. Und wir reden nie wieder darüber.«"
+    },
+    {
+      "id": "konf-flucht",
+      "label": "P4B · Flucht",
+      "floorId": "konfrontation",
+      "type": "event",
+      "message": "Mira kalkuliert kurz, dreht sich um und geht – schnell, aber ohne zu rennen. Kein Alarm. Sie hat einen Fluchtplan (Nordkai, Lagerhaus, Boot).\n\n(Die Helden können sie verbal aufhalten – oder laufen lassen. Auch das ist ein Ende.)"
+    },
+    {
+      "id": "konf-leugnung",
+      "label": "P4C · Totale Leugnung",
+      "floorId": "konfrontation",
+      "type": "event",
+      "message": "Mira dreht die Situation um. Ruhig und laut, für die Menge:\n\n»Diese Fremden waren in einem versiegelten Turm. Sie bringen wilde Geschichten und einen Stein, den die Stadt braucht. Ich schlage vor, wir übergeben den Stein dem Rat und lassen diese Menschen weiterziehen.«\n\n(Ohne Fenn glaubt die Menge erst einmal Mira. Ist Fenn da und hat den schwarzen Kristall gehört – verhaftet er sie.)"
+    },
+    {
+      "id": "ende-1",
+      "label": "Ende 1 · Stein abgegeben, Mira frei",
+      "floorId": "konfrontation",
+      "type": "reward",
+      "message": "Ihr gebt den Stein ab, nehmt die Belohnung und reist ab. Velmoor ist gerettet – Mira ist weiterhin Stadträtin. Der Käufer im Süden bekommt den Stein nie; Mira hat ihn jetzt, aber sie braucht Zeit.\n\nOffenes Ende: Sie wird es wieder versuchen."
+    },
+    {
+      "id": "ende-2",
+      "label": "Ende 2 · Mira entlarvt, Stein abgegeben",
+      "floorId": "konfrontation",
+      "type": "reward",
+      "message": "Fenn verhaftet Mira. Garen Holtz ist erschüttert, aber er handelt. Ihr werdet zu Ehrenbürgern von Velmoor. Der Stein kommt an einen sicheren Ort im Rathaus.\n\nVelmoor ist gerettet – und besser dran als zuvor."
+    },
+    {
+      "id": "ende-3",
+      "label": "Ende 3 · Mira entlarvt, Stein behalten",
+      "floorId": "konfrontation",
+      "type": "reward",
+      "message": "Ihr nehmt den Stein mit. Velmoor ist schutzlos. Brennan Cole kämpft mit konventionellen Mitteln gegen die Seuche – und verliert Zeit. Garen fleht euch an. Mira ist verhaftet.\n\nMoral: Was ist die Pflicht von Helden, die eine Waffe in der Hand halten?"
+    },
+    {
+      "id": "ende-4",
+      "label": "Ende 4 · Deal mit Mira",
+      "floorId": "konfrontation",
+      "type": "reward",
+      "message": "Ihr nehmt Miras Angebot an – oder stellt ein eigenes. Ihr behaltet den Stein und mehr Geld. Mira flieht in der Nacht, bevor jemand nachfragt.\n\nGrauzone: Velmoor ist gerettet – durch einen Deal mit einer Mörderin."
     }
   ],
   "crystals": [
