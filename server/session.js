@@ -12,6 +12,7 @@ function createSession() {
     adventure: null,
     displaySocketId: null,   // das eine geteilte Spieler-iPad
     images: [],              // hochgeladene Bilder/Karten: [{ id, name, url }]
+    sounds: [],              // hochgeladene Sounddateien: [{ id, name, url }]
     finds: [],               // Funde der Gruppe (geteilt): [{ id, label, icon }]
     messages: [],
     unlockedFloors: [],

@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react'
 import { useGame } from '../../context/GameContext'
 import { PUZZLE_BY_FLOOR } from '../../puzzles'
-import { SOUND_LIST } from '../../sounds'
 
 // Steuert, was auf dem geteilten Spieler-Display zu sehen ist (die „Bühne").
 export default function StagePanel() {
@@ -68,7 +67,7 @@ export default function StagePanel() {
 
       <ImageManager mode={mode} currentUrl={currentUrl} />
 
-      <SoundBoard />
+      <SoundManager />
 
       <FindsManager />
 
@@ -81,23 +80,96 @@ export default function StagePanel() {
   )
 }
 
-// Soundeffekte auf dem Spieler-Display abspielen.
-function SoundBoard() {
+// Eigene Sounddateien hochladen, benennen und aufs Spieler-Display abspielen.
+function SoundManager() {
   const { state, actions } = useGame()
+  const [name, setName] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [editing, setEditing] = useState(null)
+  const [editName, setEditName] = useState('')
+  const fileRef = useRef(null)
+  const sounds = state.sounds ?? []
+
+  async function onFile(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setError(''); setBusy(true)
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const r = new FileReader()
+        r.onload = () => resolve(r.result)
+        r.onerror = reject
+        r.readAsDataURL(file)
+      })
+      const fallback = file.name.replace(/\.[^.]+$/, '')
+      await actions.uploadSound(name.trim() || fallback, dataUrl)
+      setName('')
+    } catch (err) {
+      setError(err.message || 'Upload fehlgeschlagen')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  function saveRename(id) {
+    const n = editName.trim()
+    if (n) actions.renameSound(id, n)
+    setEditing(null)
+  }
+
   return (
-    <div className="card gap-8">
+    <div className="card gap-12">
       <div className="section-title">Klang</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(96px, 1fr))', gap: 8 }}>
-        {SOUND_LIST.map(s => (
-          <button key={s.id} className="btn" style={{ flexDirection: 'column', gap: 4, padding: '10px 6px' }}
-            disabled={!state.displayOnline}
-            title={state.displayOnline ? `„${s.label}“ auf dem Display abspielen` : 'Kein Display verbunden'}
-            onClick={() => actions.playSound(s.id)}>
-            <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{s.icon}</span>
-            <span style={{ fontSize: '0.8rem' }}>{s.label}</span>
-          </button>
-        ))}
+
+      <input ref={fileRef} type="file" accept="audio/*" onChange={onFile} style={{ display: 'none' }} />
+      <div style={{ display: 'flex', gap: 8 }}>
+        <input className="input" placeholder="Name (optional)" value={name}
+          onChange={e => setName(e.target.value)} />
+        <button className="btn btn-gold" disabled={busy} onClick={() => fileRef.current?.click()} style={{ flexShrink: 0 }}>
+          {busy ? 'Lädt…' : '⬆ Sound hochladen'}
+        </button>
       </div>
+
+      {error && <div className="form-error">{error}</div>}
+
+      {sounds.length === 0 ? (
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+          Noch keine Sounds. Lade eigene Dateien hoch (z.B. Tür, Knall, Musik).
+        </div>
+      ) : (
+        <div className="gap-8">
+          {sounds.map(s => (
+            <div key={s.id} style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
+              background: 'var(--bg-mid)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius)',
+            }}>
+              {editing === s.id ? (
+                <>
+                  <input className="input" style={{ flex: 1, fontSize: '0.85rem' }} value={editName} autoFocus
+                    onChange={e => setEditName(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && saveRename(s.id)} />
+                  <button className="btn btn-sm btn-gold" onClick={() => saveRename(s.id)}>✓</button>
+                  <button className="btn btn-sm" onClick={() => setEditing(null)}>✕</button>
+                </>
+              ) : (
+                <>
+                  <span style={{ flex: 1, fontSize: '0.9rem' }}>🔊 {s.name}</span>
+                  <button className="btn btn-sm btn-gold" disabled={!state.displayOnline}
+                    title={state.displayOnline ? 'Auf dem Display abspielen' : 'Kein Display verbunden'}
+                    onClick={() => actions.playSound(s.id)}>▶ Abspielen</button>
+                  <button className="btn btn-sm" title="Umbenennen"
+                    onClick={() => { setEditing(s.id); setEditName(s.name) }}>✎</button>
+                  <button className="btn btn-sm" style={{ color: 'var(--text-muted)' }}
+                    title="Entfernen" onClick={() => actions.removeSound(s.id)}>✕</button>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
       <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
         Töne kommen aus dem Spieler-Display. Falls stumm: einmal aufs Display tippen (Audio-Freigabe).
       </div>

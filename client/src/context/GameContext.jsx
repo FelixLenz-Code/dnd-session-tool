@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, useEffect, useRef } from 'react'
 import socket from '../socket'
-import { playSound, unlockAudio } from '../sounds'
+import { playUrl, unlockAudio } from '../sounds'
 
 const GameContext = createContext(null)
 
@@ -12,6 +12,7 @@ const initial = {
   adventure: null,
   displayOnline: false,
   images: [],
+  sounds: [],
   finds: [],
   currentFloor: null,
   unlockedFloors: [],
@@ -46,6 +47,8 @@ function reducer(state, action) {
       return { ...state, stage: action.stage }
     case 'IMAGES_UPDATE':
       return { ...state, images: action.images }
+    case 'SOUNDS_UPDATE':
+      return { ...state, sounds: action.sounds }
     case 'FINDS_UPDATE':
       return { ...state, finds: action.finds }
     case 'PUZZLE_WRONG':
@@ -73,7 +76,8 @@ export function GameProvider({ children }) {
     socket.on('stage_update', (stage) => dispatch({ type: 'STAGE_UPDATE', stage }))
     socket.on('images_update', (images) => dispatch({ type: 'IMAGES_UPDATE', images }))
     socket.on('finds_update', (finds) => dispatch({ type: 'FINDS_UPDATE', finds }))
-    socket.on('play_sound', ({ sound }) => playSound(sound))
+    socket.on('sounds_update', (sounds) => dispatch({ type: 'SOUNDS_UPDATE', sounds }))
+    socket.on('play_sound', ({ url }) => playUrl(url))
     socket.on('puzzle_wrong', ({ mapId }) => {
       dispatch({ type: 'PUZZLE_WRONG', mapId })
       setTimeout(() => dispatch({ type: 'PUZZLE_WRONG_CLEAR' }), 700)
@@ -154,7 +158,21 @@ export function GameProvider({ children }) {
     addFind: (find) => socket.emit('dm:add_find', find),
     removeFind: (id) => socket.emit('dm:remove_find', { id }),
 
-    playSound: (sound) => socket.emit('dm:play_sound', { sound }),
+    uploadSound: async (name, dataUrl) => {
+      const res = await fetch('/api/dm/sound', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, dataUrl }),
+      })
+      if (!res.ok) {
+        const { error } = await res.json()
+        throw new Error(error)
+      }
+      return res.json()   // { id, name, url }
+    },
+    playSound: (id) => socket.emit('dm:play_sound', { id }),
+    renameSound: (id, name) => socket.emit('dm:rename_sound', { id, name }),
+    removeSound: (id) => socket.emit('dm:remove_sound', { id }),
 
     interactMap: (mapId, elementId) => socket.emit('display:interact', { mapId, elementId }),
 

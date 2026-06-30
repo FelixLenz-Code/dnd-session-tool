@@ -17,6 +17,8 @@ let session = createSession()
 // Hochgeladene Bilder (Karten/Handouts/Visionen) — Rohdaten im Speicher,
 // Metadaten in session.images. Reicht für eine lokale Oneshot-Session.
 const imageStore = new Map()   // id → { buffer, contentType }
+// Hochgeladene Sounddateien — gleiches Prinzip, Metadaten in session.sounds.
+const soundStore = new Map()   // id → { buffer, contentType }
 
 // Standard-Adventure beim Start laden (der DM kann es jederzeit überschreiben).
 try {
@@ -59,6 +61,27 @@ app.get('/api/image/:id', (req, res) => {
   res.set('Content-Type', img.contentType)
   res.set('Cache-Control', 'public, max-age=3600')
   res.send(img.buffer)
+})
+
+// DM lädt eine Sounddatei hoch (als data-URL) → wird unter /api/sound/:id ausgeliefert
+app.post('/api/dm/sound', (req, res) => {
+  const { name, dataUrl } = req.body
+  const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl ?? '')
+  if (!m) return res.status(400).json({ error: 'Ungültige Audiodatei' })
+  const id = randomImageId()
+  soundStore.set(id, { buffer: Buffer.from(m[2], 'base64'), contentType: m[1] })
+  const meta = { id, name: name?.trim() || 'Sound', url: `/api/sound/${id}` }
+  session.sounds.push(meta)
+  io.emit('sounds_update', session.sounds)
+  res.json(meta)
+})
+
+app.get('/api/sound/:id', (req, res) => {
+  const snd = soundStore.get(req.params.id)
+  if (!snd) return res.status(404).end()
+  res.set('Content-Type', snd.contentType)
+  res.set('Cache-Control', 'public, max-age=3600')
+  res.send(snd.buffer)
 })
 
 app.post('/api/dm/auth', (req, res) => {
@@ -131,6 +154,7 @@ function publicState(s) {
     adventure: s.adventure,
     displayOnline: !!s.displaySocketId,
     images: s.images,
+    sounds: s.sounds,
     finds: s.finds,
     currentFloor: s.currentFloor,
     unlockedFloors: s.unlockedFloors,
@@ -187,9 +211,21 @@ io.on('connection', (socket) => {
     io.emit('finds_update', session.finds)
   })
 
-  // DM: Soundeffekt auf dem Display abspielen (transient, kein State)
-  socket.on('dm:play_sound', ({ sound }) => {
-    if (session.displaySocketId) io.to(session.displaySocketId).emit('play_sound', { sound })
+  // DM: hochgeladenen Sound auf dem Display abspielen (transient)
+  socket.on('dm:play_sound', ({ id }) => {
+    const snd = session.sounds.find(s => s.id === id)
+    if (snd && session.displaySocketId) io.to(session.displaySocketId).emit('play_sound', { url: snd.url })
+  })
+
+  socket.on('dm:rename_sound', ({ id, name }) => {
+    const snd = session.sounds.find(s => s.id === id)
+    if (snd) { snd.name = String(name ?? '').trim() || snd.name; io.emit('sounds_update', session.sounds) }
+  })
+
+  socket.on('dm:remove_sound', ({ id }) => {
+    session.sounds = session.sounds.filter(s => s.id !== id)
+    soundStore.delete(id)
+    io.emit('sounds_update', session.sounds)
   })
 
   // DM: floor management
