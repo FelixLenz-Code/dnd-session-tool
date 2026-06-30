@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer, useEffect, useRef } from 'react'
 import socket from '../socket'
+import { playSound, unlockAudio } from '../sounds'
 
 const GameContext = createContext(null)
 
@@ -72,6 +73,7 @@ export function GameProvider({ children }) {
     socket.on('stage_update', (stage) => dispatch({ type: 'STAGE_UPDATE', stage }))
     socket.on('images_update', (images) => dispatch({ type: 'IMAGES_UPDATE', images }))
     socket.on('finds_update', (finds) => dispatch({ type: 'FINDS_UPDATE', finds }))
+    socket.on('play_sound', ({ sound }) => playSound(sound))
     socket.on('puzzle_wrong', ({ mapId }) => {
       dispatch({ type: 'PUZZLE_WRONG', mapId })
       setTimeout(() => dispatch({ type: 'PUZZLE_WRONG_CLEAR' }), 700)
@@ -83,6 +85,7 @@ export function GameProvider({ children }) {
   // Actions
   const actions = {
     joinAsDisplay: async (code) => {
+      unlockAudio()   // innerhalb der Klick-Geste: Audio fürs Display freischalten
       const res = await fetch('/api/display/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -150,6 +153,8 @@ export function GameProvider({ children }) {
 
     addFind: (find) => socket.emit('dm:add_find', find),
     removeFind: (id) => socket.emit('dm:remove_find', { id }),
+
+    playSound: (sound) => socket.emit('dm:play_sound', { sound }),
 
     interactMap: (mapId, elementId) => socket.emit('display:interact', { mapId, elementId }),
 

@@ -187,6 +187,11 @@ io.on('connection', (socket) => {
     io.emit('finds_update', session.finds)
   })
 
+  // DM: Soundeffekt auf dem Display abspielen (transient, kein State)
+  socket.on('dm:play_sound', ({ sound }) => {
+    if (session.displaySocketId) io.to(session.displaySocketId).emit('play_sound', { sound })
+  })
+
   // DM: floor management
   socket.on('dm:unlock_floor', ({ floorId }) => {
     if (!session.unlockedFloors.includes(floorId)) {

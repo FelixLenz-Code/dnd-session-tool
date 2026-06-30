@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useGame } from '../../context/GameContext'
 import { PUZZLE_BY_FLOOR } from '../../puzzles'
+import { SOUND_LIST } from '../../sounds'
 
 // Steuert, was auf dem geteilten Spieler-Display zu sehen ist (die „Bühne").
 export default function StagePanel() {
@@ -67,6 +68,8 @@ export default function StagePanel() {
 
       <ImageManager mode={mode} currentUrl={currentUrl} />
 
+      <SoundBoard />
+
       <FindsManager />
 
       {mode === 'narration' && (
@@ -74,6 +77,30 @@ export default function StagePanel() {
           Aktuell wird ein Erzähltext angezeigt. Über den „Titelbild"-Knopf zurück zur Ruheansicht.
         </div>
       )}
+    </div>
+  )
+}
+
+// Soundeffekte auf dem Spieler-Display abspielen.
+function SoundBoard() {
+  const { state, actions } = useGame()
+  return (
+    <div className="card gap-8">
+      <div className="section-title">Klang</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(96px, 1fr))', gap: 8 }}>
+        {SOUND_LIST.map(s => (
+          <button key={s.id} className="btn" style={{ flexDirection: 'column', gap: 4, padding: '10px 6px' }}
+            disabled={!state.displayOnline}
+            title={state.displayOnline ? `„${s.label}“ auf dem Display abspielen` : 'Kein Display verbunden'}
+            onClick={() => actions.playSound(s.id)}>
+            <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{s.icon}</span>
+            <span style={{ fontSize: '0.8rem' }}>{s.label}</span>
+          </button>
+        ))}
+      </div>
+      <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+        Töne kommen aus dem Spieler-Display. Falls stumm: einmal aufs Display tippen (Audio-Freigabe).
+      </div>
     </div>
   )
 }

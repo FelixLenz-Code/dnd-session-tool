@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useGame } from '../context/GameContext'
+import { unlockAudio } from '../sounds'
 import PuzzleView from '../components/player/PuzzleView'
 import CrystalGallery from '../components/display/CrystalGallery'
 import AldricQuestions from '../components/display/AldricQuestions'
@@ -8,6 +10,13 @@ import TimerBanner from '../components/player/TimerBanner'
 export default function DisplayView() {
   const { state } = useGame()
   const mode = state.stage?.mode ?? 'cover'
+
+  // Audio bei der ersten Berührung des Displays freischalten (iOS-Sicherheit).
+  useEffect(() => {
+    const unlock = () => unlockAudio()
+    window.addEventListener('pointerdown', unlock, { once: true })
+    return () => window.removeEventListener('pointerdown', unlock)
+  }, [])
 
   const floorLabel = state.adventure?.floors?.find(f => f.id === state.currentFloor)?.label
 
