@@ -131,6 +131,8 @@ export function GameProvider({ children }) {
       }
       return res.json()   // { id, name, url }
     },
+    renameImage: (id, name) => socket.emit('dm:rename_image', { id, name }),
+    removeImage: (id) => socket.emit('dm:remove_image', { id }),
 
     loadAdventure: async (adventureJson) => {
       await fetch('/api/adventure', {

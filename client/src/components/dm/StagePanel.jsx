@@ -240,9 +240,12 @@ function FindsManager() {
 // Karten/Handouts/Visionen als Bild aufs Display bringen — Upload oder URL.
 function ImageManager({ mode, currentUrl }) {
   const { state, actions } = useGame()
+  const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [editing, setEditing] = useState(null)
+  const [editName, setEditName] = useState('')
   const fileRef = useRef(null)
   const images = state.images ?? []
 
@@ -262,8 +265,9 @@ function ImageManager({ mode, currentUrl }) {
         r.onerror = reject
         r.readAsDataURL(file)
       })
-      const meta = await actions.uploadImage(file.name.replace(/\.[^.]+$/, ''), dataUrl)
-      show(meta)
+      const fallback = file.name.replace(/\.[^.]+$/, '')
+      await actions.uploadImage(name.trim() || fallback, dataUrl)  // nur in die Galerie, nicht sofort zeigen
+      setName('')
     } catch (err) {
       setError(err.message || 'Upload fehlgeschlagen')
     } finally {
@@ -274,18 +278,26 @@ function ImageManager({ mode, currentUrl }) {
   function showUrl() {
     const u = url.trim()
     if (!u) return
-    actions.setStage('image', { url: u, label: 'Karte' })
+    actions.setStage('image', { url: u, label: name.trim() || 'Karte' })
     setUrl('')
+  }
+
+  function saveRename(id) {
+    const n = editName.trim()
+    if (n) actions.renameImage(id, n)
+    setEditing(null)
   }
 
   return (
     <div className="card gap-12">
       <div className="section-title">Karte / Bild zeigen</div>
 
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: 'none' }} />
-        <button className="btn btn-gold" disabled={busy} onClick={() => fileRef.current?.click()}>
-          {busy ? 'Lädt…' : '⬆ Bild hochladen'}
+      <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: 'none' }} />
+      <div style={{ display: 'flex', gap: 8 }}>
+        <input className="input" placeholder="Name (optional)" value={name}
+          onChange={e => setName(e.target.value)} />
+        <button className="btn btn-gold" disabled={busy} onClick={() => fileRef.current?.click()} style={{ flexShrink: 0 }}>
+          {busy ? 'Lädt…' : '⬆ Karte hochladen'}
         </button>
       </div>
 
@@ -297,23 +309,43 @@ function ImageManager({ mode, currentUrl }) {
 
       {error && <div className="form-error">{error}</div>}
 
-      {images.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))', gap: 8 }}>
+      {images.length === 0 ? (
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+          Noch keine Karten. Lade Bilder hoch – sie landen hier und lassen sich per Klick zeigen.
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8 }}>
           {images.map(img => {
             const active = mode === 'image' && currentUrl === img.url
             return (
-              <button key={img.id} onClick={() => show(img)} title={img.name}
-                style={{
-                  padding: 4, borderRadius: 'var(--radius)', cursor: 'pointer',
-                  background: 'var(--bg-mid)',
-                  border: `2px solid ${active ? 'var(--gold)' : 'var(--border-dim)'}`,
-                }}>
-                <img src={img.url} alt={img.name}
-                  style={{ width: '100%', height: 64, objectFit: 'cover', borderRadius: 4, display: 'block' }} />
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {img.name}
-                </div>
-              </button>
+              <div key={img.id} style={{
+                borderRadius: 'var(--radius)', overflow: 'hidden',
+                border: `2px solid ${active ? 'var(--gold)' : 'var(--border-dim)'}`, background: 'var(--bg-mid)',
+              }}>
+                <button onClick={() => show(img)} title="Aufs Display zeigen"
+                  style={{ display: 'block', width: '100%', padding: 0, border: 'none', cursor: 'pointer', background: 'none' }}>
+                  <img src={img.url} alt={img.name}
+                    style={{ width: '100%', height: 72, objectFit: 'cover', display: 'block' }} />
+                </button>
+                {editing === img.id ? (
+                  <div style={{ display: 'flex', gap: 4, padding: 4 }}>
+                    <input className="input" style={{ flex: 1, fontSize: '0.75rem', padding: '4px 6px' }} value={editName} autoFocus
+                      onChange={e => setEditName(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && saveRename(img.id)} />
+                    <button className="btn btn-sm btn-gold" onClick={() => saveRename(img.id)}>✓</button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '4px 6px' }}>
+                    <span style={{ flex: 1, fontSize: '0.72rem', color: 'var(--text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={img.name}>
+                      {img.name}
+                    </span>
+                    <button className="btn btn-sm" style={{ padding: '2px 6px' }} title="Umbenennen"
+                      onClick={() => { setEditing(img.id); setEditName(img.name) }}>✎</button>
+                    <button className="btn btn-sm" style={{ padding: '2px 6px', color: 'var(--text-muted)' }} title="Entfernen"
+                      onClick={() => actions.removeImage(img.id)}>✕</button>
+                  </div>
+                )}
+              </div>
             )
           })}
         </div>

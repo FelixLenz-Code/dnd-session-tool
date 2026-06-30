@@ -211,6 +211,24 @@ io.on('connection', (socket) => {
     io.emit('finds_update', session.finds)
   })
 
+  // DM: hochgeladene Karte/Bild umbenennen / entfernen
+  socket.on('dm:rename_image', ({ id, name }) => {
+    const img = session.images.find(i => i.id === id)
+    if (img) { img.name = String(name ?? '').trim() || img.name; io.emit('images_update', session.images) }
+  })
+
+  socket.on('dm:remove_image', ({ id }) => {
+    const removed = session.images.find(i => i.id === id)
+    session.images = session.images.filter(i => i.id !== id)
+    imageStore.delete(id)
+    io.emit('images_update', session.images)
+    // Falls genau diese Karte gerade auf der Bühne lag: zurück zum Titelbild
+    if (removed && session.stage?.mode === 'image' && session.stage.payload?.url === removed.url) {
+      session.stage = { mode: 'cover', payload: null }
+      io.emit('stage_update', session.stage)
+    }
+  })
+
   // DM: hochgeladenen Sound auf dem Display abspielen (transient)
   socket.on('dm:play_sound', ({ id }) => {
     const snd = session.sounds.find(s => s.id === id)
